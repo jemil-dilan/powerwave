@@ -1,4 +1,5 @@
 <?php
+require_once 'database.php';
 /**
  * PayPal Configuration - Updated for PayPal JavaScript SDK v2
  * 
@@ -13,17 +14,29 @@
 // PayPal Environment - 'sandbox' for testing, 'production' for live
 define('PAYPAL_ENVIRONMENT', 'sandbox');
 
-// PayPal API Credentials
+// PayPal API Credentials (only define if not already defined)
 if (PAYPAL_ENVIRONMENT === 'sandbox') {
     // Sandbox credentials - Replace with your actual sandbox credentials
-    define('PAYPAL_CLIENT_ID', 'AQZ8kYKhKKdS8fF8oaKd_NiFUADsqe8bKE5MYKhKKdS8fF8oaKd_NiFUADsqe8bKE5M'); // Placeholder sandbox ID
-    define('PAYPAL_CLIENT_SECRET', 'ELKhKKdS8fF8oaKd_NiFUADsqe8bKE5MYKhKKdS8fF8oaKd_NiFUADsqe8bKE5M'); // Placeholder sandbox secret
-    define('PAYPAL_BASE_URL', 'https://api.sandbox.paypal.com');
+    if (!defined('PAYPAL_CLIENT_ID')) {
+        define('PAYPAL_CLIENT_ID', 'AQZ8kYKhKKdS8fF8oaKd_NiFUADsqe8bKE5MYKhKKdS8fF8oaKd_NiFUADsqe8bKE5M'); // Placeholder sandbox ID
+    }
+    if (!defined('PAYPAL_CLIENT_SECRET')) {
+        define('PAYPAL_CLIENT_SECRET', 'ELKhKKdS8fF8oaKd_NiFUADsqe8bKE5MYKhKKdS8fF8oaKd_NiFUADsqe8bKE5M'); // Placeholder sandbox secret
+    }
+    if (!defined('PAYPAL_BASE_URL')) {
+        define('PAYPAL_BASE_URL', 'https://api.sandbox.paypal.com');
+    }
 } else {
     // Production credentials - Replace with your actual production credentials
-    define('PAYPAL_CLIENT_ID', 'YOUR_PRODUCTION_CLIENT_ID');
-    define('PAYPAL_CLIENT_SECRET', 'YOUR_PRODUCTION_CLIENT_SECRET');
-    define('PAYPAL_BASE_URL', 'https://api.paypal.com');
+    if (!defined('PAYPAL_CLIENT_ID')) {
+        define('PAYPAL_CLIENT_ID', 'YOUR_PRODUCTION_CLIENT_ID');
+    }
+    if (!defined('PAYPAL_CLIENT_SECRET')) {
+        define('PAYPAL_CLIENT_SECRET', 'YOUR_PRODUCTION_CLIENT_SECRET');
+    }
+    if (!defined('PAYPAL_BASE_URL')) {
+        define('PAYPAL_BASE_URL', 'https://api.paypal.com');
+    }
 }
 
 // PayPal Currency and Settings
@@ -39,6 +52,20 @@ define('PAYPAL_JS_SDK_URL', 'https://www.paypal.com/sdk/js');
 
 // PayPal Webhook URL (for production use)
 define('PAYPAL_WEBHOOK_URL', SITE_URL . '/paypal_webhook.php');
+
+/**
+ * Get PayPal SDK URL for JavaScript integration
+ */
+function getPayPalSDKUrl($currency = 'USD', $intent = 'capture', $components = 'buttons') {
+    $params = [
+        'client-id' => PAYPAL_CLIENT_ID,
+        'currency' => $currency,
+        'intent' => $intent,
+        'components' => $components
+    ];
+    
+    return PAYPAL_JS_SDK_URL . '?' . http_build_query($params);
+}
 
 /**
  * Get PayPal Access Token

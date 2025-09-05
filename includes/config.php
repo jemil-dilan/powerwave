@@ -59,8 +59,41 @@ ini_set('error_log', 'error.log');
 // Timezone
 date_default_timezone_set('America/New_York');
 
+// Enhanced session security (must be set before session_start())
+if (session_status() === PHP_SESSION_NONE) {
+    ini_set('session.cookie_httponly', 1);
+    ini_set('session.cookie_secure', isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 1 : 0);
+    ini_set('session.use_strict_mode', 1);
+    ini_set('session.cookie_samesite', 'Strict');
+    ini_set('session.gc_maxlifetime', SESSION_TIMEOUT);
+}
+
+// Security headers
+if (!headers_sent()) {
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: DENY');
+    header('X-XSS-Protection: 1; mode=block');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header('Permissions-Policy: geolocation=(), microphone=(), camera=()');
+}
+
 // Start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
+    
+    // Regenerate session ID periodically for security
+    if (!isset($_SESSION['last_regeneration'])) {
+        $_SESSION['last_regeneration'] = time();
+    } elseif (time() - $_SESSION['last_regeneration'] > 300) { // 5 minutes
+        session_regenerate_id(true);
+        $_SESSION['last_regeneration'] = time();
+    }
+    
+    // Check session timeout
+    if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > SESSION_TIMEOUT)) {
+        session_destroy();
+        session_start();
+    }
+    $_SESSION['last_activity'] = time();
 }
 ?>

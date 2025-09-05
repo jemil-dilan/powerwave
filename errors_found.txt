@@ -1,0 +1,16 @@
+-- Filter
+-- message displayed, and cart update
+-- unable to update cart 
+-- CANNOT PLACE AN ORDER
+-- need to store cart item until cart order is fullfield
+
+
+
+* FOR ADMIN
+-- on product tabs of admin pannel, warnings are displayed
+-- warning during editing product
+*-- after product created, it should be redirected to list of all product
+-- unable to change an order status and payment status
+-- unable to set a user as admin
+-- add a deactivate button for user
+

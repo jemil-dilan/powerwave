@@ -121,7 +121,10 @@ try {
     }
     
 } catch (Exception $e) {
-    if ($db) $db->rollback();
+    // Only rollback if transaction is active
+    if ($db && $db->getConnection()->inTransaction()) {
+        $db->rollback();
+    }
     error_log("Order creation failed: " . $e->getMessage());
     showMessage('There was an error processing your order. Please try again.', 'error');
     redirect('checkout.php');

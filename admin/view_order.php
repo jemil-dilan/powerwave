@@ -159,7 +159,7 @@ $pageTitle = 'Order #' . $order['order_number'];
                 </div>
             </div>
             
-            <?php if ($order['tracking_number']): ?>
+            <?php if (isset($order['tracking_number']) && $order['tracking_number']): ?>
                 <div style="margin-top: 16px;">
                     <strong>Tracking Number:</strong> <?php echo sanitizeInput($order['tracking_number']); ?>
                 </div>

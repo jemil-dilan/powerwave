@@ -344,7 +344,7 @@ $pageTitle = 'Edit Product';
                 
                 <div class="form-group">
                     <label for="dimensions">Dimensions (L x W x H)</label>
-                    <input type="text" id="dimensions" name="dimensions" class="input" value="<?php echo sanitizeInput($product['dimensions']); ?>" placeholder="e.g., 48 x 20 x 45 inches">
+                    <input type="text" id="dimensions" name="dimensions" class="input" value="<?php echo sanitizeInput($product['dimensions'] ?? ''); ?>" placeholder="e.g., 48 x 20 x 45 inches">
                 </div>
             </div>
             
@@ -353,7 +353,7 @@ $pageTitle = 'Edit Product';
                 <h3>Additional Details</h3>
                 <div class="form-group">
                     <label for="features">Features</label>
-                    <textarea id="features" name="features" class="textarea" placeholder="List key features, one per line"><?php echo sanitizeInput($product['features']); ?></textarea>
+                    <textarea id="features" name="features" class="textarea" placeholder="List key features, one per line"><?php echo sanitizeInput($product['features'] ?? ''); ?></textarea>
                 </div>
                 
                 <div class="form-group">

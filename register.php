@@ -8,6 +8,7 @@ if (isLoggedIn()) {
 }
 
 if ($_POST) {
+    requireCSRF();
     $firstName = sanitizeInput($_POST['first_name'] ?? '');
     $lastName = sanitizeInput($_POST['last_name'] ?? '');
     $email = sanitizeInput($_POST['email'] ?? '');
@@ -103,6 +104,7 @@ $pageTitle = 'Register';
             <h2 style="text-align: center; margin-bottom: 24px;">Create Account</h2>
             
             <form method="POST" action="register.php">
+                <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                 <div class="grid grid-2">
                     <div class="form-group">
                         <label>First Name</label>

@@ -70,15 +70,36 @@ class Database {
     
     public function update($table, $data, $where, $whereParams = []) {
         $setClause = [];
-        foreach (array_keys($data) as $column) {
-            $setClause[] = "{$column} = :{$column}";
+        $namedParams = [];
+        
+        // Use named parameters for SET clause
+        foreach ($data as $column => $value) {
+            $paramName = "set_" . $column;
+            $setClause[] = "{$column} = :{$paramName}";
+            $namedParams[$paramName] = $value;
         }
         $setClause = implode(', ', $setClause);
         
-        $sql = "UPDATE {$table} SET {$setClause} WHERE {$where}";
-        $params = array_merge($data, $whereParams);
+        // Handle WHERE clause parameters
+        if (is_array($whereParams) && !empty($whereParams)) {
+            // Convert positional parameters to named parameters
+            $whereParamNames = [];
+            foreach ($whereParams as $index => $value) {
+                $paramName = "where_param_" . $index;
+                $whereParamNames[] = $paramName;
+                $namedParams[$paramName] = $value;
+            }
+            
+            // Replace ? with named parameters in WHERE clause
+            $whereParamIndex = 0;
+            $where = preg_replace_callback('/\?/', function($matches) use ($whereParamNames, &$whereParamIndex) {
+                return ':' . $whereParamNames[$whereParamIndex++];
+            }, $where);
+        }
         
-        $stmt = $this->query($sql, $params);
+        $sql = "UPDATE {$table} SET {$setClause} WHERE {$where}";
+        
+        $stmt = $this->query($sql, $namedParams);
         return $stmt->rowCount();
     }
     

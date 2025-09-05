@@ -10,6 +10,7 @@ if (isLoggedIn()) {
 $redirect = isset($_GET['redirect']) ? sanitizeInput($_GET['redirect']) : 'index.php';
 
 if ($_POST) {
+    requireCSRF();
     $email = sanitizeInput($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     
@@ -23,19 +24,27 @@ if ($_POST) {
         );
         
         if ($user && verifyPassword($password, $user['password'])) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_role'] = $user['role'];
-            $_SESSION['user_name'] = $user['first_name'] . ' ' . $user['last_name'];
+            // Check if user account is active (handle case where status column doesn't exist yet)
+            $userStatus = $user['status'] ?? 'active';
             
-            // Transfer guest cart to user cart
-            $sessionId = session_id();
-            $db->query(
-                "UPDATE cart SET user_id = ?, session_id = NULL WHERE session_id = ?",
-                [$user['id'], $sessionId]
-            );
-            
-            showMessage('Login successful', 'success');
-            redirect($redirect);
+            if ($userStatus !== 'active') {
+                $statusMessage = $userStatus === 'inactive' ? 'Your account has been deactivated.' : 'Your account has been suspended.';
+                showMessage($statusMessage . ' Please contact support for assistance.', 'error');
+            } else {
+                $_SESSION['user_id'] = $user['id'];
+                $_SESSION['user_role'] = $user['role'];
+                $_SESSION['user_name'] = $user['first_name'] . ' ' . $user['last_name'];
+                
+                // Transfer guest cart to user cart
+                $sessionId = session_id();
+                $db->query(
+                    "UPDATE cart SET user_id = ?, session_id = NULL WHERE session_id = ?",
+                    [$user['id'], $sessionId]
+                );
+                
+                showMessage('Login successful', 'success');
+                redirect($redirect);
+            }
         } else {
             showMessage('Invalid email or password', 'error');
         }
@@ -74,6 +83,7 @@ $pageTitle = 'Login';
             <h2 style="text-align: center; margin-bottom: 24px;">Login</h2>
             
             <form method="POST" action="login.php<?php echo $redirect !== 'index.php' ? '?redirect=' . urlencode($redirect) : ''; ?>">
+                <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                 <div class="form-group">
                     <label>Email Address</label>
                     <input type="email" name="email" class="input" required value="<?php echo isset($_POST['email']) ? sanitizeInput($_POST['email']) : ''; ?>">

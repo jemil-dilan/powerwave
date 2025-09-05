@@ -26,7 +26,7 @@ class PayPalService {
         curl_setopt_array($ch, [
             CURLOPT_URL => $this->baseUrl . '/v1/oauth2/token',
             CURLOPT_HEADER => false,
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYPEER => $this->environment === 'production',
             CURLOPT_POST => true,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_USERPWD => $this->clientId . ':' . $this->clientSecret,
@@ -35,7 +35,8 @@ class PayPalService {
                 'Accept: application/json',
                 'Accept-Language: en_US',
             ]
-        ]);\n        
+        ]);
+        
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
@@ -86,7 +87,7 @@ class PayPalService {
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => json_encode($orderData),
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYPEER => $this->environment === 'production',
             CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . $accessToken,
@@ -135,7 +136,7 @@ class PayPalService {
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => '{}',
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYPEER => $this->environment === 'production',
             CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . $accessToken,
@@ -185,7 +186,7 @@ class PayPalService {
         curl_setopt_array($ch, [
             CURLOPT_URL => $this->baseUrl . '/v2/checkout/orders/' . $orderId,
             CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYPEER => $this->environment === 'production',
             CURLOPT_HTTPHEADER => [
                 'Content-Type: application/json',
                 'Authorization: Bearer ' . $accessToken

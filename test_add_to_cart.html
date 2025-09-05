@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Add to Cart</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .test-section { margin: 20px 0; padding: 20px; border: 1px solid #ddd; }
+        .btn { padding: 10px 20px; margin: 10px; border: none; cursor: pointer; border-radius: 5px; }
+        .btn-primary { background: #007bff; color: white; }
+        .cart-info { margin: 20px 0; padding: 15px; background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <h1>Add to Cart Test Page</h1>
+    
+    <div class="cart-info">
+        <strong>Cart Status:</strong>
+        <span class="cart-count">0</span> items - 
+        <span class="cart-total">$0.00</span>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test Product Card (like products.php)</h3>
+        <p>This tests the add to cart functionality from product listings</p>
+        <button class="btn btn-primary btn-add-to-cart" data-product-id="1">
+            <i class="fas fa-cart-plus"></i> Add to Cart
+        </button>
+    </div>
+    
+    <div class="test-section">
+        <h3>Test Product Detail (like product.php)</h3>
+        <p>This tests the add to cart functionality from product detail page with quantity</p>
+        <input id="quantity-input" type="number" value="2" min="1" max="99" style="width: 60px; margin-right: 10px;">
+        <button id="add-to-cart-btn" class="btn btn-primary" data-product-id="1">
+            <i class="fas fa-cart-plus"></i> Add to Cart
+        </button>
+    </div>
+    
+    <div class="test-section">
+        <h3>Instructions</h3>
+        <ul>
+            <li>Make sure your web server is running and the database is connected</li>
+            <li>Ensure product ID 1 exists in your database</li>
+            <li>Click the buttons above to test AJAX functionality</li>
+            <li>You should see notifications and cart count updates without page refresh</li>
+            <li>Open browser developer tools to see any JavaScript errors</li>
+        </ul>
+    </div>
+    
+    <script src="js/main.js"></script>
+</body>
+</html>

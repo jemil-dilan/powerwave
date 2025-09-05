@@ -105,7 +105,7 @@ if ($_POST && isset($_POST['add_product'])) {
             $productId = $db->insert('products', $productData);
             
             showMessage('Product added successfully!', 'success');
-            redirect("edit_product.php?id=$productId");
+            redirect("products.php");
             
         } catch (Exception $e) {
             $errors[] = 'Failed to add product: ' . $e->getMessage();

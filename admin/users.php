@@ -12,28 +12,56 @@ if ($_POST) {
         $userId = (int)$_POST['user_id'];
         $newRole = sanitizeInput($_POST['new_role']);
         
-        try {
-            $db->update('users', ['role' => $newRole], 'id = ?', [$userId]);
-            showMessage('User role updated successfully!', 'success');
-        } catch (Exception $e) {
-            showMessage('Error updating user role: ' . $e->getMessage(), 'error');
+        // Prevent demoting the current admin
+        if ($userId === $_SESSION['user_id'] && $newRole !== 'admin') {
+            showMessage('You cannot change your own admin role!', 'error');
+        } else {
+            try {
+                $db->update('users', ['role' => $newRole], 'id = ?', [$userId]);
+                showMessage('User role updated successfully!', 'success');
+            } catch (Exception $e) {
+                showMessage('Error updating user role: ' . $e->getMessage(), 'error');
+            }
+        }
+    }
+    
+    if (isset($_POST['toggle_status'])) {
+        $userId = (int)$_POST['user_id'];
+        $newStatus = sanitizeInput($_POST['new_status']);
+        
+        // Prevent deactivating yourself
+        if ($userId === $_SESSION['user_id']) {
+            showMessage('You cannot change your own account status!', 'error');
+        } else {
+            try {
+                $db->update('users', ['status' => $newStatus], 'id = ?', [$userId]);
+                $statusText = ucfirst($newStatus);
+                showMessage("User {$statusText} successfully!", 'success');
+            } catch (Exception $e) {
+                showMessage('Error updating user status: ' . $e->getMessage(), 'error');
+            }
         }
     }
     
     if (isset($_POST['delete_user'])) {
         $userId = (int)$_POST['user_id'];
         
-        // Check if user has orders
-        $orderCount = $db->fetchColumn("SELECT COUNT(*) FROM orders WHERE user_id = ?", [$userId]);
-        
-        if ($orderCount > 0) {
-            showMessage('Cannot delete user with existing orders. Consider deactivating instead.', 'error');
+        // Prevent deleting yourself
+        if ($userId === $_SESSION['user_id']) {
+            showMessage('You cannot delete your own account!', 'error');
         } else {
-            try {
-                $db->delete('users', 'id = ?', [$userId]);
-                showMessage('User deleted successfully!', 'success');
-            } catch (Exception $e) {
-                showMessage('Error deleting user: ' . $e->getMessage(), 'error');
+            // Check if user has orders
+            $orderCount = $db->fetchColumn("SELECT COUNT(*) FROM orders WHERE user_id = ?", [$userId]);
+            
+            if ($orderCount > 0) {
+                showMessage('Cannot delete user with existing orders. Consider deactivating instead.', 'error');
+            } else {
+                try {
+                    $db->delete('users', 'id = ?', [$userId]);
+                    showMessage('User deleted successfully!', 'success');
+                } catch (Exception $e) {
+                    showMessage('Error deleting user: ' . $e->getMessage(), 'error');
+                }
             }
         }
     }
@@ -105,6 +133,10 @@ $pageTitle = 'Manage Users';
         .role-badge { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: 600; text-transform: uppercase; }
         .role-admin { background: #fef3c7; color: #d97706; }
         .role-customer { background: #dbeafe; color: #1d4ed8; }
+        .status-badge { padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .status-active { background: #d1fae5; color: #065f46; }
+        .status-inactive { background: #fee2e2; color: #dc2626; }
+        .status-suspended { background: #fef3c7; color: #d97706; }
         .filters { background: white; padding: 16px; border-radius: 8px; margin-bottom: 20px; display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
         .user-stats { background: #f9fafb; padding: 8px; border-radius: 6px; font-size: 12px; }
     </style>
@@ -157,6 +189,7 @@ $pageTitle = 'Manage Users';
                         <th>User</th>
                         <th>Contact</th>
                         <th>Role</th>
+                        <th>Status</th>
                         <th>Orders</th>
                         <th>Total Spent</th>
                         <th>Joined</th>
@@ -193,6 +226,26 @@ $pageTitle = 'Manage Users';
                                 <?php endif; ?>
                             </td>
                             <td>
+                                <?php 
+                                $userStatus = $user['status'] ?? 'active'; // Default to active if column doesn't exist yet
+                                ?>
+                                <?php if ($user['id'] !== $_SESSION['user_id']): ?>
+                                    <form method="POST" style="display: inline;">
+                                        <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                        <select name="new_status" onchange="this.form.submit()" 
+                                                class="status-badge status-<?php echo $userStatus; ?>" 
+                                                style="border: none; background: transparent;">
+                                            <option value="active" <?php echo $userStatus === 'active' ? 'selected' : ''; ?>>Active</option>
+                                            <option value="inactive" <?php echo $userStatus === 'inactive' ? 'selected' : ''; ?>>Inactive</option>
+                                            <option value="suspended" <?php echo $userStatus === 'suspended' ? 'selected' : ''; ?>>Suspended</option>
+                                        </select>
+                                        <input type="hidden" name="toggle_status" value="1">
+                                    </form>
+                                <?php else: ?>
+                                    <span class="status-badge status-<?php echo $userStatus; ?>"><?php echo ucfirst($userStatus); ?></span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
                                 <?php if ($user['order_count'] > 0): ?>
                                     <strong><?php echo $user['order_count']; ?></strong> orders
                                 <?php else: ?>
@@ -214,12 +267,37 @@ $pageTitle = 'Manage Users';
                             </td>
                             <td>
                                 <?php if ($user['id'] !== $_SESSION['user_id']): ?>
-                                    <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.');">
-                                        <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
-                                        <button type="submit" name="delete_user" class="btn btn-sm" style="background: #dc2626; color: white; border-color: #dc2626;">
-                                            <i class="fas fa-trash"></i>
-                                        </button>
-                                    </form>
+                                    <div style="display: flex; gap: 4px;">
+                                        <!-- Quick Status Toggle Button -->
+                                        <?php 
+                                        $userStatus = $user['status'] ?? 'active';
+                                        if ($userStatus === 'active'): 
+                                        ?>
+                                            <form method="POST" style="display: inline;" onsubmit="return confirm('Deactivate this user account?');">
+                                                <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                                <input type="hidden" name="new_status" value="inactive">
+                                                <button type="submit" name="toggle_status" class="btn btn-sm" style="background: #f59e0b; color: white; border-color: #f59e0b;" title="Deactivate User">
+                                                    <i class="fas fa-user-slash"></i>
+                                                </button>
+                                            </form>
+                                        <?php else: ?>
+                                            <form method="POST" style="display: inline;" onsubmit="return confirm('Activate this user account?');">
+                                                <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                                <input type="hidden" name="new_status" value="active">
+                                                <button type="submit" name="toggle_status" class="btn btn-sm" style="background: #059669; color: white; border-color: #059669;" title="Activate User">
+                                                    <i class="fas fa-user-check"></i>
+                                                </button>
+                                            </form>
+                                        <?php endif; ?>
+                                        
+                                        <!-- Delete Button -->
+                                        <form method="POST" style="display: inline;" onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.');">
+                                            <input type="hidden" name="user_id" value="<?php echo $user['id']; ?>">
+                                            <button type="submit" name="delete_user" class="btn btn-sm" style="background: #dc2626; color: white; border-color: #dc2626;" title="Delete User">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
                                 <?php else: ?>
                                     <span style="color: #9ca3af; font-size: 12px;">Current User</span>
                                 <?php endif; ?>

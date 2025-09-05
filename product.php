@@ -93,11 +93,22 @@ $pageTitle = sanitizeInput($product['name']);
             <p style="color:#475569;"><?php echo nl2br(sanitizeInput($product['description'])); ?></p>
           </div>
         <?php endif; ?>
-        <form method="POST" action="add_to_cart.php" style="display:flex; gap:10px; align-items:center;">
-          <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-          <input class="input qty" type="number" name="quantity" value="1" min="1">
-          <button class="btn btn-primary" type="submit"><i class="fas fa-cart-plus"></i> Add to Cart</button>
-        </form>
+        <div class="add-to-cart-section" style="display:flex; gap:10px; align-items:center;">
+          <input id="quantity-input" class="input qty" type="number" value="1" min="1" max="99">
+          <button id="add-to-cart-btn" class="btn btn-primary" data-product-id="<?php echo $product['id']; ?>">
+            <i class="fas fa-cart-plus"></i> Add to Cart
+          </button>
+        </div>
+        
+        <!-- Fallback form for users with JavaScript disabled -->
+        <noscript>
+          <form method="POST" action="add_to_cart.php" style="display:flex; gap:10px; align-items:center; margin-top:10px;">
+            <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
+            <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
+            <input class="input qty" type="number" name="quantity" value="1" min="1" max="99">
+            <button class="btn btn-primary" type="submit"><i class="fas fa-cart-plus"></i> Add to Cart</button>
+          </form>
+        </noscript>
       </div>
     </div>
   </main>

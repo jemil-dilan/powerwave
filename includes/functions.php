@@ -2,10 +2,18 @@
 require_once 'database.php';
 
 // Security functions
-function sanitizeInput($data) {
+function sanitizeInput($data): string
+{
+    // Handle null values to prevent deprecated warnings
+    if ($data === null) {
+        return '';
+    }
     return htmlspecialchars(trim($data), ENT_QUOTES, 'UTF-8');
 }
 
+/**
+ * @throws \Random\RandomException
+ */
 function generateCSRFToken() {
     if (!isset($_SESSION['csrf_token'])) {
         $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
@@ -26,6 +34,16 @@ function validateCSRFToken($token) {
     }
     
     return hash_equals($_SESSION['csrf_token'], $token);
+}
+
+function requireCSRF() {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $token = $_POST['csrf_token'] ?? '';
+        if (!validateCSRFToken($token)) {
+            showMessage('Invalid security token. Please try again.', 'error');
+            redirect($_SERVER['PHP_SELF']);
+        }
+    }
 }
 
 function hashPassword($password) {
@@ -106,7 +124,8 @@ function getProductImages($productId) {
     );
 }
 
-function searchProducts($query, $category = null, $brand = null, $minPrice = null, $maxPrice = null, $limit = 12, $offset = 0) {
+function searchProducts($query, $category = null, $brand = null, $minPrice = null, $maxPrice = null, $limit = 12, $offset = 0): array
+{
     $db = Database::getInstance();
     $params = [];
     $whereConditions = ["p.status = 'active'"];
@@ -336,7 +355,8 @@ function sendEmail($to, $subject, $message, $headers = null) {
 }
 
 // File upload function for images
-function handleImageUpload($file, $folder = 'products') {
+function handleImageUpload($file, $folder = 'products'): array
+{
     try {
         // Determine the correct upload directory path
         $uploadDir = (basename(getcwd()) === 'admin') ? '../uploads/' . $folder . '/' : 'uploads/' . $folder . '/';
@@ -390,7 +410,7 @@ function handleImageUpload($file, $folder = 'products') {
             return ['success' => false, 'error' => 'Invalid file type. Allowed: ' . implode(', ', $allowedTypes)];
         }
         
-        // Basic image validation (check MIME type)
+        // Enhanced image validation
         $finfo = finfo_open(FILEINFO_MIME_TYPE);
         $mimeType = finfo_file($finfo, $fileTmp);
         finfo_close($finfo);
@@ -398,6 +418,23 @@ function handleImageUpload($file, $folder = 'products') {
         $allowedMimes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
         if (!in_array($mimeType, $allowedMimes)) {
             return ['success' => false, 'error' => 'File is not a valid image'];
+        }
+        
+        // Additional security: Check image dimensions and validate as actual image
+        $imageInfo = getimagesize($fileTmp);
+        if ($imageInfo === false) {
+            return ['success' => false, 'error' => 'File is not a valid image format'];
+        }
+        
+        // Security: Prevent extremely large dimensions
+        if ($imageInfo[0] > 5000 || $imageInfo[1] > 5000) {
+            return ['success' => false, 'error' => 'Image dimensions too large (max 5000x5000 pixels)'];
+        }
+        
+        // Security: Check for embedded PHP code
+        $fileContent = file_get_contents($fileTmp, false, null, 0, 1024);
+        if (strpos($fileContent, '<?php') !== false || strpos($fileContent, '<%') !== false) {
+            return ['success' => false, 'error' => 'Invalid file content detected'];
         }
         
         // Generate unique filename

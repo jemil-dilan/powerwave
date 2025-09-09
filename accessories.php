@@ -2,107 +2,32 @@
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
 
-$categories = getAllCategories();
-$brands = getAllBrands();
+$db = Database::getInstance();
+
+// Fetch all accessory categories from the database
+$accessoryCategories = $db->fetchAll("SELECT DISTINCT category FROM accessories WHERE status = 'active' ORDER BY category");
+
+// Get the selected category from the URL, default to 'All'
+$selectedCategory = isset($_GET['category']) ? sanitizeInput($_GET['category']) : 'All';
+
+// Build the query to fetch accessories
+$sql = "SELECT * FROM accessories WHERE status = 'active'";
+$params = [];
+
+if ($selectedCategory !== 'All') {
+    $sql .= " AND category = ?";
+    $params[] = $selectedCategory;
+}
+
+$sql .= " ORDER BY name";
+
+$accessories = $db->fetchAll($sql, $params);
 
 $pageTitle = "Marine Accessories - PowerWave outboards";
 
-// Sample accessories data (in a real application, this would come from the database)
-$accessories = [
-    [
-        'id' => 1,
-        'name' => 'PowerWave Premium Propeller Set',
-        'description' => 'High-performance stainless steel propellers designed for maximum efficiency and durability.',
-        'price' => 299.99,
-        'sale_price' => null,
-        'image' => 'images/accessories/propeller-set.jpg',
-        'category' => 'Propellers',
-        'rating' => 4.8
-    ],
-    [
-        'id' => 2,
-        'name' => 'Marine Engine Oil - Synthetic Blend',
-        'description' => 'Premium synthetic blend oil specifically formulated for PowerWave outboard motors.',
-        'price' => 89.99,
-        'sale_price' => 69.99,
-        'image' => 'images/accessories/engine-oil.jpg',
-        'category' => 'Maintenance',
-        'rating' => 4.9
-    ],
-    [
-        'id' => 3,
-        'name' => 'Outboard Motor Cover - Waterproof',
-        'description' => 'Heavy-duty waterproof cover to protect your outboard motor from the elements.',
-        'price' => 149.99,
-        'sale_price' => null,
-        'image' => 'images/accessories/motor-cover.jpg',
-        'category' => 'Protection',
-        'rating' => 4.7
-    ],
-    [
-        'id' => 4,
-        'name' => 'PowerWave Digital Gauge Kit',
-        'description' => 'Advanced digital gauge system with RPM, fuel flow, and engine diagnostics.',
-        'price' => 899.99,
-        'sale_price' => null,
-        'image' => 'images/accessories/gauge-kit.jpg',
-        'category' => 'Electronics',
-        'rating' => 4.6
-    ],
-    [
-        'id' => 5,
-        'name' => 'Fuel Water Separator Filter',
-        'description' => 'Essential fuel system component that removes water and contaminants from fuel.',
-        'price' => 45.99,
-        'sale_price' => 34.99,
-        'image' => 'images/accessories/fuel-filter.jpg',
-        'category' => 'Maintenance',
-        'rating' => 4.8
-    ],
-    [
-        'id' => 6,
-        'name' => 'Outboard Motor Stand - Heavy Duty',
-        'description' => 'Adjustable heavy-duty stand for secure storage and maintenance of outboard motors.',
-        'price' => 199.99,
-        'sale_price' => null,
-        'image' => 'images/accessories/motor-stand.jpg',
-        'category' => 'Storage',
-        'rating' => 4.5
-    ],
-    [
-        'id' => 7,
-        'name' => 'PowerWave Remote Control Kit',
-        'description' => 'Complete remote control system for convenient motor operation from anywhere on your boat.',
-        'price' => 549.99,
-        'sale_price' => 499.99,
-        'image' => 'images/accessories/remote-control.jpg',
-        'category' => 'Controls',
-        'rating' => 4.7
-    ],
-    [
-        'id' => 8,
-        'name' => 'Stainless Steel Trim Tabs',
-        'description' => 'Premium stainless steel trim tabs for improved boat performance and fuel efficiency.',
-        'price' => 379.99,
-        'sale_price' => null,
-        'image' => 'images/accessories/trim-tabs.jpg',
-        'category' => 'Performance',
-        'rating' => 4.6
-    ]
-];
-
-$accessoryCategories = [
-    'All' => 'All Accessories',
-    'Propellers' => 'Propellers',
-    'Maintenance' => 'Maintenance',
-    'Protection' => 'Protection',
-    'Electronics' => 'Electronics',
-    'Storage' => 'Storage',
-    'Controls' => 'Controls',
-    'Performance' => 'Performance'
-];
-
-$selectedCategory = isset($_GET['category']) ? $_GET['category'] : 'All';
+// These are needed for the header dropdowns
+$categories = getAllCategories();
+$brands = getAllBrands();
 ?>
 
 <!DOCTYPE html>
@@ -110,6 +35,7 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : 'All';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="<?php echo generateCSRFToken(); ?>">
     <title><?php echo $pageTitle; ?></title>
     <meta name="description" content="Shop premium marine accessories for your PowerWave outboard motor. Propellers, maintenance products, covers, electronics and more.">
     <meta name="keywords" content="marine accessories, outboard parts, propellers, engine oil, motor covers, marine electronics">
@@ -194,7 +120,7 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : 'All';
                         <a href="brands.php"><i class="fas fa-tags"></i> Brands <i class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
                             <?php foreach ($brands as $brand): ?>
-                                <li><a href="products.php?brand=<?php echo $brand['id']; ?>"><?php echo sanitizeInput($brand['name']); ?></a></li>
+                                <li><a href="accessory.php?brand=<?php echo $brand['id']; ?>"><?php echo sanitizeInput($brand['name']); ?></a></li>
                             <?php endforeach; ?>
                         </ul>
                     </li>
@@ -227,44 +153,46 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : 'All';
         <section class="accessories-filter">
             <div class="container">
                 <div class="filter-tabs">
-                    <?php foreach ($accessoryCategories as $catKey => $catName): ?>
-                        <a href="accessories.php?category=<?php echo $catKey; ?>" 
-                           class="filter-tab <?php echo $selectedCategory === $catKey ? 'active' : ''; ?>">
-                            <?php echo $catName; ?>
+                    <a href="accessories.php?category=All" class="filter-tab <?php echo $selectedCategory === 'All' ? 'active' : ''; ?>">All Accessories</a>
+                    <?php foreach ($accessoryCategories as $cat): ?>
+                        <a href="accessories.php?category=<?php echo urlencode($cat['category']); ?>"
+                           class="filter-tab <?php echo $selectedCategory === $cat['category'] ? 'active' : ''; ?>">
+                            <?php echo sanitizeInput($cat['category']); ?>
                         </a>
                     <?php endforeach; ?>
                 </div>
             </div>
         </section>
 
+        <div id="add-to-cart-message" class="container" style="margin-top: 15px; margin-bottom: 15px;"></div>
+
         <!-- Accessories Grid -->
         <section class="accessories-products">
             <div class="container">
                 <div class="products-grid">
-                    <?php foreach ($accessories as $accessory): ?>
-                        <?php if ($selectedCategory === 'All' || $selectedCategory === $accessory['category']): ?>
+                    <?php if (empty($accessories)): ?>
+                        <div style="text-align: center; padding: 40px; background: white; border-radius: 12px; border: 1px solid #e2e8f0; grid-column: 1 / -1;">
+                            <p>No accessories found in this category.</p>
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($accessories as $accessory): ?>
                             <div class="product-card">
                                 <div class="product-image">
-                                    <img src="<?php echo $accessory['image']; ?>" alt="<?php echo $accessory['name']; ?>" loading="lazy">
+                                    <a href="accessory.php?id=<?php echo $accessory['id']; ?>">
+                                        <img src="<?php echo getProductImageUrl($accessory['image']); ?>" alt="<?php echo sanitizeInput($accessory['name']); ?>">
+                                    </a>
                                     <?php if ($accessory['sale_price']): ?>
                                         <span class="sale-badge">Sale</span>
                                     <?php endif; ?>
                                     <div class="product-actions">
-                                        <button class="btn-add-to-cart" data-product-id="acc_<?php echo $accessory['id']; ?>">
-                                            <i class="fas fa-cart-plus"></i>
-                                        </button>
-                                        <button class="btn-wishlist" data-product-id="acc_<?php echo $accessory['id']; ?>">
-                                            <i class="fas fa-heart"></i>
-                                        </button>
-                                        <button class="btn-quick-view" data-product-id="acc_<?php echo $accessory['id']; ?>">
-                                            <i class="fas fa-eye"></i>
-                                        </button>
+                                        <button class="btn-add-to-cart" data-product-id="<?php echo $accessory['id']; ?>"><i class="fas fa-cart-plus"></i></button>
+                                        <a class="btn-quick-view" href="accessory.php?id=<?php echo $accessory['id']; ?>"><i class="fas fa-eye"></i></a>
                                     </div>
                                 </div>
                                 <div class="product-info">
-                                    <h3><?php echo $accessory['name']; ?></h3>
-                                    <p class="product-category"><?php echo $accessory['category']; ?></p>
-                                    <p class="product-description"><?php echo $accessory['description']; ?></p>
+                                    <h3><a href="accessory.php?id=<?php echo $accessory['id']; ?>"><?php echo sanitizeInput($accessory['name']); ?></a></h3>
+                                    <p class="product-brand"><?php echo sanitizeInput($accessory['brand_name']); ?></p>
+                                    <div class="product-specs"><span><?php echo (int)$accessory['horsepower']; ?>HP</span> <span><?php echo ucfirst($accessory['stroke']); ?></span></div>
                                     <div class="product-price">
                                         <?php if ($accessory['sale_price']): ?>
                                             <span class="original-price"><?php echo formatPrice($accessory['price']); ?></span>
@@ -273,31 +201,10 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : 'All';
                                             <span class="price"><?php echo formatPrice($accessory['price']); ?></span>
                                         <?php endif; ?>
                                     </div>
-                                    <div class="product-rating">
-                                        <div class="stars">
-                                            <?php 
-                                            $rating = $accessory['rating'];
-                                            $fullStars = floor($rating);
-                                            $hasHalfStar = $rating - $fullStars >= 0.5;
-                                            
-                                            for ($i = 0; $i < $fullStars; $i++): ?>
-                                                <i class="fas fa-star"></i>
-                                            <?php endfor; 
-                                            
-                                            if ($hasHalfStar): ?>
-                                                <i class="fas fa-star-half-alt"></i>
-                                            <?php endif;
-                                            
-                                            for ($i = $fullStars + ($hasHalfStar ? 1 : 0); $i < 5; $i++): ?>
-                                                <i class="far fa-star"></i>
-                                            <?php endfor; ?>
-                                        </div>
-                                        <span class="rating-count">(<?php echo rand(15, 50); ?> reviews)</span>
-                                    </div>
                                 </div>
                             </div>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
             </div>
         </section>
@@ -399,5 +306,55 @@ $selectedCategory = isset($_GET['category']) ? $_GET['category'] : 'All';
 
     <!-- JavaScript -->
     <script src="js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('.add-to-cart-form');
+        const messageDiv = document.getElementById('add-to-cart-message');
+        const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+        forms.forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                const formData = new FormData(form);
+                formData.append('csrf_token', csrfToken);
+
+                const button = form.querySelector('button[type="submit"]');
+                const originalButtonIcon = button.innerHTML;
+                button.disabled = true;
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+                fetch('add_to_cart.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const cartCountEl = document.querySelector('.cart-count');
+                        const cartTotalEl = document.querySelector('.cart-total');
+                        if (cartCountEl) cartCountEl.textContent = data.cart_count;
+                        if (cartTotalEl) cartTotalEl.textContent = data.cart_total_formatted;
+
+                        messageDiv.innerHTML = '<div class="alert alert-success">Accessory added to cart!</div>';
+                        setTimeout(() => messageDiv.innerHTML = '', 3000);
+                    } else {
+                        messageDiv.innerHTML = `<div class="alert alert-error">Error: ${data.message}</div>`;
+                        setTimeout(() => messageDiv.innerHTML = '', 5000);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    messageDiv.innerHTML = '<div class="alert alert-error">An unexpected error occurred.</div>';
+                    setTimeout(() => messageDiv.innerHTML = '', 5000);
+                })
+                .finally(() => {
+                    button.disabled = false;
+                    button.innerHTML = originalButtonIcon;
+                });
+            });
+        });
+    });
+  </script>
 </body>
 </html>

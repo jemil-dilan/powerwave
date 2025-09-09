@@ -30,10 +30,10 @@ define('CURRENCY_CODE', 'USD');
 define('TAX_RATE', 0.08); // 8% tax rate
 define('SHIPPING_RATE', 99.99); // Flat shipping rate
 
-// Payment provider placeholders (replace with your real credentials)
-// PayPal
-define('PAYPAL_CLIENT_ID', '{{PAYPAL_CLIENT_ID}}');
-define('PAYPAL_SECRET', '{{PAYPAL_SECRET}}');
+//// Payment provider placeholders (replace with your real credentials)
+//// PayPal
+//define('PAYPAL_CLIENT_ID', '{{PAYPAL_CLIENT_ID}}');
+//define('PAYPAL_SECRET', '{{PAYPAL_SECRET}}');
 // Apple Pay
 define('APPLE_PAY_MERCHANT_ID', '{{APPLE_PAY_MERCHANT_ID}}');
 // Cash App

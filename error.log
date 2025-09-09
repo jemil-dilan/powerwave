@@ -66,3 +66,99 @@ Stack trace:
 [05-Sep-2025 16:03:30 America/New_York] PHP Warning:  Constant PAYPAL_CLIENT_ID already defined in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\paypal_config.php on line 20
 [05-Sep-2025 19:18:08 America/New_York] Add to cart error: You can only add 2 more of this item (stock limit)
 [05-Sep-2025 19:23:03 America/New_York] PHP Fatal error:  Cannot redeclare getPayPalSDKUrl() (previously declared in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\paypal_config.php:59) in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\PayPalService.php on line 256
+[07-Sep-2025 15:54:47 America/New_York] Database query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.product_id' in 'on clause'
+[07-Sep-2025 15:54:47 America/New_York] PHP Fatal error:  Uncaught Exception: Database query failed in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php:43
+Stack trace:
+#0 C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php(48): Database->query('SELECT c.*, p.n...', Array)
+#1 C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\functions.php(256): Database->fetchAll('SELECT c.*, p.n...', Array)
+#2 C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\functions.php(269): getCartItems(NULL)
+#3 C:\Users\Admin\Desktop\New folder (2)\powerwave\index.php(80): getCartTotal(NULL)
+#4 {main}
+  thrown in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php on line 43
+[07-Sep-2025 15:54:51 America/New_York] Database query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.product_id' in 'on clause'
+[07-Sep-2025 15:54:51 America/New_York] PHP Fatal error:  Uncaught Exception: Database query failed in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php:43
+Stack trace:
+#0 C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php(48): Database->query('SELECT c.*, p.n...', Array)
+#1 C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\functions.php(256): Database->fetchAll('SELECT c.*, p.n...', Array)
+#2 C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\functions.php(269): getCartItems(NULL)
+#3 C:\Users\Admin\Desktop\New folder (2)\powerwave\index.php(80): getCartTotal(NULL)
+#4 {main}
+  thrown in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php on line 43
+[07-Sep-2025 15:59:41 America/New_York] Database query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'c.product_id' in 'on clause'
+[07-Sep-2025 15:59:41 America/New_York] PHP Fatal error:  Uncaught Exception: Database query failed in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php:43
+Stack trace:
+#0 C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php(48): Database->query('SELECT c.*, p.n...', Array)
+#1 C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\functions.php(256): Database->fetchAll('SELECT c.*, p.n...', Array)
+#2 C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\functions.php(269): getCartItems(NULL)
+#3 C:\Users\Admin\Desktop\New folder (2)\powerwave\index.php(80): getCartTotal(NULL)
+#4 {main}
+  thrown in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php on line 43
+[07-Sep-2025 16:03:39 America/New_York] Add to cart error: Invalid product ID
+[07-Sep-2025 16:25:42 America/New_York] Add to cart error: Invalid product ID
+[07-Sep-2025 16:25:43 America/New_York] Add to cart error: Invalid product ID
+[07-Sep-2025 16:51:39 America/New_York] Database query failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'outboard_sales2.accessories' doesn't exist
+[07-Sep-2025 16:51:39 America/New_York] PHP Fatal error:  Uncaught Exception: Database query failed in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php:43
+Stack trace:
+#0 C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php(48): Database->query('SELECT DISTINCT...', Array)
+#1 C:\Users\Admin\Desktop\New folder (2)\powerwave\accessories.php(8): Database->fetchAll('SELECT DISTINCT...')
+#2 {main}
+  thrown in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php on line 43
+[07-Sep-2025 16:51:43 America/New_York] Database query failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'outboard_sales2.accessories' doesn't exist
+[07-Sep-2025 16:51:43 America/New_York] PHP Fatal error:  Uncaught Exception: Database query failed in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php:43
+Stack trace:
+#0 C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php(48): Database->query('SELECT DISTINCT...', Array)
+#1 C:\Users\Admin\Desktop\New folder (2)\powerwave\accessories.php(8): Database->fetchAll('SELECT DISTINCT...')
+#2 {main}
+  thrown in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php on line 43
+[07-Sep-2025 16:51:43 America/New_York] Database query failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'outboard_sales2.accessories' doesn't exist
+[07-Sep-2025 16:51:43 America/New_York] PHP Fatal error:  Uncaught Exception: Database query failed in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php:43
+Stack trace:
+#0 C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php(48): Database->query('SELECT DISTINCT...', Array)
+#1 C:\Users\Admin\Desktop\New folder (2)\powerwave\accessories.php(8): Database->fetchAll('SELECT DISTINCT...')
+#2 {main}
+  thrown in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php on line 43
+[07-Sep-2025 16:51:43 America/New_York] Database query failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'outboard_sales2.accessories' doesn't exist
+[07-Sep-2025 16:51:43 America/New_York] PHP Fatal error:  Uncaught Exception: Database query failed in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php:43
+Stack trace:
+#0 C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php(48): Database->query('SELECT DISTINCT...', Array)
+#1 C:\Users\Admin\Desktop\New folder (2)\powerwave\accessories.php(8): Database->fetchAll('SELECT DISTINCT...')
+#2 {main}
+  thrown in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php on line 43
+[07-Sep-2025 16:51:43 America/New_York] Database query failed: SQLSTATE[42S02]: Base table or view not found: 1146 Table 'outboard_sales2.accessories' doesn't exist
+[07-Sep-2025 16:51:43 America/New_York] PHP Fatal error:  Uncaught Exception: Database query failed in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php:43
+Stack trace:
+#0 C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php(48): Database->query('SELECT DISTINCT...', Array)
+#1 C:\Users\Admin\Desktop\New folder (2)\powerwave\accessories.php(8): Database->fetchAll('SELECT DISTINCT...')
+#2 {main}
+  thrown in C:\Users\Admin\Desktop\New folder (2)\powerwave\includes\database.php on line 43
+[07-Sep-2025 17:30:41 America/New_York] Add to cart error: Invalid product ID
+[08-Sep-2025 19:09:29 America/New_York] Database connection failed: SQLSTATE[HY000] [2002] No connection could be made because the target machine actively refused it
+[08-Sep-2025 19:09:29 America/New_York] PHP Fatal error:  Uncaught Exception: Database connection failed in C:\Users\Admin\Desktop\philon online\2nd Project\includes\database.php:21
+Stack trace:
+#0 C:\Users\Admin\Desktop\philon online\2nd Project\includes\database.php(27): Database->__construct()
+#1 C:\Users\Admin\Desktop\philon online\2nd Project\includes\functions.php(94): Database::getInstance()
+#2 C:\Users\Admin\Desktop\philon online\2nd Project\index.php(6): getFeaturedProducts(6)
+#3 {main}
+  thrown in C:\Users\Admin\Desktop\philon online\2nd Project\includes\database.php on line 21
+[08-Sep-2025 19:14:02 America/New_York] PHP Warning:  Constant PAYPAL_CLIENT_ID already defined in C:\Users\Admin\Desktop\philon online\2nd Project\includes\paypal_config.php on line 6
+[08-Sep-2025 19:14:02 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function getPayPalSDKUrl() in C:\Users\Admin\Desktop\philon online\2nd Project\checkout.php:244
+Stack trace:
+#0 {main}
+  thrown in C:\Users\Admin\Desktop\philon online\2nd Project\checkout.php on line 244
+[08-Sep-2025 19:14:47 America/New_York] PHP Warning:  Constant PAYPAL_CLIENT_ID already defined in C:\Users\Admin\Desktop\philon online\2nd Project\includes\paypal_config.php on line 6
+[08-Sep-2025 19:14:48 America/New_York] PayPal access token error: 
+[08-Sep-2025 19:14:48 America/New_York] PHP Warning:  Constant PAYPAL_CLIENT_ID already defined in C:\Users\Admin\Desktop\philon online\2nd Project\includes\paypal_config.php on line 6
+[08-Sep-2025 20:36:44 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function getPayPalSDKUrl() in C:\Users\Admin\Desktop\philon online\2nd Project\checkout.php:244
+Stack trace:
+#0 {main}
+  thrown in C:\Users\Admin\Desktop\philon online\2nd Project\checkout.php on line 244
+[08-Sep-2025 20:37:16 America/New_York] PayPal access token error: {"error":"invalid_client","error_description":"Client Authentication failed"}
+[08-Sep-2025 21:53:40 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function getCryptoPrices() in C:\Users\Admin\Desktop\philon online\2nd Project\checkout.php:23
+Stack trace:
+#0 {main}
+  thrown in C:\Users\Admin\Desktop\philon online\2nd Project\checkout.php on line 23
+[08-Sep-2025 21:55:49 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function getPayPalSDKUrl() in C:\Users\Admin\Desktop\philon online\2nd Project\checkout.php:348
+Stack trace:
+#0 {main}
+  thrown in C:\Users\Admin\Desktop\philon online\2nd Project\checkout.php on line 348
+[08-Sep-2025 22:11:01 America/New_York] PHP Warning:  mail(): Failed to connect to mailserver at &quot;localhost&quot; port 25, verify your &quot;SMTP&quot; and &quot;smtp_port&quot; setting in php.ini or use ini_set() in C:\Users\Admin\Desktop\philon online\2nd Project\includes\functions.php on line 354

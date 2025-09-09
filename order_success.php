@@ -4,14 +4,14 @@ require_once 'includes/functions.php';
 
 requireLogin();
 
-$orderNumber = sanitizeInput($_GET['order'] ?? '');
-$paymentMethod = sanitizeInput($_GET['method'] ?? '');
+$orderNumber = isset($_GET['order']) ? sanitizeInput($_GET['order']) : '';
+$paymentMethod = isset($_GET['method']) ? sanitizeInput($_GET['method']) : '';
 
-if (!$orderNumber || !$paymentMethod) {
+if (empty($orderNumber)) {
     redirect('index.php');
 }
 
-// Verify order belongs to current user
+// Get order details
 $db = Database::getInstance();
 $order = $db->fetchOne(
     "SELECT * FROM orders WHERE order_number = ? AND user_id = ?",
@@ -19,9 +19,19 @@ $order = $db->fetchOne(
 );
 
 if (!$order) {
-    showMessage('Order not found.', 'error');
+    showMessage('Order not found', 'error');
     redirect('index.php');
 }
+
+// Get order items
+$orderItems = $db->fetchAll(
+    "SELECT oi.*, p.name, p.model, b.name as brand_name
+     FROM order_items oi
+     JOIN products p ON oi.product_id = p.id
+     JOIN brands b ON p.brand_id = b.id
+     WHERE oi.order_id = ?",
+    [$order['id']]
+);
 
 $pageTitle = 'Order Confirmation';
 ?>
@@ -34,124 +44,126 @@ $pageTitle = 'Order Confirmation';
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .success-header { background: linear-gradient(135deg, #10b981, #059669); color: white; padding: 48px 0; text-align: center; }
+        .success-icon { font-size: 64px; margin-bottom: 16px; }
+        .order-details { background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; margin: 24px 0; }
+        .order-items-table { width: 100%; border-collapse: collapse; margin: 16px 0; }
+        .order-items-table th, .order-items-table td { padding: 12px; text-align: left; border-bottom: 1px solid #f3f4f6; }
+        .order-items-table th { background: #f9fafb; font-weight: 600; }
+        .payment-info { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 16px 0; }
+        .next-steps { background: #eff6ff; border: 1px solid #93c5fd; border-radius: 8px; padding: 16px; margin: 16px 0; }
+    </style>
 </head>
 <body>
-    <header class="header">
+    <div class="success-header">
         <div class="container">
-            <div class="main-header">
-                <div class="logo">
-                    <a href="index.php">
-                        <h1><i class="fas fa-anchor"></i> <?php echo SITE_NAME; ?></h1>
-                    </a>
+            <div class="success-icon">
+                <i class="fas fa-check-circle"></i>
+            </div>
+            <h1>Order Confirmed!</h1>
+            <p>Thank you for your purchase. Your order has been received and is being processed.</p>
+        </div>
+    </div>
+
+    <main class="container">
+        <div class="order-details">
+            <div class="grid grid-2">
+                <div>
+                    <h3>Order Information</h3>
+                    <p><strong>Order Number:</strong> <?php echo sanitizeInput($order['order_number']); ?></p>
+                    <p><strong>Order Date:</strong> <?php echo date('F j, Y g:i A', strtotime($order['created_at'])); ?></p>
+                    <p><strong>Total Amount:</strong> <?php echo formatPrice($order['total_amount']); ?></p>
+                    <p><strong>Payment Method:</strong> <?php echo ucfirst($order['payment_method']); ?></p>
+                    <p><strong>Status:</strong>
+                        <span style="color: #f59e0b; font-weight: 600;"><?php echo ucfirst($order['status']); ?></span>
+                    </p>
+                </div>
+                <div>
+                    <h3>Payment Status</h3>
+                    <?php if ($order['payment_status'] === 'paid'): ?>
+                        <div class="payment-info">
+                            <p style="margin: 0; color: #166534;"><i class="fas fa-check-circle"></i> Payment Confirmed</p>
+                            <p style="margin: 8px 0 0; color: #166534; font-size: 14px;">Your payment has been successfully processed.</p>
+                        </div>
+                    <?php else: ?>
+                        <div class="next-steps">
+                            <p style="margin: 0; color: #1e40af;"><i class="fas fa-info-circle"></i> Payment Pending</p>
+                            <?php if ($order['payment_method'] === 'bank'): ?>
+                                <p style="margin: 8px 0 0; color: #1e40af; font-size: 14px;">Bank transfer instructions have been sent to your email.</p>
+                            <?php else: ?>
+                                <p style="margin: 8px 0 0; color: #1e40af; font-size: 14px;">We're processing your payment and will update you shortly.</p>
+                            <?php endif; ?>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
-    </header>
 
-    <main class="container">
-        <div style="max-width: 800px; margin: 0 auto;">
-            <div style="background: white; border-radius: 12px; border: 1px solid #e2e8f0; padding: 32px; text-align: center;">
-                <i class="fas fa-check-circle" style="font-size: 64px; color: #10b981; margin-bottom: 16px;"></i>
-                <h1 style="color: #10b981; margin-bottom: 8px;">Order Placed Successfully!</h1>
-                <p style="font-size: 18px; color: #64748b; margin-bottom: 24px;">Thank you for your order. We've received it and will process it shortly.</p>
-                
-                <div style="background: #f8fafc; border-radius: 8px; padding: 20px; margin: 24px 0; text-align: left;">
-                    <h3>Order Details</h3>
-                    <p><strong>Order Number:</strong> <?php echo sanitizeInput($orderNumber); ?></p>
-                    <p><strong>Total Amount:</strong> <?php echo formatPrice($order['total_amount']); ?></p>
-                    <p><strong>Payment Method:</strong> <?php echo ucfirst($paymentMethod); ?></p>
-                    <p><strong>Order Date:</strong> <?php echo date('M j, Y g:i A', strtotime($order['created_at'])); ?></p>
-                </div>
+        <div class="order-details">
+            <h3>Order Items</h3>
+            <table class="order-items-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php foreach ($orderItems as $item): ?>
+                        <tr>
+                            <td>
+                                <strong><?php echo sanitizeInput($item['name']); ?></strong><br>
+                                <small style="color: #6b7280;"><?php echo sanitizeInput($item['brand_name']); ?> - <?php echo sanitizeInput($item['model']); ?></small>
+                            </td>
+                            <td><?php echo formatPrice($item['price']); ?></td>
+                            <td><?php echo (int)$item['quantity']; ?></td>
+                            <td><?php echo formatPrice($item['total']); ?></td>
+                        </tr>
+                    <?php endforeach; ?>
+                </tbody>
+                <tfoot>
+                    <tr style="border-top: 2px solid #e2e8f0;">
+                        <td colspan="2"><strong>Subtotal</strong></td>
+                        <td colspan="2"><strong><?php echo formatPrice($order['total_amount'] - $order['shipping_cost'] - $order['tax_amount']); ?></strong></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Shipping</td>
+                        <td colspan="2"><?php echo formatPrice($order['shipping_cost']); ?></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">Tax</td>
+                        <td colspan="2"><?php echo formatPrice($order['tax_amount']); ?></td>
+                    </tr>
+                    <tr style="font-size: 18px; font-weight: 700;">
+                        <td colspan="2"><strong>Total</strong></td>
+                        <td colspan="2"><strong><?php echo formatPrice($order['total_amount']); ?></strong></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
 
-                <?php if ($paymentMethod === 'paypal'): ?>
-                    <div style="background: #e0f2fe; border-radius: 8px; padding: 20px; margin: 24px 0; text-align: left;">
-                        <h3><i class="fab fa-paypal"></i> PayPal Payment</h3>
-                        <p>To complete your payment using PayPal:</p>
-                        <ol>
-                            <li>Click the PayPal button below</li>
-                            <li>Log in to your PayPal account</li>
-                            <li>Complete the payment</li>
-                        </ol>
-                        
-                        <!-- PayPal Button Placeholder -->
-                        <div style="border: 2px dashed #0ea5e9; border-radius: 8px; padding: 20px; text-align: center; margin: 16px 0;">
-                            <p style="color: #0ea5e9; font-weight: bold;">PayPal Button Integration</p>
-                            <p style="color: #64748b; font-size: 14px;">
-                                Replace PAYPAL_CLIENT_ID in includes/config.php with your real PayPal client ID<br>
-                                Current placeholder: <?php echo PAYPAL_CLIENT_ID; ?>
-                            </p>
-                            <div style="background: #0070ba; color: white; padding: 12px 24px; border-radius: 6px; display: inline-block; margin: 8px;">
-                                <i class="fab fa-paypal"></i> Pay with PayPal
-                            </div>
-                        </div>
-                    </div>
-
-                <?php elseif ($paymentMethod === 'bank'): ?>
-                    <div style="background: #fef3c7; border-radius: 8px; padding: 20px; margin: 24px 0; text-align: left;">
-                        <h3><i class="fas fa-university"></i> Bank Transfer Instructions</h3>
-                        <p>Please transfer the total amount to our bank account:</p>
-                        <div style="background: white; border-radius: 6px; padding: 16px; margin: 16px 0;">
-                            <p><strong>Account Name:</strong> <?php echo BANK_ACCOUNT_NAME; ?></p>
-                            <p><strong>Account Number:</strong> <?php echo BANK_ACCOUNT_NUMBER; ?></p>
-                            <p><strong>Routing Number:</strong> <?php echo BANK_ROUTING_NUMBER; ?></p>
-                            <p><strong>Amount:</strong> <?php echo formatPrice($order['total_amount']); ?></p>
-                            <p><strong>Reference:</strong> <?php echo $orderNumber; ?></p>
-                        </div>
-                        <p style="color: #d97706;"><strong>Important:</strong> Please include the order number as reference in your transfer.</p>
-                        <p style="font-size: 14px; color: #64748b;">Update bank details in includes/config.php with your real account information.</p>
-                    </div>
-
-                <?php elseif ($paymentMethod === 'applepay'): ?>
-                    <div style="background: #f3f4f6; border-radius: 8px; padding: 20px; margin: 24px 0; text-align: left;">
-                        <h3><i class="fab fa-apple"></i> Apple Pay</h3>
-                        <p>Complete your payment using Apple Pay on your Apple device:</p>
-                        
-                        <div style="border: 2px dashed #6b7280; border-radius: 8px; padding: 20px; text-align: center; margin: 16px 0;">
-                            <p style="color: #6b7280; font-weight: bold;">Apple Pay Integration</p>
-                            <p style="color: #64748b; font-size: 14px;">
-                                Replace APPLE_PAY_MERCHANT_ID in includes/config.php<br>
-                                Current placeholder: <?php echo APPLE_PAY_MERCHANT_ID; ?>
-                            </p>
-                            <div style="background: #000; color: white; padding: 12px 24px; border-radius: 6px; display: inline-block; margin: 8px;">
-                                <i class="fab fa-apple"></i> Pay
-                            </div>
-                        </div>
-                    </div>
-
-                <?php elseif ($paymentMethod === 'cashapp'): ?>
-                    <div style="background: #dcfce7; border-radius: 8px; padding: 20px; margin: 24px 0; text-align: left;">
-                        <h3><i class="fas fa-dollar-sign"></i> Cash App Payment</h3>
-                        <p>Send payment via Cash App:</p>
-                        <div style="background: white; border-radius: 6px; padding: 16px; margin: 16px 0;">
-                            <p><strong>Cash App Tag:</strong> <?php echo CASH_APP_CASHTAG; ?></p>
-                            <p><strong>Amount:</strong> <?php echo formatPrice($order['total_amount']); ?></p>
-                            <p><strong>Note:</strong> <?php echo $orderNumber; ?></p>
-                        </div>
-                        <p style="color: #059669;"><strong>Important:</strong> Please include the order number in the payment note.</p>
-                        <p style="font-size: 14px; color: #64748b;">Update CASH_APP_CASHTAG in includes/config.php with your real Cash App tag.</p>
-                    </div>
-                <?php endif; ?>
-
-                <div style="background: #f1f5f9; border-radius: 8px; padding: 20px; margin: 24px 0; text-align: left;">
-                    <h3>What Happens Next?</h3>
-                    <ol>
-                        <li>Complete your payment using the method selected above</li>
-                        <li>We will verify your payment within 24 hours</li>
-                        <li>Once confirmed, we'll prepare your order for shipping</li>
-                        <li>You'll receive a tracking number via email</li>
-                        <li>Your outboard motor will be delivered to your address</li>
-                    </ol>
-                </div>
-
-                <div style="text-align: center; margin: 32px 0;">
-                    <a href="index.php" class="btn btn-primary">Continue Shopping</a>
-                    <a href="products.php" class="btn btn-outline" style="margin-left: 8px;">View Products</a>
-                </div>
-
-                <p style="color: #64748b; font-size: 14px;">
-                    If you have any questions about your order, please contact us at <?php echo SITE_EMAIL; ?> or call (555) 123-4567.
+        <?php if ($order['payment_method'] === 'bank' && $order['payment_status'] === 'pending'): ?>
+        <div class="order-details">
+            <h3><i class="fas fa-university"></i> Bank Transfer Instructions</h3>
+            <div class="next-steps">
+                <p><strong>Please transfer <?php echo formatPrice($order['total_amount']); ?> to:</strong></p>
+                <p>
+                    <strong>Account Name:</strong> <?php echo BANK_ACCOUNT_NAME; ?><br>
+                    <strong>Account Number:</strong> <?php echo BANK_ACCOUNT_NUMBER; ?><br>
+                    <strong>Routing Number:</strong> <?php echo BANK_ROUTING_NUMBER; ?><br>
+                    <strong>Reference:</strong> <?php echo $order['order_number']; ?>
                 </p>
+                <p><strong>Important:</strong> Please include your order number (<?php echo $order['order_number']; ?>) in the transfer reference to ensure quick processing.</p>
             </div>
+        </div>
+        <?php endif; ?>
+
+        <div style="text-align: center; margin: 32px 0;">
+            <a href="products.php" class="btn btn-primary">Continue Shopping</a>
+            <a href="index.php" class="btn btn-outline" style="margin-left: 12px;">Back to Home</a>
         </div>
     </main>
 

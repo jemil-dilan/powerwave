@@ -471,7 +471,3 @@ composer.lock
 *.css.map
 *.sass.map
 *.scss.map
-
-lamn.zip
-lint_all.bat
-php_lint_results.csv

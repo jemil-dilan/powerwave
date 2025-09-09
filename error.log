@@ -146,7 +146,7 @@ Stack trace:
 #0 {main}
   thrown in C:\Users\Admin\Desktop\philon online\2nd Project\checkout.php on line 244
 [08-Sep-2025 19:14:47 America/New_York] PHP Warning:  Constant PAYPAL_CLIENT_ID already defined in C:\Users\Admin\Desktop\philon online\2nd Project\includes\paypal_config.php on line 6
-[08-Sep-2025 19:14:48 America/New_York] PayPal access token error: 
+[08-Sep-2025 19:14:48 America/New_York] PayPal access token error:
 [08-Sep-2025 19:14:48 America/New_York] PHP Warning:  Constant PAYPAL_CLIENT_ID already defined in C:\Users\Admin\Desktop\philon online\2nd Project\includes\paypal_config.php on line 6
 [08-Sep-2025 20:36:44 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function getPayPalSDKUrl() in C:\Users\Admin\Desktop\philon online\2nd Project\checkout.php:244
 Stack trace:
@@ -166,3 +166,11 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in /home/jemil/IdeaProjects/powerwave/crypto_webhook.php on line 8
+[10-Sep-2025 14:08:21 America/New_York] Database connection failed: SQLSTATE[HY000] [2002] Connection refused
+[10-Sep-2025 14:08:21 America/New_York] PHP Fatal error:  Uncaught Exception: Database connection failed in /home/jemil/IdeaProjects/powerwave/includes/database.php:21
+Stack trace:
+#0 /home/jemil/IdeaProjects/powerwave/includes/database.php(27): Database->__construct()
+#1 /home/jemil/IdeaProjects/powerwave/includes/functions.php(94): Database::getInstance()
+#2 /home/jemil/IdeaProjects/powerwave/index.php(6): getFeaturedProducts(6)
+#3 {main}
+  thrown in /home/jemil/IdeaProjects/powerwave/includes/database.php on line 21

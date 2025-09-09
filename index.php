@@ -7,7 +7,7 @@ $featuredProducts = getFeaturedProducts(6);
 $categories = getAllCategories();
 $brands = getAllBrands();
 
-$pageTitle = "Home - Premium Outboard Motors";
+$pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
 ?>
 
 <!DOCTYPE html>
@@ -37,7 +37,7 @@ $pageTitle = "Home - Premium Outboard Motors";
             <div class="top-bar">
                 <div class="contact-info">
                     <span><i class="fas fa-phone"></i> (555) 123-4567</span>
-                    <span><i class="fas fa-envelope"></i> info@outboardmotorspro.com</span>
+                    <span><i class="fas fa-envelope"></i> info@wavemasteroutboards.com</span>
                 </div>
                 <div class="user-actions">
                     <?php if (isLoggedIn()): ?>
@@ -59,7 +59,7 @@ $pageTitle = "Home - Premium Outboard Motors";
             <div class="main-header">
                 <div class="logo">
                     <a href="index.php">
-                        <img src="logo1.png" alt="<?php echo SITE_NAME; ?>" style="height: 50px; width: auto;">
+                        <img src="wave.jpeg" alt="<?php echo SITE_NAME; ?>" style="height: 60px; width: auto; border-radius: 10px;">
                         <h1><?php echo SITE_NAME; ?></h1>
                     </a>
                 </div>
@@ -120,10 +120,12 @@ $pageTitle = "Home - Premium Outboard Motors";
         
         <!-- Hero Section -->
         <section class="hero">
-            <div class="hero-content">
-                <h2>Premium Outboard Motors</h2>
-                <p>Discover the perfect outboard motor for your boat. Quality engines from trusted brands.</p>
-                <a href="products.php" class="btn btn-primary">Shop Now</a>
+            <div class="container">
+                <div class="hero-content">
+                    <h2>Ride the Waves with WaveMaster</h2>
+                    <p>Experience unparalleled power and reliability with our premium outboard motors. From weekend fishing trips to professional marine operations, WaveMaster Outboards delivers exceptional performance on every voyage.</p>
+                    <a href="products.php" class="btn btn-primary">Explore Our Motors</a>
+                </div>
             </div>
             <div class="hero-image">
                 <img src="images/hero-outboard.jpg" alt="Premium Outboard Motors" loading="lazy">

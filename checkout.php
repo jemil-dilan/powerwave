@@ -351,7 +351,7 @@ $pageTitle = 'Checkout';
         }
       }
     });
-    
+
     // Prevent selection of disabled payment methods
     document.addEventListener('click', (e) => {
       if (e.target.closest('.payment-method.disabled')) {
@@ -392,10 +392,12 @@ $pageTitle = 'Checkout';
       
       paypal.Buttons({
         createOrder: function(data, actions) {
+          const csrfToken = document.querySelector('input[name="csrf_token"]').value;
           return fetch('api/paypal_create_order.php', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': csrfToken
             },
             body: JSON.stringify({
               amount: <?php echo $grandTotal; ?>,
@@ -417,13 +419,15 @@ $pageTitle = 'Checkout';
         },
         
         onApprove: function(data, actions) {
+          const csrfToken = document.querySelector('input[name="csrf_token"]').value;
           document.getElementById('paypal-button-container').innerHTML =
             '<div style="text-align: center; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Processing payment...</div>';
 
           return fetch('api/paypal_capture_order.php', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': csrfToken
             },
             body: JSON.stringify({
               orderID: data.orderID

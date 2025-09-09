@@ -82,11 +82,13 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
     
     try {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
       const res = await fetch('add_to_cart.php', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/x-www-form-urlencoded',
-          'X-Requested-With': 'XMLHttpRequest'
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': csrfToken
         },
         body: new URLSearchParams({ product_id: productId, quantity: quantity })
       });
@@ -140,9 +142,13 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!cartId) return;
     
     try {
+      const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
       const res = await fetch('remove_cart_item.php', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: { 
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRF-TOKEN': csrfToken
+        },
         body: new URLSearchParams({ cart_id: cartId })
       });
       const data = await res.json();

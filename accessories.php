@@ -10,7 +10,7 @@ $accessoriesCategoryId = $accessoriesCategory ? $accessoriesCategory['id'] : 0;
 
 // Fetch all brands that have accessories
 $brandsWithAccessories = $db->fetchAll(
-    "SELECT DISTINCT b.id, b.name FROM brands b JOIN products p ON b.id = p.brand_id WHERE p.category_id = ? ORDER BY b.name", 
+    "SELECT DISTINCT b.id, b.name FROM brands b JOIN products p ON b.id = p.brand_id WHERE p.category_id = ? ORDER BY b.name",
     [$accessoriesCategoryId]
 );
 
@@ -160,6 +160,11 @@ $brands = getAllBrands();
         <section class="accessories-filter">
             <div class="container">
                 <div class="filter-tabs">
+                    <a href="accessories.php?category=All" class="filter-tab <?php echo $selectedCategory === 'All' ? 'active' : ''; ?>">All Accessories</a>
+                    <?php foreach ($accessoryCategories as $cat): ?>
+                        <a href="accessories.php?category=<?php echo urlencode($cat['category']); ?>"
+                           class="filter-tab <?php echo $selectedCategory === $cat['category'] ? 'active' : ''; ?>">
+                            <?php echo sanitizeInput($cat['category']); ?>
                     <a href="accessories.php?brand=All" class="filter-tab <?php echo $selectedBrand === 'All' ? 'active' : ''; ?>">All Brands</a>
                     <?php foreach ($brandsWithAccessories as $brand): ?>
                         <a href="accessories.php?brand=<?php echo urlencode($brand['id']); ?>"

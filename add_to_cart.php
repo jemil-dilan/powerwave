@@ -33,22 +33,9 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 }
 
 // CSRF Protection for traditional form submissions
-    // For AJAX, we expect the token in a header. For forms, in the POST body.
-    if ($isAjax) {
-        $token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
-    } else {
-        $token = $_POST['csrf_token'] ?? '';
-    }
-    
-    if (!validateCSRFToken($token)) {
-        if ($isAjax) {
-            echo json_encode(['success' => false, 'message' => 'Invalid security token']);
-        } else {
-            showMessage('Invalid security token. Please try again.', 'error');
-            redirect($_SERVER['HTTP_REFERER'] ?? 'products.php');
-        }
-        exit;
-    }
+if (!$isAjax) {
+    requireCSRF();
+}
 
 // Input validation and sanitization
 $productId = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;

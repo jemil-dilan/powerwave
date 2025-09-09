@@ -1,75 +1,96 @@
 <?php
-// File: api/paypal_create_order.php
-header('Content-Type: application/json');
-
 require_once '../includes/config.php';
 require_once '../includes/functions.php';
 require_once '../includes/paypal_config.php';
 require_once '../includes/PayPalService.php';
 
+header('Content-Type: application/json');
+
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(['success' => false, 'error' => 'Method not allowed']);
+    echo json_encode(['error' => 'Method not allowed']);
     exit;
 }
 
 // Check if user is logged in
 if (!isLoggedIn()) {
     http_response_code(401);
-    echo json_encode(['success' => false, 'error' => 'User not authenticated']);
+    echo json_encode(['error' => 'User not authenticated']);
+    exit;
+}
+
+// CSRF Protection
+$token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+if (!validateCSRFToken($token)) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Invalid security token']);
     exit;
 }
 
 try {
-    // Get request data
+    // Get JSON input
     $input = json_decode(file_get_contents('php://input'), true);
-    $amount = floatval($input['amount'] ?? 0);
-    $currency = $input['currency'] ?? 'USD';
-
-    if ($amount <= 0) {
-        throw new Exception('Invalid amount');
+    
+    if (!$input) {
+        throw new Exception('Invalid JSON input');
     }
-
-    // Verify cart total matches requested amount
+    
     $userId = $_SESSION['user_id'];
+    $cartItems = getCartItems($userId);
+    
+    if (empty($cartItems)) {
+        throw new Exception('Cart is empty');
+    }
+    
+    // Calculate totals
     $cartTotal = getCartTotal($userId);
     $shipping = SHIPPING_RATE;
     $tax = round($cartTotal * TAX_RATE, 2);
     $grandTotal = $cartTotal + $shipping + $tax;
-
-    if (abs($amount - $grandTotal) > 0.01) {
-        throw new Exception('Amount mismatch. Please refresh and try again.');
+    
+    // Validate amount matches
+    $requestedAmount = (float)($input['amount'] ?? 0);
+    if (abs($requestedAmount - $grandTotal) > 0.01) {
+        throw new Exception('Amount mismatch');
     }
-
-    // Create PayPal order
+    
+    // Create PayPal service instance
     $paypalService = new PayPalService();
-    $description = "Order from " . SITE_NAME;
-    $result = $paypalService->createOrder($amount, $currency, $description);
-
+    
+    // Create order description
+    $itemCount = count($cartItems);
+    $description = "Order from " . SITE_NAME . " - {$itemCount} item(s)";
+    
+    // Create PayPal order
+    $result = $paypalService->createOrder(
+        $grandTotal,
+        PAYPAL_CURRENCY,
+        $description,
+        'order_' . time()
+    );
+    
     if ($result['success']) {
-        // Store order info in session for later completion
-        $_SESSION['pending_paypal_order'] = [
+        // Store order info in session for later processing
+        $_SESSION['paypal_pending_order'] = [
             'paypal_order_id' => $result['order_id'],
-            'amount' => $amount,
-            'currency' => $currency,
+            'amount' => $grandTotal,
+            'cart_items' => $cartItems,
             'created_at' => time()
         ];
-
+        
         echo json_encode([
             'success' => true,
-            'order_id' => $result['order_id']
+            'order_id' => $result['order_id'],
+            'approval_url' => $result['approval_url']
         ]);
     } else {
-        throw new Exception($result['error'] ?? 'Failed to create PayPal order');
+        throw new Exception($result['error']);
     }
-
+    
 } catch (Exception $e) {
-    error_log('PayPal create order error: ' . $e->getMessage());
+    error_log('PayPal create order API error: ' . $e->getMessage());
     http_response_code(400);
-    echo json_encode([
-        'success' => false,
-        'error' => $e->getMessage()
-    ]);
+    echo json_encode(['error' => $e->getMessage()]);
 }
 ?>

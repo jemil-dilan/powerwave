@@ -25,10 +25,18 @@ define('SESSION_TIMEOUT', 3600); // 1 hour in seconds
 define('CSRF_TOKEN_EXPIRE', 1800); // 30 minutes in seconds
 
 // Payment settings
-define('CURRENCY_SYMBOL', '$');
-define('CURRENCY_CODE', 'USD');
-define('TAX_RATE', 0.08); // 8% tax rate
-define('SHIPPING_RATE', 99.99); // Flat shipping rate
+if (!defined('CURRENCY_SYMBOL')) {
+    define('CURRENCY_SYMBOL', '$');
+}
+if (!defined('CURRENCY_CODE')) {
+    define('CURRENCY_CODE', 'USD');
+}
+if (!defined('TAX_RATE')) {
+    define('TAX_RATE', 0.08);
+}
+if (!defined('SHIPPING_RATE')) {
+    define('SHIPPING_RATE', 99.99);
+}
 
 //// Payment provider placeholders (replace with your real credentials)
 //// PayPal

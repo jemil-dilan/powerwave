@@ -102,8 +102,73 @@ try {
             showMessage('PayPal payment setup failed. Please try again or use a different payment method.', 'error');
             redirect('checkout.php');
         }
+    } elseif ($paymentMethod === 'crypto') {
+        // Coinbase Commerce integration
+        require_once 'includes/crypto_config.php';
+
+        $chargeData = [
+            'name' => SITE_NAME . ' Order #' . $orderNumber,
+            'description' => 'Payment for Order #' . $orderNumber,
+            'local_price' => [
+                'amount' => $grandTotal,
+                'currency' => 'USD'
+            ],
+            'pricing_type' => 'fixed_price',
+            'metadata' => [
+                'order_id' => $orderId,
+                'user_id' => $userId,
+                'order_number' => $orderNumber
+            ],
+            'redirect_url' => SITE_URL . '/order_success.php?order=' . $orderNumber,
+            'cancel_url' => SITE_URL . '/checkout.php?payment_cancelled=1'
+        ];
+
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, COINBASE_COMMERCE_API_URL . '/charges');
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($chargeData));
+
+        $headers = [
+            'Content-Type: application/json',
+            'Accept: application/json',
+            'X-CC-Api-Key: ' . COINBASE_COMMERCE_API_KEY,
+            'X-CC-Version: 2018-03-22'
+        ];
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($httpCode === 201) {
+            $charge = json_decode($response, true)['data'];
+
+            // Log the charge to the new table
+            $db->insert('coinbase_charges', [
+                'order_id' => $orderId,
+                'charge_code' => $charge['code'],
+                'status' => $charge['timeline'][0]['status'], // e.g., 'NEW'
+                'amount' => $charge['pricing']['local']['amount'],
+                'currency' => $charge['pricing']['local']['currency'],
+                'hosted_url' => $charge['hosted_url'],
+                'created_at' => date('Y-m-d H:i:s', strtotime($charge['created_at'])),
+                'expires_at' => date('Y-m-d H:i:s', strtotime($charge['expires_at']))
+            ]);
+
+            // Redirect user to the Coinbase Commerce payment page
+            header('Location: ' . $charge['hosted_url']);
+            exit;
+        } else {
+            // Handle API error
+            error_log('Coinbase Commerce API Error: ' . $response);
+            $db->update('orders', ['payment_status' => 'failed', 'status' => 'cancelled'], 'id = ?', [$orderId]);
+            showMessage('Could not connect to cryptocurrency payment gateway. Please try another method or contact support.', 'error');
+            redirect('checkout.php');
+        }
+
     } else {
-        // For other payment methods, send confirmation email
+        // For other payment methods (e.g., bank transfer), send confirmation email
         $user = getCurrentUser();
         $emailSubject = "Order Confirmation - $orderNumber";
         $emailMessage = "

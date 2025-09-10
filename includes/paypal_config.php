@@ -3,8 +3,8 @@
 
 // PayPal Configuration
 define('PAYPAL_ENVIRONMENT', 'sandbox'); // Change to 'production' for live
-define('PAYPAL_CLIENT_ID', 'YOUR_PAYPAL_CLIENT_ID_HERE');
-define('PAYPAL_CLIENT_SECRET', 'YOUR_PAYPAL_CLIENT_SECRET_HERE');
+define('PAYPAL_CLIENT_ID', 'Aex2JDHopP2P8cfcChTUCmVifD1rkn823DVdu5VElRfAwQVhqQDYX5fa5Ovutwr7xAq8Au2-btaYmxuk');
+define('PAYPAL_CLIENT_SECRET', 'EL1-uYaFXGrtwzg4RTIJVDoOOZFeMtwY4EMXBbQAAy0XtvpFjMWl0oqb5a7FBK6kfXJjSrImvGocT_GE');
 define('PAYPAL_CURRENCY', 'USD');
 
 // PayPal API URLs

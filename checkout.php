@@ -1,7 +1,7 @@
 <?php
 require_once 'includes/config.php';
-require_once 'includes/crypto_config.php';
 require_once 'includes/functions.php';
+require_once 'includes/crypto_config.php';
 require_once 'includes/paypal_config.php';
 
 requireLogin();
@@ -148,29 +148,13 @@ $pageTitle = 'Checkout';
               </div>
             </label>
 
-            <!-- Bitcoin - Available -->
-            <label class="payment-method" data-method="bitcoin">
-              <input type="radio" name="payment_method" value="bitcoin">
+            <!-- Crypto (Automated) -->
+            <label class="payment-method" data-method="crypto">
+              <input type="radio" name="payment_method" value="crypto">
               <i class="fab fa-bitcoin" style="color:#f7931a; font-size: 20px;"></i>
               <div>
-                <div>Bitcoin (BTC)</div>
-                <div class="payment-status available">
-                  <span class="crypto-amount"><?php echo number_format($btcAmount, 8); ?> BTC</span>
-                  <div class="crypto-rate">1 BTC = $<?php echo number_format($cryptoPrices['bitcoin'], 2); ?></div>
-                </div>
-              </div>
-            </label>
-
-            <!-- USDT - Available -->
-            <label class="payment-method" data-method="usdt">
-              <input type="radio" name="payment_method" value="usdt">
-              <i class="fas fa-coins" style="color:#26a17b; font-size: 18px;"></i>
-              <div>
-                <div>USDT (Tether)</div>
-                <div class="payment-status available">
-                  <span class="crypto-amount"><?php echo number_format($usdtAmount, 2); ?> USDT</span>
-                  <div class="crypto-rate">Network: <?php echo strtoupper(USDT_NETWORK); ?></div>
-                </div>
+                <div>Pay with Crypto</div>
+                <div class="payment-status available">Bitcoin, Ethereum, USDT, and more</div>
               </div>
             </label>
 
@@ -213,46 +197,11 @@ $pageTitle = 'Checkout';
               </p>
             </div>
 
-            <!-- Bitcoin Info -->
-            <div id="bitcoin-info" class="payment-info-content crypto-payment-info hidden">
-              <h4 style="margin: 0 0 12px; color: #f7931a;"><i class="fab fa-bitcoin"></i> Bitcoin Payment Instructions</h4>
-              <p><strong>Amount to send:</strong> <span class="crypto-amount"><?php echo number_format($btcAmount, 8); ?> BTC</span></p>
-              <p><strong>Bitcoin Address:</strong></p>
-              <div class="crypto-address"><?php echo BITCOIN_WALLET_ADDRESS; ?></div>
-              <div class="qr-placeholder">
-                <div style="text-align: center;">
-                  <i class="fas fa-qrcode" style="font-size: 32px; margin-bottom: 8px;"></i><br>
-                  QR Code will be<br>generated here
-                </div>
-              </div>
-              <div style="background: #fef3c7; padding: 12px; border-radius: 6px; margin-top: 12px;">
-                <p style="margin: 0; color: #92400e; font-size: 14px;">
-                  <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong> Send exactly <strong><?php echo number_format($btcAmount, 8); ?> BTC</strong> to the address above.
-                  Your order will be processed after <?php echo CRYPTO_CONFIRMATION_BLOCKS; ?> network confirmations.
-                </p>
-              </div>
-            </div>
-
-            <!-- USDT Info -->
-            <div id="usdt-info" class="payment-info-content crypto-payment-info hidden">
-              <h4 style="margin: 0 0 12px; color: #26a17b;"><i class="fas fa-coins"></i> USDT Payment Instructions</h4>
-              <p><strong>Amount to send:</strong> <span class="crypto-amount"><?php echo number_format($usdtAmount, 2); ?> USDT</span></p>
-              <p><strong>Network:</strong> <?php echo strtoupper(USDT_NETWORK); ?></p>
-              <p><strong>USDT Address:</strong></p>
-              <div class="crypto-address"><?php echo USDT_WALLET_ADDRESS; ?></div>
-              <div class="qr-placeholder">
-                <div style="text-align: center;">
-                  <i class="fas fa-qrcode" style="font-size: 32px; margin-bottom: 8px;"></i><br>
-                  QR Code will be<br>generated here
-                </div>
-              </div>
-              <div style="background: #fef3c7; padding: 12px; border-radius: 6px; margin-top: 12px;">
-                <p style="margin: 0; color: #92400e; font-size: 14px;">
-                  <i class="fas fa-exclamation-triangle"></i> <strong>Important:</strong>
-                  Send exactly <strong><?php echo number_format($usdtAmount, 2); ?> USDT</strong> on the <strong><?php echo strtoupper(USDT_NETWORK); ?></strong> network.
-                  Wrong network = lost funds!
-                </p>
-              </div>
+            <!-- Crypto Info -->
+            <div id="crypto-info" class="payment-info-content hidden" style="padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+              <p style="margin: 0; color: #475569; font-size: 14px;">
+                <i class="fas fa-info-circle"></i> You will be redirected to Coinbase to complete your payment with Bitcoin, Ethereum, USDT, and other cryptocurrencies.
+              </p>
             </div>
 
             <!-- Bank Info -->
@@ -367,7 +316,7 @@ $pageTitle = 'Checkout';
 
         allInfoContent.forEach(content => content.classList.add('hidden'));
         
-        if (['paypal', 'bitcoin', 'usdt', 'bank'].includes(selectedMethod)) {
+        if (['paypal', 'crypto', 'bank'].includes(selectedMethod)) {
           paymentInfo.classList.remove('hidden');
           document.getElementById(selectedMethod + '-info').classList.remove('hidden');
         } else {
@@ -384,16 +333,14 @@ $pageTitle = 'Checkout';
           traditionalCheckout.classList.add('hidden');
           paypalCheckout.classList.remove('hidden');
           initializePayPalButton();
-        } else if (['bank', 'bitcoin', 'usdt'].includes(selectedMethod)) {
-          // Show traditional button for manual payment methods
+        } else if (['bank', 'crypto'].includes(selectedMethod)) {
+          // Show traditional button for manual/redirect payment methods
           paypalCheckout.classList.add('hidden');
           traditionalCheckout.classList.remove('hidden');
 
           // Update button text based on payment method
-          if (selectedMethod === 'bitcoin') {
-            checkoutBtnText.innerHTML = '<i class="fab fa-bitcoin"></i> Place Order - Pay with Bitcoin';
-          } else if (selectedMethod === 'usdt') {
-            checkoutBtnText.innerHTML = '<i class="fas fa-coins"></i> Place Order - Pay with USDT';
+          if (selectedMethod === 'crypto') {
+            checkoutBtnText.innerHTML = '<i class="fab fa-bitcoin"></i> Proceed to Crypto Payment';
           } else if (selectedMethod === 'bank') {
             checkoutBtnText.innerHTML = '<i class="fas fa-university"></i> Place Order - Bank Transfer';
           }

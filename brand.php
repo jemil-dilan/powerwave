@@ -5,7 +5,7 @@ require_once 'includes/functions.php';
 $categories = getAllCategories();
 $brands = getAllBrands();
 
-$pageTitle = "Our Brand - PowerWave outboards";
+$pageTitle = "Our Brand - WaveMaster Outboards";
 ?>
 
 <!DOCTYPE html>
@@ -14,8 +14,8 @@ $pageTitle = "Our Brand - PowerWave outboards";
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $pageTitle; ?></title>
-    <meta name="description" content="Discover PowerWave outboards - Leading manufacturer of premium marine engines. Innovation, reliability, and performance for over 50 years.">
-    <meta name="keywords" content="PowerWave outboards, marine engines, boat motors, outboard technology, marine innovation">
+    <meta name="description" content="Discover WaveMaster Outboards - Leading manufacturer of premium marine engines. Innovation, reliability, and performance for over 50 years.">
+    <meta name="keywords" content="WaveMaster Outboards, marine engines, boat motors, outboard technology, marine innovation">
     
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
@@ -57,7 +57,7 @@ $pageTitle = "Our Brand - PowerWave outboards";
             <div class="main-header">
                 <div class="logo">
                     <a href="index.php">
-                        <img src="logo1.png" alt="<?php echo SITE_NAME; ?>" style="height: 50px; width: auto;">
+                        <img src="wave.jpeg" alt="<?php echo SITE_NAME; ?>" style="height: 60px; width: auto; border-radius: 10px;">
                         <h1><?php echo SITE_NAME; ?></h1>
                     </a>
                 </div>
@@ -120,13 +120,13 @@ $pageTitle = "Our Brand - PowerWave outboards";
             <div class="hero-content">
                 <div class="container">
                     <div class="hero-text">
-                        <h1>PowerWave outboards</h1>
-                        <h2>Powering Your Maritime Adventures Since 1970</h2>
-                        <p>For over five decades, PowerWave has been at the forefront of marine propulsion innovation, crafting outboard motors that combine cutting-edge technology with unmatched reliability.</p>
+                        <h1>WaveMaster Outboards</h1>
+                        <h2>Mastering the Waves Since 1970</h2>
+                        <p>For over five decades, WaveMaster Outboards has been at the forefront of marine propulsion innovation, crafting outboard motors that combine cutting-edge technology with unmatched reliability.</p>
                         <a href="products.php" class="btn btn-primary">Explore Our Motors</a>
                     </div>
                     <div class="hero-image">
-                        <img src="images/hero-outboard.jpg" alt="PowerWave Outboard Motors" loading="lazy">
+                        <img src="images/hero-outboard.jpg" alt="WaveMaster Outboard Motors" loading="lazy">
                     </div>
                 </div>
             </div>
@@ -138,8 +138,8 @@ $pageTitle = "Our Brand - PowerWave outboards";
                 <div class="story-content">
                     <div class="story-text">
                         <h2>Our Story</h2>
-                        <p>Founded in 1970 by marine engineering pioneer Captain James PowerWave, our company began with a simple mission: to create the most reliable and efficient outboard motors for passionate boaters worldwide.</p>
-                        <p>What started in a small workshop in Miami has grown into a global leader in marine propulsion technology. Today, PowerWave outboards power vessels in over 80 countries, from weekend fishing trips to professional racing circuits.</p>
+                        <p>Founded in 1970 by marine engineering pioneer Captain James WaveMaster, our company began with a simple mission: to create the most reliable and efficient outboard motors for passionate boaters worldwide.</p>
+                        <p>What started in a small workshop in Miami has grown into a global leader in marine propulsion technology. Today, WaveMaster Outboards power vessels in over 80 countries, from weekend fishing trips to professional racing circuits.</p>
                         <p>Our commitment to innovation has led to groundbreaking developments in fuel efficiency, emissions reduction, and digital integration, making us the preferred choice for both recreational boaters and marine professionals.</p>
                     </div>
                     <div class="story-stats">
@@ -181,7 +181,7 @@ $pageTitle = "Our Brand - PowerWave outboards";
                             <i class="fas fa-shield-alt"></i>
                         </div>
                         <h3>Reliability</h3>
-                        <p>Every PowerWave motor is built to last, with rigorous testing and quality control ensuring dependable performance in any conditions.</p>
+                        <p>Every WaveMaster motor is built to last, with rigorous testing and quality control ensuring dependable performance in any conditions.</p>
                     </div>
                     <div class="value-card">
                         <div class="value-icon">
@@ -207,8 +207,8 @@ $pageTitle = "Our Brand - PowerWave outboards";
                 <div class="tech-content">
                     <div class="tech-text">
                         <h2>Cutting-Edge Technology</h2>
-                        <h3>PowerWave Advanced Propulsion System (PAPS)</h3>
-                        <p>Our proprietary PAPS technology optimizes fuel injection, ignition timing, and propeller design to deliver:</p>
+                        <h3>WaveMaster Advanced Propulsion System (WMAPS)</h3>
+                        <p>Our proprietary WMAPS technology optimizes fuel injection, ignition timing, and propeller design to deliver:</p>
                         <ul>
                             <li><i class="fas fa-check"></i> Up to 30% better fuel efficiency</li>
                             <li><i class="fas fa-check"></i> 40% reduction in harmful emissions</li>
@@ -226,7 +226,7 @@ $pageTitle = "Our Brand - PowerWave outboards";
                         </div>
                         <div class="feature-highlight">
                             <i class="fas fa-mobile-alt"></i>
-                            <h4>PowerWave Connect App</h4>
+                            <h4>WaveMaster Connect App</h4>
                             <p>Monitor and control your motor from your smartphone</p>
                         </div>
                         <div class="feature-highlight">
@@ -272,8 +272,8 @@ $pageTitle = "Our Brand - PowerWave outboards";
         <section class="brand-cta">
             <div class="container">
                 <div class="cta-content">
-                    <h2>Ready to Experience PowerWave Excellence?</h2>
-                    <p>Join millions of satisfied customers worldwide who trust PowerWave for their marine adventures.</p>
+                    <h2>Ready to Experience WaveMaster Excellence?</h2>
+                    <p>Join millions of satisfied customers worldwide who trust WaveMaster Outboards for their marine adventures.</p>
                     <div class="cta-buttons">
                         <a href="products.php" class="btn btn-primary">Shop Motors</a>
                         <a href="contact.php" class="btn btn-outline">Find a Dealer</a>

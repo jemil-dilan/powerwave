@@ -434,13 +434,29 @@ function handleImageUpload($file, $folder = 'products'): array
 
         // Ensure upload directory exists and is writable
         if (!is_dir($uploadDir)) {
-            if (!mkdir($uploadDir, 0777, true)) {
+            if (!mkdir($uploadDir, 0775, true)) {
                 return ['success' => false, 'error' => 'Cannot create upload directory'];
             }
         }
         
+        // Set proper permissions for Ubuntu
         if (!is_writable($uploadDir)) {
-            return ['success' => false, 'error' => 'Upload directory is not writable'];
+            // Try to fix permissions only if we have permission to do so
+            if (function_exists('chmod')) {
+                $chmodResult = @chmod($uploadDir, 0775);
+                // If chmod failed or directory still not writable, provide helpful error
+                if (!$chmodResult || !is_writable($uploadDir)) {
+                    return [
+                        'success' => false, 
+                        'error' => 'Upload directory is not writable. Please run: sudo chown -R www-data:www-data uploads/ && sudo chmod -R 775 uploads/'
+                    ];
+                }
+            } else {
+                return [
+                    'success' => false, 
+                    'error' => 'Upload directory is not writable. Please run: sudo chown -R www-data:www-data uploads/ && sudo chmod -R 775 uploads/'
+                ];
+            }
         }
         
         // Validate input
@@ -514,14 +530,23 @@ function handleImageUpload($file, $folder = 'products'): array
         
         // Move uploaded file
         if (move_uploaded_file($fileTmp, $destination)) {
-            // Set proper permissions
-            chmod($destination, 0644);
+            // Set proper permissions for Ubuntu (use @ to suppress warnings)
+            @chmod($destination, 0644);
             // Return web-accessible path relative to uploads/
             $webPath = 'uploads/' . $folder . '/' . $newFileName;
             return ['success' => true, 'filename' => $newFileName, 'path' => $webPath];
         }
         
-        return ['success' => false, 'error' => 'Failed to move uploaded file'];
+        // If move failed, provide detailed error information
+        $error = 'Failed to move uploaded file';
+        if (!is_writable($uploadDir)) {
+            $error .= ' - Upload directory not writable';
+        }
+        if (!is_readable($fileTmp)) {
+            $error .= ' - Temporary file not readable';
+        }
+        
+        return ['success' => false, 'error' => $error];
         
     } catch (Exception $e) {
         return ['success' => false, 'error' => 'Upload error: ' . $e->getMessage()];

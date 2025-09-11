@@ -1,0 +1,12 @@
+problem encountered
+
+checkout
+Warning: Constant PAYPAL_CLIENT_ID already defined in /opt/lampp/htdocs/PWO-MOTORS/includes/paypal_config.php on line 23
+and there is no button to continue
+Warning: Constant PAYPAL_CLIENT_ID already defined in /opt/lampp/htdocs/PWO-MOTORS/includes/paypal_config.php on line 23
+
+Fatal error: Cannot redeclare getPayPalSDKUrl() (previously declared in /opt/lampp/htdocs/PWO-MOTORS/includes/paypal_config.php:52) in /opt/lampp/htdocs/PWO-MOTORS/includes/PayPalService.php on line 248
+
+product
+Warning: chmod(): Opération non permise in /opt/lampp/htdocs/PWO-MOTORS/includes/functions.php on line 374
+Image upload failed: Upload directory is not writable. Please run: sudo chmod -R 775 uploads/

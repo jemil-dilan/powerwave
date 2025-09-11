@@ -3,6 +3,7 @@ require_once 'includes/config.php';
 require_once 'includes/functions.php';
 require_once 'includes/crypto_config.php';
 require_once 'includes/paypal_config.php';
+require_once 'includes/PayPalService.php';
 
 requireLogin();
 

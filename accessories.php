@@ -30,7 +30,7 @@ $sql .= " ORDER BY p.name";
 
 $accessories = $db->fetchAll($sql, $params);
 
-$pageTitle = "Marine Accessories - PowerWave outboards";
+$pageTitle = "Marine Accessories - WaveMaster Outboards";
 
 // These are needed for the header dropdowns
 $categories = getAllCategories();
@@ -44,7 +44,7 @@ $brands = getAllBrands();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<?php echo generateCSRFToken(); ?>">
     <title><?php echo $pageTitle; ?></title>
-    <meta name="description" content="Shop premium marine accessories for your PowerWave outboard motor. Propellers, maintenance products, covers, electronics and more.">
+    <meta name="description" content="Shop premium marine accessories for your WaveMaster outboard motor. Propellers, maintenance products, covers, electronics and more.">
     <meta name="keywords" content="marine accessories, outboard parts, propellers, engine oil, motor covers, marine electronics">
     
     <!-- CSS -->
@@ -87,7 +87,7 @@ $brands = getAllBrands();
             <div class="main-header">
                 <div class="logo">
                     <a href="index.php">
-                        <img src="logo1.png" alt="<?php echo SITE_NAME; ?>" style="height: 50px; width: auto;">
+                        <img src="wave.jpeg" alt="<?php echo SITE_NAME; ?>" style="height: 50px; width: auto;">
                         <h1><?php echo SITE_NAME; ?></h1>
                     </a>
                 </div>
@@ -151,7 +151,7 @@ $brands = getAllBrands();
             <div class="container">
                 <div class="hero-content">
                     <h1>Marine Accessories</h1>
-                    <p>Premium accessories and parts to enhance your PowerWave outboard motor experience. From performance upgrades to essential maintenance items.</p>
+                    <p>Premium accessories and parts to enhance your WaveMaster outboard motor experience. From performance upgrades to essential maintenance items.</p>
                 </div>
             </div>
         </section>
@@ -223,7 +223,7 @@ $brands = getAllBrands();
                     <div class="info-card">
                         <i class="fas fa-medal"></i>
                         <h3>Genuine Parts</h3>
-                        <p>All accessories are genuine PowerWave parts designed specifically for optimal performance and compatibility.</p>
+                        <p>All accessories are genuine WaveMaster parts designed specifically for optimal performance and compatibility.</p>
                     </div>
                     <div class="info-card">
                         <i class="fas fa-shipping-fast"></i>

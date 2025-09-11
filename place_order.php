@@ -9,6 +9,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirect('checkout.php');
 }
 
+// CSRF Protection
+if (!isset($_POST['csrf_token']) || !validateCSRFToken($_POST['csrf_token'])) {
+    showMessage('Invalid security token. Please try again.', 'error');
+    redirect('checkout.php');
+}
+
 $userId = $_SESSION['user_id'];
 $cartItems = getCartItems($userId);
 

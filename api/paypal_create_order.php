@@ -21,6 +21,14 @@ if (!isLoggedIn()) {
     exit;
 }
 
+// CSRF Protection
+$token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+if (!validateCSRFToken($token)) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Invalid security token']);
+    exit;
+}
+
 try {
     // Get request data
     $input = json_decode(file_get_contents('php://input'), true);

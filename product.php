@@ -8,6 +8,7 @@ if (!$product) { showMessage('Product not found', 'error'); redirect('products.p
 $images = getProductImages($id);
 
 $pageTitle = sanitizeInput($product['name']);
+$csrfToken = generateCSRFToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -18,6 +19,7 @@ $pageTitle = sanitizeInput($product['name']);
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <meta name="csrf-token" content="<?php echo $csrfToken; ?>">
 </head>
 <body>
   <header class="header">

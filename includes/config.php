@@ -7,9 +7,9 @@ define('DB_PASS', '');
 
 // Site configuration
 define('SITE_URL', 'http://localhost/outboard-website');
-define('SITE_NAME', 'PowerWave outboards');
-define('SITE_EMAIL', 'PowerWave@outboard.com');
-define('ADMIN_EMAIL', 'PowerWave@outboardmotorspro.com');
+define('SITE_NAME', 'WaveMaster Outboards');
+define('SITE_EMAIL', 'info@wavemasteroutboards.com');
+define('ADMIN_EMAIL', 'admin@wavemasteroutboards.com');
 
 // Upload configuration
 define('UPLOAD_PATH', 'uploads/');

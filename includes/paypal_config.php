@@ -1,41 +1,50 @@
 <?php
 require_once 'database.php';
 /**
- * PayPal Configuration - Updated for PayPal JavaScript SDK v2
+ * PayPal Configuration for Ubuntu Deployment
  * 
- * INSTRUCTIONS:
- * 1. Get your Client ID from PayPal Developer Dashboard
- * 2. Replace PAYPAL_CLIENT_ID_SANDBOX with your sandbox client ID
- * 3. Replace PAYPAL_CLIENT_ID_PRODUCTION with your production client ID
- * 4. Replace PAYPAL_CLIENT_SECRET_* with your actual client secrets
- * 5. Set PAYPAL_ENVIRONMENT to 'production' when ready to go live
+ * UBUNTU DEPLOYMENT INSTRUCTIONS:
+ * 1. Go to https://developer.paypal.com
+ * 2. Log in and go to "My Apps & Credentials"
+ * 3. Create a new app or use existing one
+ * 4. Copy your Client ID and Client Secret
+ * 5. Edit this file on Ubuntu: nano includes/paypal_config.php
+ * 6. Replace YOUR_SANDBOX_CLIENT_ID_HERE and YOUR_SANDBOX_CLIENT_SECRET_HERE
+ * 7. For production, change PAYPAL_ENVIRONMENT to 'production'
  */
 
 // PayPal Environment - 'sandbox' for testing, 'production' for live
 define('PAYPAL_ENVIRONMENT', 'sandbox');
 
-// PayPal API Credentials (only define if not already defined)
+// PayPal API Credentials
+// REPLACE THESE WITH YOUR ACTUAL CREDENTIALS FROM https://developer.paypal.com
 if (PAYPAL_ENVIRONMENT === 'sandbox') {
-    // Sandbox credentials - Replace with your actual sandbox credentials
+    // Sandbox credentials - REPLACE WITH YOUR SANDBOX CREDENTIALS
     if (!defined('PAYPAL_CLIENT_ID')) {
-        define('PAYPAL_CLIENT_ID', 'AQZ8kYKhKKdS8fF8oaKd_NiFUADsqe8bKE5MYKhKKdS8fF8oaKd_NiFUADsqe8bKE5M'); // Placeholder sandbox ID
+        define('PAYPAL_CLIENT_ID', 'YOUR_SANDBOX_CLIENT_ID_HERE');
     }
     if (!defined('PAYPAL_CLIENT_SECRET')) {
-        define('PAYPAL_CLIENT_SECRET', 'ELKhKKdS8fF8oaKd_NiFUADsqe8bKE5MYKhKKdS8fF8oaKd_NiFUADsqe8bKE5M'); // Placeholder sandbox secret
+        define('PAYPAL_CLIENT_SECRET', 'YOUR_SANDBOX_CLIENT_SECRET_HERE');
     }
     if (!defined('PAYPAL_BASE_URL')) {
-        define('PAYPAL_BASE_URL', 'https://api.sandbox.paypal.com');
+        define('PAYPAL_BASE_URL', 'https://api-m.sandbox.paypal.com');
+    }
+    if (!defined('PAYPAL_WEB_URL')) {
+        define('PAYPAL_WEB_URL', 'https://www.sandbox.paypal.com');
     }
 } else {
-    // Production credentials - Replace with your actual production credentials
+    // Production credentials - REPLACE WITH YOUR LIVE CREDENTIALS
     if (!defined('PAYPAL_CLIENT_ID')) {
-        define('PAYPAL_CLIENT_ID', 'YOUR_PRODUCTION_CLIENT_ID');
+        define('PAYPAL_CLIENT_ID', 'YOUR_PRODUCTION_CLIENT_ID_HERE');
     }
     if (!defined('PAYPAL_CLIENT_SECRET')) {
-        define('PAYPAL_CLIENT_SECRET', 'YOUR_PRODUCTION_CLIENT_SECRET');
+        define('PAYPAL_CLIENT_SECRET', 'YOUR_PRODUCTION_CLIENT_SECRET_HERE');
     }
     if (!defined('PAYPAL_BASE_URL')) {
-        define('PAYPAL_BASE_URL', 'https://api.paypal.com');
+        define('PAYPAL_BASE_URL', 'https://api-m.paypal.com');
+    }
+    if (!defined('PAYPAL_WEB_URL')) {
+        define('PAYPAL_WEB_URL', 'https://www.paypal.com');
     }
 }
 
@@ -53,19 +62,7 @@ define('PAYPAL_JS_SDK_URL', 'https://www.paypal.com/sdk/js');
 // PayPal Webhook URL (for production use)
 define('PAYPAL_WEBHOOK_URL', SITE_URL . '/paypal_webhook.php');
 
-/**
- * Get PayPal SDK URL for JavaScript integration
- */
-function getPayPalSDKUrl($currency = 'USD', $intent = 'capture', $components = 'buttons') {
-    $params = [
-        'client-id' => PAYPAL_CLIENT_ID,
-        'currency' => $currency,
-        'intent' => $intent,
-        'components' => $components
-    ];
-    
-    return PAYPAL_JS_SDK_URL . '?' . http_build_query($params);
-}
+// Note: getPayPalSDKUrl() function is now defined in PayPalService.php to avoid conflicts
 
 /**
  * Get PayPal Access Token

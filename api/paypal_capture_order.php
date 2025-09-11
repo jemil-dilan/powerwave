@@ -1,77 +1,82 @@
 <?php
+// File: api/paypal_capture_order.php
+header('Content-Type: application/json');
+
 require_once '../includes/config.php';
 require_once '../includes/functions.php';
 require_once '../includes/paypal_config.php';
 require_once '../includes/PayPalService.php';
 
-header('Content-Type: application/json');
-
 // Only allow POST requests
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     http_response_code(405);
-    echo json_encode(['error' => 'Method not allowed']);
+    echo json_encode(['success' => false, 'error' => 'Method not allowed']);
     exit;
 }
 
 // Check if user is logged in
 if (!isLoggedIn()) {
     http_response_code(401);
-    echo json_encode(['error' => 'User not authenticated']);
+    echo json_encode(['success' => false, 'error' => 'User not authenticated']);
+    exit;
+}
+
+// CSRF Protection
+$token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+if (!validateCSRFToken($token)) {
+    http_response_code(403);
+    echo json_encode(['success' => false, 'error' => 'Invalid security token']);
     exit;
 }
 
 try {
-    // Get JSON input
     $input = json_decode(file_get_contents('php://input'), true);
-    
-    if (!$input || !isset($input['orderID'])) {
-        throw new Exception('Invalid input - orderID required');
+    $orderID = $input['orderID'] ?? '';
+
+    if (empty($orderID)) {
+        throw new Exception('No order ID provided');
     }
-    
-    $paypalOrderId = $input['orderID'];
-    $userId = $_SESSION['user_id'];
-    
-    // Check if we have pending order data
-    if (!isset($_SESSION['paypal_pending_order']) || 
-        $_SESSION['paypal_pending_order']['paypal_order_id'] !== $paypalOrderId) {
-        throw new Exception('Invalid or expired order session');
+
+    // Verify this order belongs to current session
+    if (!isset($_SESSION['pending_paypal_order']) ||
+        $_SESSION['pending_paypal_order']['paypal_order_id'] !== $orderID) {
+        throw new Exception('Invalid order ID for current session');
     }
-    
-    $pendingOrder = $_SESSION['paypal_pending_order'];
-    $cartItems = $pendingOrder['cart_items'];
-    
-    // Create PayPal service instance
+
+    // Capture the payment
     $paypalService = new PayPalService();
-    
-    // Capture the PayPal order
-    $result = $paypalService->captureOrder($paypalOrderId);
-    
+    $result = $paypalService->captureOrder($orderID);
+
     if ($result['success']) {
+        $userId = $_SESSION['user_id'];
+        $cartItems = getCartItems($userId);
+
+        if (empty($cartItems)) {
+            throw new Exception('Cart is empty');
+        }
+
         $db = Database::getInstance();
         $db->beginTransaction();
-        
+
         try {
-            // Get user and billing info
-            $user = getCurrentUser();
-            $billingAddress = $user['address'] ? 
-                implode(', ', array_filter([
-                    $user['first_name'] . ' ' . $user['last_name'],
-                    $user['address'],
-                    $user['city'] . ', ' . $user['state'] . ' ' . $user['zip_code'],
-                    $user['country']
-                ])) : 
-                'Address not provided';
-            
             // Calculate totals
-            $cartTotal = 0;
-            foreach ($cartItems as $item) {
-                $cartTotal += $item['price'] * $item['quantity'];
-            }
+            $cartTotal = getCartTotal($userId);
             $shipping = SHIPPING_RATE;
             $tax = round($cartTotal * TAX_RATE, 2);
             $grandTotal = $cartTotal + $shipping + $tax;
-            
-            // Create order in database
+
+            // Get user info for billing address
+            $user = getCurrentUser();
+            $billingAddress = implode(', ', [
+                $user['first_name'] . ' ' . $user['last_name'],
+                $user['address'] ?? '',
+                $user['city'] ?? '',
+                $user['state'] ?? '',
+                $user['zip_code'] ?? '',
+                $user['country'] ?? ''
+            ]);
+
+            // Create order
             $orderNumber = generateOrderNumber();
             $orderId = $db->insert('orders', [
                 'user_id' => $userId,
@@ -80,34 +85,14 @@ try {
                 'shipping_cost' => $shipping,
                 'tax_amount' => $tax,
                 'payment_method' => 'paypal',
-                'payment_status' => 'paid',
-                'status' => 'processing',
+                'payment_transaction_id' => $result['capture_id'],
+                'payment_details' => json_encode($result['order_data']),
                 'shipping_address' => $billingAddress,
                 'billing_address' => $billingAddress,
-                'payment_transaction_id' => $result['capture_id'],
-                'payment_details' => json_encode([
-                    'paypal_order_id' => $result['order_id'],
-                    'paypal_capture_id' => $result['capture_id'],
-                    'payer_email' => $result['payer_email'],
-                    'payer_name' => $result['payer_name'],
-                    'amount_paid' => $result['amount'],
-                    'currency' => $result['currency']
-                ])
+                'status' => 'processing',
+                'payment_status' => 'paid'
             ]);
-            
-            // Create PayPal transaction record
-            $db->insert('paypal_transactions', [
-                'order_id' => $orderId,
-                'paypal_order_id' => $result['order_id'],
-                'paypal_capture_id' => $result['capture_id'],
-                'status' => 'captured',
-                'amount' => $result['amount'],
-                'currency' => $result['currency'],
-                'payer_email' => $result['payer_email'],
-                'payer_name' => $result['payer_name'],
-                'paypal_response' => json_encode($result['order_data'])
-            ]);
-            
+
             // Add order items
             foreach ($cartItems as $item) {
                 $db->insert('order_items', [
@@ -118,50 +103,61 @@ try {
                     'total' => $item['price'] * $item['quantity']
                 ]);
             }
-            
-            // Clear user's cart
+
+            // Create PayPal transaction record
+            $db->insert('paypal_transactions', [
+                'order_id' => $orderId,
+                'paypal_order_id' => $orderID,
+                'paypal_capture_id' => $result['capture_id'],
+                'status' => 'captured',
+                'amount' => $result['amount'],
+                'currency' => $result['currency'],
+                'payer_email' => $result['payer_email'],
+                'payer_name' => $result['payer_name'],
+                'paypal_response' => json_encode($result['order_data'])
+            ]);
+
+            // Clear cart
             $db->delete('cart', 'user_id = ?', [$userId]);
-            
+
             $db->commit();
-            
-            // Send confirmation email
-            $emailSubject = "Payment Confirmed - Order " . $orderNumber;
-            $emailMessage = "
-                <h2>Payment Confirmed!</h2>
-                <p>Your PayPal payment has been successfully processed.</p>
-                <p><strong>Order Number:</strong> {$orderNumber}</p>
-                <p><strong>Amount Paid:</strong> " . formatPrice($result['amount']) . "</p>
-                <p><strong>Transaction ID:</strong> {$result['capture_id']}</p>
-                <p><strong>PayPal Email:</strong> {$result['payer_email']}</p>
-                <p>Your order is now being processed and you will receive a shipping notification soon.</p>
-                <p>Thank you for your business!</p>
-            ";
-            
-            sendEmail($user['email'], $emailSubject, $emailMessage);
-            
+
             // Clear session data
-            unset($_SESSION['paypal_pending_order']);
-            
+            unset($_SESSION['pending_paypal_order']);
+
+            // Send confirmation email
+            $emailSubject = "Order Confirmation - $orderNumber";
+            $emailMessage = "
+                <h2>Thank you for your order!</h2>
+                <p>Order Number: <strong>$orderNumber</strong></p>
+                <p>Total: <strong>" . formatPrice($grandTotal) . "</strong></p>
+                <p>Payment Method: <strong>PayPal</strong></p>
+                <p>Your payment has been processed successfully.</p>
+            ";
+
+            sendEmail($user['email'], $emailSubject, $emailMessage);
+
             echo json_encode([
                 'success' => true,
                 'order_number' => $orderNumber,
-                'transaction_id' => $result['capture_id'],
-                'amount' => $result['amount'],
-                'redirect_url' => "order_success.php?order={$orderNumber}&method=paypal&status=paid"
+                'redirect_url' => SITE_URL . '/order_success.php?order=' . $orderNumber . '&method=paypal'
             ]);
-            
+
         } catch (Exception $e) {
             $db->rollback();
             throw $e;
         }
-        
+
     } else {
-        throw new Exception($result['error']);
+        throw new Exception($result['error'] ?? 'Failed to capture PayPal payment');
     }
-    
+
 } catch (Exception $e) {
-    error_log('PayPal capture order API error: ' . $e->getMessage());
+    error_log('PayPal capture order error: ' . $e->getMessage());
     http_response_code(400);
-    echo json_encode(['error' => $e->getMessage()]);
+    echo json_encode([
+        'success' => false,
+        'error' => $e->getMessage()
+    ]);
 }
 ?>

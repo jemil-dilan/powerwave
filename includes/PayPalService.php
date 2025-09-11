@@ -59,7 +59,16 @@ class PayPalService {
         if (!$accessToken) {
             return ['success' => false, 'error' => 'Failed to get PayPal access token'];
         }
-        
+
+        // Ajouter validation
+        if (!is_numeric($amount) || $amount <= 0) {
+            return ['success' => false, 'error' => 'Invalid amount'];
+        }
+
+        if (!preg_match('/^[A-Z]{3}$/', $currency)) {
+            return ['success' => false, 'error' => 'Invalid currency code'];
+        }
+
         $orderData = [
             'intent' => 'CAPTURE',
             'purchase_units' => [

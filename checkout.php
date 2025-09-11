@@ -20,10 +20,74 @@ $shipping = SHIPPING_RATE;
 $tax = round($cartTotal * TAX_RATE, 2);
 $grandTotal = $cartTotal + $shipping + $tax;
 
+// AJAX endpoint: create Coinbase charge and order
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'create_crypto_charge') {
+    header('Content-Type: application/json; charset=utf-8');
+    $token = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+    if (!validateCSRFToken($token)) {
+        echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
+        exit;
+    }
+
+    try {
+        $db = Database::getInstance();
+        // Create a minimal order record
+        $orderNumber = generateOrderNumber();
+        $orderData = [
+            'user_id' => $userId,
+            'order_number' => $orderNumber,
+            'amount' => $grandTotal,
+            'shipping' => $shipping,
+            'tax' => $tax,
+            'status' => 'pending',
+            'payment_status' => 'pending',
+            'payment_method' => 'crypto',
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        $db->insert('orders', $orderData);
+
+        // Attempt to get inserted order id
+        $orderId = null;
+        if (method_exists($db, 'lastInsertId')) {
+            $orderId = $db->lastInsertId();
+        }
+        if (!$orderId) {
+            // Fallback: fetch by order_number
+            $orderId = $db->fetchColumn("SELECT id FROM orders WHERE order_number = ?", [$orderNumber]);
+        }
+
+        // Create Coinbase charge
+        $charge = createCoinbaseCharge($orderId, 'Order ' . $orderNumber, 'Payment for order ' . $orderNumber, $grandTotal, 'USD');
+        if ($charge['success']) {
+            echo json_encode(['success' => true, 'hosted_url' => $charge['hosted_url'], 'charge_code' => $charge['code']]);
+            exit;
+        } else {
+            echo json_encode(['success' => false, 'error' => $charge['error'] ?? 'Failed to create charge']);
+            exit;
+        }
+    } catch (Exception $e) {
+        if (function_exists('logError')) logError('create_crypto_charge_error', ['msg' => $e->getMessage()]);
+        echo json_encode(['success' => false, 'error' => 'Server error']);
+        exit;
+    }
+}
+
 // Get crypto prices and amounts
-$cryptoPrices = getCryptoPrices();
-$btcAmount = calculateCryptoAmount($grandTotal, 'bitcoin');
-$usdtAmount = calculateCryptoAmount($grandTotal, 'usdt');
+if (function_exists('getCryptoPrices') && function_exists('calculateCryptoAmount')) {
+    $cryptoPrices = getCryptoPrices();
+    $btcAmount = calculateCryptoAmount($grandTotal, 'bitcoin');
+    $usdtAmount = calculateCryptoAmount($grandTotal, 'usdt');
+} else {
+    // Fallback hard-coded values to avoid fatal errors
+    $cryptoPrices = [
+        'bitcoin' => 50000.00,
+        'usdt' => 1.00,
+        'last_updated' => time(),
+        'fallback' => true
+    ];
+    $btcAmount = round($grandTotal / $cryptoPrices['bitcoin'], 8);
+    $usdtAmount = round($grandTotal / $cryptoPrices['usdt'], 2);
+}
 
 $pageTitle = 'Checkout';
 ?>
@@ -472,6 +536,46 @@ $pageTitle = 'Checkout';
       }).render('#paypal-button-container');
     }
     
+    // Intercept form submit for crypto payment
+    document.getElementById('checkout-form').addEventListener('submit', function(e) {
+      const selected = document.querySelector('input[name="payment_method"]:checked');
+      if (selected && selected.value === 'crypto') {
+        e.preventDefault();
+        const form = this;
+        const formData = new FormData(form);
+        formData.append('action', 'create_crypto_charge');
+
+        // Optional: show loading state
+        const btn = form.querySelector('button[type="submit"]');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+        fetch(window.location.pathname, {
+          method: 'POST',
+          body: formData,
+          credentials: 'same-origin'
+        })
+        .then(r => r.json())
+        .then(data => {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+          if (data.success && data.hosted_url) {
+            // Redirect user to Coinbase hosted payment page
+            window.location.href = data.hosted_url;
+          } else {
+            alert(data.error || 'Failed to initiate crypto payment. Please try again.');
+          }
+        })
+        .catch(err => {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+          console.error(err);
+          alert('Server error initiating crypto payment.');
+        });
+      }
+    });
+
     // Initialize on page load - default to bank transfer if available
     document.addEventListener('DOMContentLoaded', function() {
       // Check if there are any enabled payment methods
@@ -487,3 +591,4 @@ $pageTitle = 'Checkout';
   </script>
 </body>
 </html>
+

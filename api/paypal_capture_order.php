@@ -14,6 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+if (!isset($_SERVER['HTTP_X_CSRF_TOKEN']) || !validateCSRFToken($_SERVER['HTTP_X_CSRF_TOKEN'])) {
+    http_response_code(403);
+    exit(json_encode(['error' => 'Invalid CSRF token']));
+}
+
+
 // Check if user is logged in
 if (!isLoggedIn()) {
     http_response_code(401);

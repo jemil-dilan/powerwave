@@ -159,5 +159,61 @@ $pageTitle = 'Products';
   </footer>
 
   <script src="js/main.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      // Sélectionner tous les boutons d'ajout au panier
+      const addToCartButtons = document.querySelectorAll('.btn-add-to-cart');
+
+      addToCartButtons.forEach(button => {
+        button.addEventListener('click', function(e) {
+          e.preventDefault();
+          const productId = this.dataset.productId;
+          const icon = this.querySelector('i');
+
+          // Changer l'icône en indicateur de chargement
+          icon.classList.remove('fa-cart-plus');
+          icon.classList.add('fa-spinner', 'fa-spin');
+
+          // Appel AJAX pour ajouter au panier
+          fetch('add_to_cart.php', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'X-Requested-With': 'XMLHttpRequest'
+            },
+            body: JSON.stringify({
+              product_id: productId,
+              quantity: 1
+            })
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              // Mettre à jour le compteur et total du panier
+              document.querySelector('.cart-count').textContent = data.cart_count;
+              document.querySelector('.cart-total').textContent = data.cart_total;
+
+              // Animation de succès
+              icon.classList.remove('fa-spinner', 'fa-spin');
+              icon.classList.add('fa-check');
+              setTimeout(() => {
+                icon.classList.remove('fa-check');
+                icon.classList.add('fa-cart-plus');
+              }, 1500);
+            } else {
+              throw new Error(data.message || 'Failed to add item to cart');
+            }
+          })
+          .catch(error => {
+            console.error('Error:', error);
+            // Restaurer l'icône en cas d'erreur
+            icon.classList.remove('fa-spinner', 'fa-spin');
+            icon.classList.add('fa-cart-plus');
+            alert('Error adding item to cart: ' + error.message);
+          });
+        });
+      });
+    });
+  </script>
 </body>
 </html>

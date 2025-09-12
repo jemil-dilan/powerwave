@@ -82,7 +82,15 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
     
     try {
-      const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+      const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+      if (!csrfTokenElement) {
+        throw new Error('Security token not found. Please refresh the page.');
+      }
+      const csrfToken = csrfTokenElement.content;
+      if (!csrfToken) {
+        throw new Error('Invalid security token. Please refresh the page.');
+      }
+      
       const res = await fetch('add_to_cart.php', {
         method: 'POST',
         headers: { 
@@ -142,7 +150,17 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!cartId) return;
     
     try {
-      const csrfToken = document.querySelector('meta[name="csrf-token"]').content;
+      const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+      if (!csrfTokenElement) {
+        alert('Security token not found. Please refresh the page.');
+        return;
+      }
+      const csrfToken = csrfTokenElement.content;
+      if (!csrfToken) {
+        alert('Invalid security token. Please refresh the page.');
+        return;
+      }
+      
       const res = await fetch('remove_cart_item.php', {
         method: 'POST',
         headers: { 

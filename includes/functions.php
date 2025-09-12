@@ -169,12 +169,12 @@ function searchProducts($query, $category = null, $brand = null, $minPrice = nul
     }
     
     if ($minPrice !== null) {
-        $whereConditions[] = "p.price >= ?";
+        $whereConditions[] = "(CASE WHEN p.sale_price > 0 THEN p.sale_price ELSE p.price END) >= ?";
         $params[] = $minPrice;
     }
     
     if ($maxPrice !== null) {
-        $whereConditions[] = "p.price <= ?";
+        $whereConditions[] = "(CASE WHEN p.sale_price > 0 THEN p.sale_price ELSE p.price END) <= ?";
         $params[] = $maxPrice;
     }
     

@@ -7,13 +7,13 @@ define('DB_PASS', '');
 
 // Site configuration
 define('SITE_URL', 'http://localhost/outboard-website');
-define('SITE_NAME', 'PowerWave outboards');
-define('SITE_EMAIL', 'PowerWave@outboard.com');
-define('ADMIN_EMAIL', 'PowerWave@outboardmotorspro.com');
+define('SITE_NAME', 'WaveMaster Outboards');
+define('SITE_EMAIL', 'wavemasteroutboard@gmail.com');
+define('ADMIN_EMAIL', 'wavemasteroutboard@gmail.com');
 
 // Upload configuration
 define('UPLOAD_PATH', 'uploads/');
-define('MAX_FILE_SIZE', 5242880); // 5MB in bytes
+define('MAX_FILE_SIZE', 6242880); // 5MB in bytes
 define('ALLOWED_IMAGE_TYPES', ['jpg', 'jpeg', 'png', 'gif']);
 
 // Pagination
@@ -88,7 +88,7 @@ if (!headers_sent()) {
 // Start session if not already started
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
-    
+
     // Regenerate session ID periodically for security
     if (!isset($_SESSION['last_regeneration'])) {
         $_SESSION['last_regeneration'] = time();
@@ -96,7 +96,7 @@ if (session_status() === PHP_SESSION_NONE) {
         session_regenerate_id(true);
         $_SESSION['last_regeneration'] = time();
     }
-    
+
     // Check session timeout
     if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity'] > SESSION_TIMEOUT)) {
         session_destroy();

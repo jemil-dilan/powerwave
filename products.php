@@ -48,7 +48,7 @@ $csrfToken = generateCSRFToken();
       <div class="main-header">
         <div class="logo">
           <a href="index.php">
-            <img src="logo1.png" alt="<?php echo SITE_NAME; ?>" style="height: 50px; width: auto;">
+            <img src="wave.jpeg" alt="<?php echo SITE_NAME; ?>" style="height: 50px; width: auto;">
             <h1><?php echo SITE_NAME; ?></h1>
           </a>
         </div>

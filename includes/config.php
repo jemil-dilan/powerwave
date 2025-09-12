@@ -3,7 +3,7 @@
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'outboard_sales2');
 define('DB_USER', 'root');
-define('DB_PASS', '');
+define('DB_PASS', 'powerwave123');
 
 // Site configuration  
 define('SITE_URL', 'http://localhost:8000');
@@ -33,9 +33,9 @@ define('TAX_RATE', 0.08); // 8% tax rate
 define('SHIPPING_RATE', 99.99); // Flat shipping rate
 
 // Payment provider placeholders (replace with your real credentials)
-// PayPal
-define('PAYPAL_CLIENT_ID', '{{PAYPAL_CLIENT_ID}}');
-define('PAYPAL_SECRET', '{{PAYPAL_SECRET}}');
+// PayPal - These are now defined in includes/paypal_config.php
+// define('PAYPAL_CLIENT_ID', '{{PAYPAL_CLIENT_ID}}');
+// define('PAYPAL_SECRET', '{{PAYPAL_SECRET}}');
 // Apple Pay
 define('APPLE_PAY_MERCHANT_ID', '{{APPLE_PAY_MERCHANT_ID}}');
 // Cash App
@@ -51,6 +51,9 @@ define('SMTP_PORT', 587);
 define('SMTP_USERNAME', '');
 define('SMTP_PASSWORD', '');
 define('SMTP_SECURE', 'tls');
+
+// Debug mode (disable in production)
+define('DEBUG', true);
 
 // Error reporting (disable in production)
 error_reporting(E_ALL);

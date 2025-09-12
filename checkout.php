@@ -37,13 +37,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'creat
         $orderData = [
             'user_id' => $userId,
             'order_number' => $orderNumber,
-            'amount' => $grandTotal,
-            'shipping' => $shipping,
-            'tax' => $tax,
+            'total_amount' => $grandTotal,
+            'shipping_cost' => $shipping,
+            'tax_amount' => $tax,
             'status' => 'pending',
             'payment_status' => 'pending',
             'payment_method' => 'crypto',
-            'created_at' => date('Y-m-d H:i:s')
+            'shipping_address' => json_encode([
+                'first_name' => $_POST['billing_first_name'] ?? '',
+                'last_name' => $_POST['billing_last_name'] ?? '',
+                'address' => $_POST['billing_address'] ?? '',
+                'city' => $_POST['billing_city'] ?? '',
+                'state' => $_POST['billing_state'] ?? '',
+                'zip' => $_POST['billing_zip'] ?? '',
+                'country' => $_POST['billing_country'] ?? ''
+            ]),
+            'billing_address' => json_encode([
+                'first_name' => $_POST['billing_first_name'] ?? '',
+                'last_name' => $_POST['billing_last_name'] ?? '',
+                'address' => $_POST['billing_address'] ?? '',
+                'city' => $_POST['billing_city'] ?? '',
+                'state' => $_POST['billing_state'] ?? '',
+                'zip' => $_POST['billing_zip'] ?? '',
+                'country' => $_POST['billing_country'] ?? ''
+            ])
         ];
         $db->insert('orders', $orderData);
 
@@ -67,8 +84,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'creat
             exit;
         }
     } catch (Exception $e) {
-        if (function_exists('logError')) logError('create_crypto_charge_error', ['msg' => $e->getMessage()]);
-        echo json_encode(['success' => false, 'error' => 'Server error']);
+        // Log detailed error for debugging
+        error_log('Crypto payment error: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+        error_log('Crypto payment stack trace: ' . $e->getTraceAsString());
+        
+        if (function_exists('logError')) {
+            logError('create_crypto_charge_error', ['msg' => $e->getMessage(), 'file' => $e->getFile(), 'line' => $e->getLine()]);
+        }
+        
+        // Return more specific error in development mode
+        if (defined('DEBUG') && DEBUG) {
+            echo json_encode(['success' => false, 'error' => 'Server error: ' . $e->getMessage()]);
+        } else {
+            echo json_encode(['success' => false, 'error' => 'Server error initiating crypto payment']);
+        }
         exit;
     }
 }

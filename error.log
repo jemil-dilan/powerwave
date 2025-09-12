@@ -306,3 +306,19 @@ Stack trace:
 #1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/accessories.php(5): Database::getInstance()
 #2 {main}
   thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 12
+[12-Sep-2025 09:43:31 America/New_York] PDO MySQL extension is not loaded
+[12-Sep-2025 09:43:38 America/New_York] PDO MySQL extension is not loaded
+[12-Sep-2025 09:47:28 America/New_York] Database connection failed: SQLSTATE[HY000] [1698] Access denied for user 'root'@'localhost'
+[12-Sep-2025 10:01:07 America/New_York] Database query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'amount' in 'field list'
+[12-Sep-2025 10:01:12 America/New_York] Database query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'amount' in 'field list'
+[12-Sep-2025 10:04:42 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function getPayPalSDKUrl() in /home/jemil/Téléchargements/powerwave/debug_payments.php:49
+Stack trace:
+#0 {main}
+  thrown in /home/jemil/Téléchargements/powerwave/debug_payments.php on line 49
+[12-Sep-2025 10:04:52 America/New_York] PHP Fatal error:  Uncaught Error: Call to undefined function getPayPalSDKUrl() in /home/jemil/Téléchargements/powerwave/debug_payments.php:49
+Stack trace:
+#0 {main}
+  thrown in /home/jemil/Téléchargements/powerwave/debug_payments.php on line 49
+[12-Sep-2025 10:39:34 America/New_York] Database query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'amount' in 'field list'
+[12-Sep-2025 10:41:06 America/New_York] Database query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'amount' in 'field list'
+[12-Sep-2025 10:43:25 America/New_York] Database query failed: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'amount' in 'field list'

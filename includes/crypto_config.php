@@ -8,7 +8,8 @@ define('COINBASE_COMMERCE_API_KEY', '14fed5cd-921a-4f43-9559-5df8c04c1310');
 // 2. Set up a webhook endpoint in your Coinbase Commerce settings: https://commerce.coinbase.com/settings/notifications
 //    The URL should be: http://yoursite.com/crypto_webhook.php
 // 3. Add the 'Webhook shared secret' provided by Coinbase here.
-define('COINBASE_COMMERCE_WEBHOOK_SECRET', 'YOUR_COINBASE_WEBHOOK_SECRET_HERE');
+// For now, using a temporary secret. Update this with your actual webhook secret from Coinbase Commerce
+define('COINBASE_COMMERCE_WEBHOOK_SECRET', 'temp_webhook_secret_' . md5('powerwave_' . time()));
 
 // Coinbase Commerce API URL
 define('COINBASE_COMMERCE_API_URL', 'https://api.commerce.coinbase.com');

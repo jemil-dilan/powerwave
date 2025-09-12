@@ -12,23 +12,26 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $pageTitle; ?></title>
-    <meta name="description" content="Shop premium outboard motors from top brands like Yamaha, Mercury, Honda, and Suzuki. Find the perfect outboard motor for your boat.">
+    <meta name="description"
+        content="Shop premium outboard motors from top brands like Yamaha, Mercury, Honda, and Suzuki. Find the perfect outboard motor for your boat.">
     <meta name="keywords" content="outboard motors, boat engines, marine engines, Yamaha, Mercury, Honda, Suzuki">
-    
+
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
@@ -37,7 +40,7 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
             <div class="top-bar">
                 <div class="contact-info">
                     <span><i class="fas fa-phone"></i> (555) 123-4567</span>
-                    <span><i class="fas fa-envelope"></i> info@wavemasteroutboards.com</span>
+                    <span><i class="fas fa-envelope"></i> wavemasteroutboard@gmail.com</span>
                 </div>
                 <div class="user-actions">
                     <?php if (isLoggedIn()): ?>
@@ -54,43 +57,50 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
                     <?php endif; ?>
                 </div>
             </div>
-            
+
             <!-- Main Header -->
             <div class="main-header">
                 <div class="logo">
                     <a href="index.php">
-                        <img src="wave.jpeg" alt="<?php echo SITE_NAME; ?>" style="height: 60px; width: auto; border-radius: 10px;">
+                        <img src="wave.jpeg" alt="<?php echo SITE_NAME; ?>"
+                            style="height: 60px; width: auto; border-radius: 10px;">
                         <h1><?php echo SITE_NAME; ?></h1>
                     </a>
                 </div>
-                
+
                 <!-- Search Bar -->
                 <div class="search-bar">
                     <form action="search.php" method="GET" class="search-form">
-                        <input type="text" name="q" placeholder="Search outboard motors..." value="<?php echo isset($_GET['q']) ? sanitizeInput($_GET['q']) : ''; ?>">
+                        <input type="text" name="q" placeholder="Search outboard motors..."
+                            value="<?php echo isset($_GET['q']) ? sanitizeInput($_GET['q']) : ''; ?>">
                         <button type="submit"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
-                
+
                 <!-- Cart -->
                 <div class="cart-info">
                     <a href="cart.php" class="cart-link">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
-                        <span class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
+                        <span
+                            class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
+                        <span
+                            class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
                     </a>
                 </div>
             </div>
-            
+
             <!-- Navigation -->
             <nav class="navigation">
                 <ul class="nav-menu">
                     <li><a href="index.php" class="active"><i class="fas fa-home"></i> Home</a></li>
                     <li class="dropdown">
-                        <a href="products.php"><i class="fas fa-cog"></i> Products <i class="fas fa-chevron-down"></i></a>
+                        <a href="products.php"><i class="fas fa-cog"></i> Products <i
+                                class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
                             <?php foreach ($categories as $category): ?>
-                                <li><a href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a></li>
+                                <li><a
+                                        href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a>
+                                </li>
                             <?php endforeach; ?>
                         </ul>
                     </li>
@@ -99,7 +109,9 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
                         <a href="brands.php"><i class="fas fa-tags"></i> Brands <i class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
                             <?php foreach ($brands as $brand): ?>
-                                <li><a href="products.php?brand=<?php echo $brand['id']; ?>"><?php echo sanitizeInput($brand['name']); ?></a></li>
+                                <li><a
+                                        href="products.php?brand=<?php echo $brand['id']; ?>"><?php echo sanitizeInput($brand['name']); ?></a>
+                                </li>
                             <?php endforeach; ?>
                         </ul>
                     </li>
@@ -117,13 +129,15 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
     <!-- Main Content -->
     <main>
         <?php displayMessage(); ?>
-        
+
         <!-- Hero Section -->
         <section class="hero">
             <div class="container">
                 <div class="hero-content">
                     <h2>Ride the Waves with WaveMaster</h2>
-                    <p>Experience unparalleled power and reliability with our premium outboard motors. From weekend fishing trips to professional marine operations, WaveMaster Outboards delivers exceptional performance on every voyage.</p>
+                    <p>Experience unparalleled power and reliability with our premium outboard motors. From weekend
+                        fishing trips to professional marine operations, WaveMaster Outboards delivers exceptional
+                        performance on every voyage.</p>
                     <a href="products.php" class="btn btn-primary">Explore Our Motors</a>
                 </div>
             </div>
@@ -131,7 +145,7 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
                 <img src="images/hero-outboard.jpg" alt="Premium Outboard Motors" loading="lazy">
             </div>
         </section>
-        
+
         <!-- Featured Categories -->
         <section class="featured-categories">
             <div class="container">
@@ -141,8 +155,8 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
                         <div class="category-card">
                             <a href="products.php?category=<?php echo $category['id']; ?>">
                                 <div class="category-image">
-                                    <img src="<?php echo $category['image'] ? 'uploads/categories/' . $category['image'] : 'images/category-placeholder.jpg'; ?>" 
-                                         alt="<?php echo sanitizeInput($category['name']); ?>" loading="lazy">
+                                    <img src="<?php echo $category['image'] ? 'uploads/categories/' . $category['image'] : 'images/category-placeholder.jpg'; ?>"
+                                        alt="<?php echo sanitizeInput($category['name']); ?>" loading="lazy">
                                 </div>
                                 <h3><?php echo sanitizeInput($category['name']); ?></h3>
                                 <p><?php echo sanitizeInput($category['description']); ?></p>
@@ -152,7 +166,7 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
                 </div>
             </div>
         </section>
-        
+
         <!-- Featured Products -->
         <section class="featured-products">
             <div class="container">
@@ -162,8 +176,8 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
                         <div class="product-card">
                             <div class="product-image">
                                 <a href="product.php?id=<?php echo $product['id']; ?>">
-                                    <img src="<?php echo getProductImageUrl($product['main_image']); ?>" 
-                                         alt="<?php echo sanitizeInput($product['name']); ?>" loading="lazy">
+                                    <img src="<?php echo getProductImageUrl($product['main_image']); ?>"
+                                        alt="<?php echo sanitizeInput($product['name']); ?>" loading="lazy">
                                 </a>
                                 <?php if ($product['sale_price']): ?>
                                     <span class="sale-badge">Sale</span>
@@ -181,7 +195,9 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
                                 </div>
                             </div>
                             <div class="product-info">
-                                <h3><a href="product.php?id=<?php echo $product['id']; ?>"><?php echo sanitizeInput($product['name']); ?></a></h3>
+                                <h3><a
+                                        href="product.php?id=<?php echo $product['id']; ?>"><?php echo sanitizeInput($product['name']); ?></a>
+                                </h3>
                                 <p class="product-brand"><?php echo sanitizeInput($product['brand_name']); ?></p>
                                 <div class="product-specs">
                                     <span class="hp"><?php echo $product['horsepower']; ?>HP</span>
@@ -214,7 +230,7 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
                 </div>
             </div>
         </section>
-        
+
         <!-- Features Section -->
         <section class="features">
             <div class="container">
@@ -242,7 +258,7 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
                 </div>
             </div>
         </section>
-        
+
         <!-- Newsletter -->
         <section class="newsletter">
             <div class="container">
@@ -264,7 +280,8 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
             <div class="footer-content">
                 <div class="footer-section">
                     <h3><?php echo SITE_NAME; ?></h3>
-                    <p>Your trusted source for premium outboard motors. We offer the best selection of marine engines from top brands.</p>
+                    <p>Your trusted source for premium outboard motors. We offer the best selection of marine engines
+                        from top brands.</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -272,7 +289,7 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
                         <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
@@ -282,16 +299,18 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
                         <li><a href="contact.php">Contact</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Categories</h4>
                     <ul>
                         <?php foreach (array_slice($categories, 0, 4) as $category): ?>
-                            <li><a href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a></li>
+                            <li><a
+                                    href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a>
+                            </li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Customer Service</h4>
                     <ul>
@@ -301,18 +320,18 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
                         <li><a href="faq.php">FAQ</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Contact Info</h4>
                     <div class="contact-info">
                         <p><i class="fas fa-phone"></i> (555) 123-4567</p>
                         <p><i class="fas fa-envelope"></i> <?php echo SITE_EMAIL; ?></p>
-                        <p><i class="fas fa-map-marker-alt"></i> 123 Marina Drive<br>Coastal City, CC 12345</p>
+                        <p><i class="fas fa-map-marker-alt"></i> 4801 W Buckeye Rd<br>Phoenix, AZ 85043</p>
                         <p><i class="fas fa-clock"></i> Mon-Fri: 8AM-6PM<br>Sat: 9AM-5PM, Sun: Closed</p>
                     </div>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <p>&copy; <?php echo date('Y'); ?> <?php echo SITE_NAME; ?>. All rights reserved.</p>
                 <div class="footer-links">
@@ -326,4 +345,5 @@ $pageTitle = "Home - WaveMaster Outboards | Premium Marine Engines";
     <!-- JavaScript -->
     <script src="js/main.js"></script>
 </body>
+
 </html>

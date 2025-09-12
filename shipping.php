@@ -9,23 +9,27 @@ $pageTitle = 'Shipping Information';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $pageTitle; ?> - <?php echo SITE_NAME; ?></title>
-    <meta name="description" content="Learn about shipping options for outboard motors and marine equipment. Fast delivery, free shipping on qualifying orders, and specialized handling.">
-    <meta name="keywords" content="outboard motor shipping, marine equipment delivery, free shipping, freight delivery, shipping rates">
-    
+    <meta name="description"
+        content="Learn about shipping options for outboard motors and marine equipment. Fast delivery, free shipping on qualifying orders, and specialized handling.">
+    <meta name="keywords"
+        content="outboard motor shipping, marine equipment delivery, free shipping, freight delivery, shipping rates">
+
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
@@ -51,7 +55,7 @@ $pageTitle = 'Shipping Information';
                     <?php endif; ?>
                 </div>
             </div>
-            
+
             <!-- Main Header -->
             <div class="main-header">
                 <div class="logo">
@@ -60,7 +64,7 @@ $pageTitle = 'Shipping Information';
                         <h1><?php echo SITE_NAME; ?></h1>
                     </a>
                 </div>
-                
+
                 <!-- Search Bar -->
                 <div class="search-bar">
                     <form action="search.php" method="GET" class="search-form">
@@ -68,26 +72,31 @@ $pageTitle = 'Shipping Information';
                         <button type="submit"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
-                
+
                 <!-- Cart -->
                 <div class="cart-info">
                     <a href="cart.php" class="cart-link">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
-                        <span class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
+                        <span
+                            class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
+                        <span
+                            class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
                     </a>
                 </div>
             </div>
-            
+
             <!-- Navigation -->
             <nav class="navigation">
                 <ul class="nav-menu">
                     <li><a href="index.php"><i class="fas fa-home"></i> Home</a></li>
                     <li class="dropdown">
-                        <a href="products.php"><i class="fas fa-cog"></i> Products <i class="fas fa-chevron-down"></i></a>
+                        <a href="products.php"><i class="fas fa-cog"></i> Products <i
+                                class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
                             <?php foreach ($categories as $category): ?>
-                                <li><a href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a></li>
+                                <li><a
+                                        href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a>
+                                </li>
                             <?php endforeach; ?>
                         </ul>
                     </li>
@@ -96,7 +105,9 @@ $pageTitle = 'Shipping Information';
                         <a href="brands.php"><i class="fas fa-tags"></i> Brands <i class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
                             <?php foreach ($brands as $brand): ?>
-                                <li><a href="products.php?brand=<?php echo $brand['id']; ?>"><?php echo sanitizeInput($brand['name']); ?></a></li>
+                                <li><a
+                                        href="products.php?brand=<?php echo $brand['id']; ?>"><?php echo sanitizeInput($brand['name']); ?></a>
+                                </li>
                             <?php endforeach; ?>
                         </ul>
                     </li>
@@ -114,22 +125,23 @@ $pageTitle = 'Shipping Information';
     <!-- Main Content -->
     <main>
         <?php displayMessage(); ?>
-        
+
         <!-- Page Header -->
         <section class="page-header">
             <div class="container">
                 <div class="header-content">
                     <h1>Shipping Information</h1>
-                    <p>Fast, secure delivery for all outboard motors and marine equipment. We offer multiple shipping options to get your order delivered safely and on time.</p>
+                    <p>Fast, secure delivery for all outboard motors and marine equipment. We offer multiple shipping
+                        options to get your order delivered safely and on time.</p>
                 </div>
             </div>
         </section>
-        
+
         <!-- Shipping Content -->
         <section class="policy-section">
             <div class="container">
                 <div class="policy-content">
-                    
+
                     <!-- Free Shipping Overview -->
                     <div class="policy-card">
                         <div class="policy-icon">
@@ -137,10 +149,12 @@ $pageTitle = 'Shipping Information';
                         </div>
                         <div class="policy-text">
                             <h2>Free Shipping on Orders Over $1,000</h2>
-                            <p>Enjoy complimentary shipping on all orders over $1,000. We use specialized freight carriers experienced in handling marine equipment to ensure your order arrives safely.</p>
+                            <p>Enjoy complimentary shipping on all orders over $1,000. We use specialized freight
+                                carriers experienced in handling marine equipment to ensure your order arrives safely.
+                            </p>
                         </div>
                     </div>
-                    
+
                     <!-- Shipping Options -->
                     <div class="content-section">
                         <h2>Shipping Options</h2>
@@ -148,7 +162,8 @@ $pageTitle = 'Shipping Information';
                             <div class="info-card">
                                 <h3><i class="fas fa-truck"></i> Standard Freight</h3>
                                 <p><strong>5-10 Business Days</strong><br>
-                                Best for outboard motors and large accessories. Professional freight delivery with liftgate service available.</p>
+                                    Best for outboard motors and large accessories. Professional freight delivery with
+                                    liftgate service available.</p>
                                 <ul style="margin-top: 12px;">
                                     <li>Free on orders over $1,000</li>
                                     <li>Curbside delivery included</li>
@@ -159,7 +174,7 @@ $pageTitle = 'Shipping Information';
                             <div class="info-card">
                                 <h3><i class="fas fa-plane"></i> Express Shipping</h3>
                                 <p><strong>2-3 Business Days</strong><br>
-                                Expedited delivery for smaller accessories and parts when you need them fast.</p>
+                                    Expedited delivery for smaller accessories and parts when you need them fast.</p>
                                 <ul style="margin-top: 12px;">
                                     <li>Available for items under 150 lbs</li>
                                     <li>Signature required delivery</li>
@@ -170,7 +185,7 @@ $pageTitle = 'Shipping Information';
                             <div class="info-card">
                                 <h3><i class="fas fa-star"></i> White Glove Delivery</h3>
                                 <p><strong>Scheduled Appointment</strong><br>
-                                Premium delivery service with inside delivery and unpacking for outboard motors.</p>
+                                    Premium delivery service with inside delivery and unpacking for outboard motors.</p>
                                 <ul style="margin-top: 12px;">
                                     <li>Inside delivery to your location</li>
                                     <li>Professional unpacking</li>
@@ -181,7 +196,8 @@ $pageTitle = 'Shipping Information';
                             <div class="info-card">
                                 <h3><i class="fas fa-store"></i> Local Pickup</h3>
                                 <p><strong>Same Day Availability</strong><br>
-                                Save on shipping and pick up your order at our facility. Perfect for local customers.</p>
+                                    Save on shipping and pick up your order at our facility. Perfect for local
+                                    customers.</p>
                                 <ul style="margin-top: 12px;">
                                     <li>No shipping charges</li>
                                     <li>Same-day pickup available</li>
@@ -191,20 +207,25 @@ $pageTitle = 'Shipping Information';
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Shipping Rates -->
                     <div class="content-section">
                         <h2>Shipping Rates</h2>
-                        <p>Shipping costs are calculated based on item weight, dimensions, and destination. Here are our standard rates:</p>
-                        
+                        <p>Shipping costs are calculated based on item weight, dimensions, and destination. Here are our
+                            standard rates:</p>
+
                         <div class="shipping-table">
                             <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
                                 <thead>
                                     <tr style="background: #f8fafc; border: 1px solid #e2e8f0;">
-                                        <th style="padding: 12px; text-align: left; border: 1px solid #e2e8f0;">Item Type</th>
-                                        <th style="padding: 12px; text-align: left; border: 1px solid #e2e8f0;">Weight Range</th>
-                                        <th style="padding: 12px; text-align: left; border: 1px solid #e2e8f0;">Shipping Cost</th>
-                                        <th style="padding: 12px; text-align: left; border: 1px solid #e2e8f0;">Delivery Time</th>
+                                        <th style="padding: 12px; text-align: left; border: 1px solid #e2e8f0;">Item
+                                            Type</th>
+                                        <th style="padding: 12px; text-align: left; border: 1px solid #e2e8f0;">Weight
+                                            Range</th>
+                                        <th style="padding: 12px; text-align: left; border: 1px solid #e2e8f0;">Shipping
+                                            Cost</th>
+                                        <th style="padding: 12px; text-align: left; border: 1px solid #e2e8f0;">Delivery
+                                            Time</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -235,7 +256,7 @@ $pageTitle = 'Shipping Information';
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <div class="highlight-box">
                             <h3><i class="fas fa-gift"></i> Free Shipping Qualifications</h3>
                             <ul>
@@ -246,32 +267,36 @@ $pageTitle = 'Shipping Information';
                             </ul>
                         </div>
                     </div>
-                    
+
                     <!-- Processing & Handling -->
                     <div class="content-section">
                         <h2>Order Processing & Handling</h2>
-                        <p>We take great care in preparing your order for shipment to ensure it arrives in perfect condition.</p>
-                        
+                        <p>We take great care in preparing your order for shipment to ensure it arrives in perfect
+                            condition.</p>
+
                         <div class="process-steps">
                             <div class="step">
                                 <div class="step-number">1</div>
                                 <div class="step-content">
                                     <h3>Order Verification</h3>
-                                    <p>We verify all order details, payment information, and shipping addresses within 24 hours of receiving your order.</p>
+                                    <p>We verify all order details, payment information, and shipping addresses within
+                                        24 hours of receiving your order.</p>
                                 </div>
                             </div>
                             <div class="step">
                                 <div class="step-number">2</div>
                                 <div class="step-content">
                                     <h3>Professional Packaging</h3>
-                                    <p>Items are carefully packaged using marine-grade protective materials and custom crating for outboard motors.</p>
+                                    <p>Items are carefully packaged using marine-grade protective materials and custom
+                                        crating for outboard motors.</p>
                                 </div>
                             </div>
                             <div class="step">
                                 <div class="step-number">3</div>
                                 <div class="step-content">
                                     <h3>Quality Inspection</h3>
-                                    <p>Every item receives a final inspection before shipping to ensure it meets our quality standards.</p>
+                                    <p>Every item receives a final inspection before shipping to ensure it meets our
+                                        quality standards.</p>
                                 </div>
                             </div>
                             <div class="step">
@@ -283,7 +308,7 @@ $pageTitle = 'Shipping Information';
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Delivery Information -->
                     <div class="content-section">
                         <h2>Delivery Information</h2>
@@ -310,32 +335,37 @@ $pageTitle = 'Shipping Information';
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Special Handling -->
                     <div class="content-section">
                         <h2>Special Handling for Outboard Motors</h2>
-                        <p>Outboard motors require specialized handling and shipping due to their size, weight, and sensitivity.</p>
-                        
+                        <p>Outboard motors require specialized handling and shipping due to their size, weight, and
+                            sensitivity.</p>
+
                         <div class="info-grid">
                             <div class="info-card">
                                 <h3><i class="fas fa-box"></i> Custom Crating</h3>
-                                <p>All outboard motors are professionally crated using marine-grade materials to prevent damage during transit.</p>
+                                <p>All outboard motors are professionally crated using marine-grade materials to prevent
+                                    damage during transit.</p>
                             </div>
                             <div class="info-card">
                                 <h3><i class="fas fa-shield-alt"></i> Insurance Coverage</h3>
-                                <p>Full insurance coverage included for the complete value of your outboard motor during shipping.</p>
+                                <p>Full insurance coverage included for the complete value of your outboard motor during
+                                    shipping.</p>
                             </div>
                             <div class="info-card">
                                 <h3><i class="fas fa-tools"></i> Drain & Prep</h3>
-                                <p>Motors are properly drained of fluids and prepared for shipping according to DOT regulations.</p>
+                                <p>Motors are properly drained of fluids and prepared for shipping according to DOT
+                                    regulations.</p>
                             </div>
                             <div class="info-card">
                                 <h3><i class="fas fa-truck-loading"></i> Specialized Carriers</h3>
-                                <p>We use freight carriers experienced in handling marine equipment with proper lifting equipment.</p>
+                                <p>We use freight carriers experienced in handling marine equipment with proper lifting
+                                    equipment.</p>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Shipping Zones -->
                     <div class="content-section">
                         <h2>Shipping Zones & Timeframes</h2>
@@ -349,17 +379,18 @@ $pageTitle = 'Shipping Information';
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="zone-card">
                                 <h3><i class="fas fa-map-marker-alt"></i> Zone 2 - Regional (200-1000 miles)</h3>
                                 <div class="zone-details">
                                     <div class="zone-time">3-7 Business Days</div>
                                     <div class="zone-features">
-                                        <p>Standard freight delivery • Liftgate service available • Tracking provided</p>
+                                        <p>Standard freight delivery • Liftgate service available • Tracking provided
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="zone-card">
                                 <h3><i class="fas fa-globe-americas"></i> Zone 3 - National (1000+ miles)</h3>
                                 <div class="zone-details">
@@ -371,12 +402,13 @@ $pageTitle = 'Shipping Information';
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- International Shipping -->
                     <div class="content-section">
                         <h2>International Shipping</h2>
-                        <p>We ship to select international destinations. International orders require special handling due to customs and documentation requirements.</p>
-                        
+                        <p>We ship to select international destinations. International orders require special handling
+                            due to customs and documentation requirements.</p>
+
                         <div class="grid grid-2">
                             <div class="condition-card">
                                 <h3><i class="fas fa-globe"></i> Available Countries</h3>
@@ -402,16 +434,17 @@ $pageTitle = 'Shipping Information';
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Order Tracking -->
                     <div class="content-section">
                         <h2>Order Tracking & Updates</h2>
                         <p>Stay informed about your order status with our comprehensive tracking system.</p>
-                        
+
                         <div class="info-grid">
                             <div class="info-card">
                                 <h3><i class="fas fa-envelope"></i> Email Notifications</h3>
-                                <p>Receive automatic email updates when your order is processed, shipped, and delivered.</p>
+                                <p>Receive automatic email updates when your order is processed, shipped, and delivered.
+                                </p>
                             </div>
                             <div class="info-card">
                                 <h3><i class="fas fa-mobile-alt"></i> SMS Updates</h3>
@@ -423,16 +456,17 @@ $pageTitle = 'Shipping Information';
                             </div>
                             <div class="info-card">
                                 <h3><i class="fas fa-phone"></i> Personal Updates</h3>
-                                <p>Call our customer service team for personal order updates and delivery scheduling.</p>
+                                <p>Call our customer service team for personal order updates and delivery scheduling.
+                                </p>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Delivery Issues -->
                     <div class="content-section">
                         <h2>Delivery Issues & Damage</h2>
                         <p>While rare, delivery issues can occur. Here's how we handle them:</p>
-                        
+
                         <div class="emergency-contact">
                             <h3><i class="fas fa-exclamation-triangle"></i> If Your Order is Damaged</h3>
                             <ul>
@@ -443,7 +477,7 @@ $pageTitle = 'Shipping Information';
                                 <li>Keep all packaging materials for inspection</li>
                             </ul>
                         </div>
-                        
+
                         <div class="highlight-box">
                             <h3><i class="fas fa-redo"></i> Missed Delivery Policy</h3>
                             <p>If you miss a scheduled delivery:</p>
@@ -455,12 +489,13 @@ $pageTitle = 'Shipping Information';
                             </ol>
                         </div>
                     </div>
-                    
+
                     <!-- Shipping Support -->
                     <div class="contact-section">
                         <h2>Shipping Support</h2>
-                        <p>Our shipping department is ready to help with delivery scheduling, tracking, and any shipping-related questions.</p>
-                        
+                        <p>Our shipping department is ready to help with delivery scheduling, tracking, and any
+                            shipping-related questions.</p>
+
                         <div class="contact-options">
                             <div class="contact-option">
                                 <i class="fas fa-phone"></i>
@@ -484,10 +519,11 @@ $pageTitle = 'Shipping Information';
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div style="text-align: center; margin-top: 32px;">
                             <a href="contact.php" class="btn btn-primary">Contact Shipping Department</a>
-                            <a href="products.php" class="btn btn-outline" style="margin-left: 8px;">Continue Shopping</a>
+                            <a href="products.php" class="btn btn-outline" style="margin-left: 8px;">Continue
+                                Shopping</a>
                         </div>
                     </div>
                 </div>
@@ -501,7 +537,8 @@ $pageTitle = 'Shipping Information';
             <div class="footer-content">
                 <div class="footer-section">
                     <h3><?php echo SITE_NAME; ?></h3>
-                    <p>Your trusted source for premium outboard motors. We offer the best selection of marine engines from top brands.</p>
+                    <p>Your trusted source for premium outboard motors. We offer the best selection of marine engines
+                        from top brands.</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -509,7 +546,7 @@ $pageTitle = 'Shipping Information';
                         <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
@@ -519,16 +556,18 @@ $pageTitle = 'Shipping Information';
                         <li><a href="contact.php">Contact</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Categories</h4>
                     <ul>
                         <?php foreach (array_slice($categories, 0, 4) as $category): ?>
-                            <li><a href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a></li>
+                            <li><a
+                                    href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a>
+                            </li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Customer Service</h4>
                     <ul>
@@ -538,18 +577,18 @@ $pageTitle = 'Shipping Information';
                         <li><a href="faq.php">FAQ</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Contact Info</h4>
                     <div class="contact-info">
                         <p><i class="fas fa-phone"></i> (555) 123-4567</p>
                         <p><i class="fas fa-envelope"></i> <?php echo SITE_EMAIL; ?></p>
-                        <p><i class="fas fa-map-marker-alt"></i> 123 Marina Drive<br>Coastal City, CC 12345</p>
+                        <p><i class="fas fa-map-marker-alt"></i> 4801 W Buckeye Rd<br>Phoenix, AZ 85043</p>
                         <p><i class="fas fa-clock"></i> Mon-Fri: 8AM-6PM<br>Sat: 9AM-5PM, Sun: Closed</p>
                     </div>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <p>&copy; <?php echo date('Y'); ?> <?php echo SITE_NAME; ?>. All rights reserved.</p>
                 <div class="footer-links">
@@ -563,4 +602,5 @@ $pageTitle = 'Shipping Information';
     <!-- JavaScript -->
     <script src="js/main.js"></script>
 </body>
+
 </html>

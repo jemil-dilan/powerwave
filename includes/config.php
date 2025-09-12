@@ -5,8 +5,8 @@ define('DB_NAME', 'outboard_sales2');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
-// Site configuration
-define('SITE_URL', 'http://localhost/outboard-website');
+// Site configuration  
+define('SITE_URL', 'http://localhost:8000');
 define('SITE_NAME', 'WaveMaster Outboards');
 define('SITE_EMAIL', 'wavemasteroutboard@gmail.com');
 define('ADMIN_EMAIL', 'wavemasteroutboard@gmail.com');

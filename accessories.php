@@ -39,24 +39,28 @@ $brands = getAllBrands();
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="<?php echo generateCSRFToken(); ?>">
     <title><?php echo $pageTitle; ?></title>
-    <meta name="description" content="Shop premium marine accessories for your WaveMaster outboard motor. Propellers, maintenance products, covers, electronics and more.">
-    <meta name="keywords" content="marine accessories, outboard parts, propellers, engine oil, motor covers, marine electronics">
-    
+    <meta name="description"
+        content="Shop premium marine accessories for your WaveMaster outboard motor. Propellers, maintenance products, covers, electronics and more.">
+    <meta name="keywords"
+        content="marine accessories, outboard parts, propellers, engine oil, motor covers, marine electronics">
+
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
@@ -82,7 +86,7 @@ $brands = getAllBrands();
                     <?php endif; ?>
                 </div>
             </div>
-            
+
             <!-- Main Header -->
             <div class="main-header">
                 <div class="logo">
@@ -91,7 +95,7 @@ $brands = getAllBrands();
                         <h1><?php echo SITE_NAME; ?></h1>
                     </a>
                 </div>
-                
+
                 <!-- Search Bar -->
                 <div class="search-bar">
                     <form action="search.php" method="GET" class="search-form">
@@ -99,26 +103,31 @@ $brands = getAllBrands();
                         <button type="submit"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
-                
+
                 <!-- Cart -->
                 <div class="cart-info">
                     <a href="cart.php" class="cart-link">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
-                        <span class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
+                        <span
+                            class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
+                        <span
+                            class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
                     </a>
                 </div>
             </div>
-            
+
             <!-- Navigation -->
             <nav class="navigation">
                 <ul class="nav-menu">
                     <li><a href="index.php"><i class="fas fa-home"></i> Home</a></li>
                     <li class="dropdown">
-                        <a href="products.php"><i class="fas fa-cog"></i> Products <i class="fas fa-chevron-down"></i></a>
+                        <a href="products.php"><i class="fas fa-cog"></i> Products <i
+                                class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
                             <?php foreach ($categories as $category): ?>
-                                <li><a href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a></li>
+                                <li><a
+                                        href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a>
+                                </li>
                             <?php endforeach; ?>
                         </ul>
                     </li>
@@ -127,7 +136,7 @@ $brands = getAllBrands();
                         <a href="brands.php"><i class="fas fa-tags"></i> Brands <i class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
                             <?php foreach ($brands as $brand): ?>
-                                <li><a href="accessory.php?brand=<?php echo $brand['id']; ?>"><?php echo sanitizeInput($brand['name']); ?></a></li>
+                                <li><a href="products.php?brand=<?php echo $brand['id']; ?>"><?php echo sanitizeInput($brand['name']); ?></a></li>
                             <?php endforeach; ?>
                         </ul>
                     </li>
@@ -145,13 +154,14 @@ $brands = getAllBrands();
     <!-- Main Content -->
     <main>
         <?php displayMessage(); ?>
-        
+
         <!-- Accessories Hero Section -->
         <section class="accessories-hero">
             <div class="container">
                 <div class="hero-content">
                     <h1>Marine Accessories</h1>
-                    <p>Premium accessories and parts to enhance your WaveMaster outboard motor experience. From performance upgrades to essential maintenance items.</p>
+                    <p>Premium accessories and parts to enhance your WaveMaster outboard motor experience. From
+                        performance upgrades to essential maintenance items.</p>
                 </div>
             </div>
         </section>
@@ -185,19 +195,19 @@ $brands = getAllBrands();
                         <?php foreach ($accessories as $accessory): ?>
                             <div class="product-card">
                                 <div class="product-image">
-                                    <a href="accessory.php?id=<?php echo $accessory['id']; ?>">
-                                        <img src="<?php echo getProductImageUrl($accessory['image']); ?>" alt="<?php echo sanitizeInput($accessory['name']); ?>">
+                                    <a href="product.php?id=<?php echo $accessory['id']; ?>">
+                                        <img src="<?php echo getProductImageUrl($accessory['image']); ?>" alt="<?php echo sanitizeInput($accessory['name']); ?>" loading="lazy">
                                     </a>
                                     <?php if ($accessory['sale_price']): ?>
                                         <span class="sale-badge">Sale</span>
                                     <?php endif; ?>
                                     <div class="product-actions">
                                         <button class="btn-add-to-cart" data-product-id="<?php echo $accessory['id']; ?>"><i class="fas fa-cart-plus"></i></button>
-                                        <a class="btn-quick-view" href="accessory.php?id=<?php echo $accessory['id']; ?>"><i class="fas fa-eye"></i></a>
+                                        <a class="btn-quick-view" href="product.php?id=<?php echo $accessory['id']; ?>"><i class="fas fa-eye"></i></a>
                                     </div>
                                 </div>
                                 <div class="product-info">
-                                    <h3><a href="accessory.php?id=<?php echo $accessory['id']; ?>"><?php echo sanitizeInput($accessory['name']); ?></a></h3>
+                                    <h3><a href="product.php?id=<?php echo $accessory['id']; ?>"><?php echo sanitizeInput($accessory['name']); ?></a></h3>
                                     <p class="product-brand"><?php echo sanitizeInput($accessory['brand_name']); ?></p>
                                     <div class="product-specs"><span><?php echo (int)$accessory['horsepower']; ?>HP</span> <span><?php echo ucfirst($accessory['stroke']); ?></span></div>
                                     <div class="product-price">
@@ -223,22 +233,26 @@ $brands = getAllBrands();
                     <div class="info-card">
                         <i class="fas fa-medal"></i>
                         <h3>Genuine Parts</h3>
-                        <p>All accessories are genuine WaveMaster parts designed specifically for optimal performance and compatibility.</p>
+                        <p>All accessories are genuine WaveMaster parts designed specifically for optimal performance
+                            and compatibility.</p>
                     </div>
                     <div class="info-card">
                         <i class="fas fa-shipping-fast"></i>
                         <h3>Fast Shipping</h3>
-                        <p>Quick delivery on all accessories with free shipping on orders over $75. Most items ship within 24 hours.</p>
+                        <p>Quick delivery on all accessories with free shipping on orders over $75. Most items ship
+                            within 24 hours.</p>
                     </div>
                     <div class="info-card">
                         <i class="fas fa-tools"></i>
                         <h3>Expert Support</h3>
-                        <p>Need installation help? Our certified technicians provide expert guidance and support for all accessories.</p>
+                        <p>Need installation help? Our certified technicians provide expert guidance and support for all
+                            accessories.</p>
                     </div>
                     <div class="info-card">
                         <i class="fas fa-shield-alt"></i>
                         <h3>Quality Guarantee</h3>
-                        <p>Every accessory comes with our quality guarantee and manufacturer warranty for your peace of mind.</p>
+                        <p>Every accessory comes with our quality guarantee and manufacturer warranty for your peace of
+                            mind.</p>
                     </div>
                 </div>
             </div>
@@ -251,7 +265,8 @@ $brands = getAllBrands();
             <div class="footer-content">
                 <div class="footer-section">
                     <h3><?php echo SITE_NAME; ?></h3>
-                    <p>Your trusted source for premium outboard motors and marine accessories. Quality products with unmatched reliability.</p>
+                    <p>Your trusted source for premium outboard motors and marine accessories. Quality products with
+                        unmatched reliability.</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -259,7 +274,7 @@ $brands = getAllBrands();
                         <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
@@ -270,16 +285,18 @@ $brands = getAllBrands();
                         <li><a href="contact.php">Contact</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Categories</h4>
                     <ul>
                         <?php foreach (array_slice($categories, 0, 4) as $category): ?>
-                            <li><a href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a></li>
+                            <li><a
+                                    href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a>
+                            </li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Customer Service</h4>
                     <ul>
@@ -289,18 +306,18 @@ $brands = getAllBrands();
                         <li><a href="faq.php">FAQ</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Contact Info</h4>
                     <div class="contact-info">
                         <p><i class="fas fa-phone"></i> (555) 123-4567</p>
                         <p><i class="fas fa-envelope"></i> <?php echo SITE_EMAIL; ?></p>
-                        <p><i class="fas fa-map-marker-alt"></i> 123 Marina Drive<br>Coastal City, CC 12345</p>
+                        <p><i class="fas fa-map-marker-alt"></i> 4801 W Buckeye Rd<br>Phoenix, AZ 85043</p>
                         <p><i class="fas fa-clock"></i> Mon-Fri: 8AM-6PM<br>Sat: 9AM-5PM, Sun: Closed</p>
                     </div>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <p>&copy; <?php echo date('Y'); ?> <?php echo SITE_NAME; ?>. All rights reserved.</p>
                 <div class="footer-links">
@@ -369,4 +386,5 @@ $brands = getAllBrands();
     });
   </script>
 </body>
+
 </html>

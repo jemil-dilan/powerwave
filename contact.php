@@ -169,8 +169,8 @@ $pageTitle = 'Contact Us';
                             <i class="fas fa-map-marker-alt" style="color: #0ea5e9; font-size: 18px; width: 20px;"></i>
                             <div>
                                 <strong>Address</strong><br>
-                                123 Marina Drive<br>
-                                Coastal City, CC 12345
+                                4801 W Buckeye Rd<br>
+                                Phoenix, AZ  85043
                             </div>
                         </div>
                         

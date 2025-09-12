@@ -251,7 +251,7 @@ $pageTitle = "Brands - All Outboard Motor Brands";
                     <div class="contact-info">
                         <p><i class="fas fa-phone"></i> (555) 123-4567</p>
                         <p><i class="fas fa-envelope"></i> <?php echo SITE_EMAIL; ?></p>
-                        <p><i class="fas fa-map-marker-alt"></i> 123 Marina Drive<br>Coastal City, CC 12345</p>
+                        <p><i class="fas fa-map-marker-alt"></i> 4801 W Buckeye Rd<br>Phoenix, AZ  85043</p>
                         <p><i class="fas fa-clock"></i> Mon-Fri: 8AM-6PM<br>Sat: 9AM-5PM, Sun: Closed</p>
                     </div>
                 </div>

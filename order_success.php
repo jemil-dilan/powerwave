@@ -54,7 +54,7 @@ $pageTitle = 'Order Confirmation';
         .payment-info { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 16px 0; }
         .next-steps { background: #eff6ff; border: 1px solid #93c5fd; border-radius: 8px; padding: 16px; margin: 16px 0; }
     </style>
-    <link rel="stylesheet" href="css/production-fixes.css">
+
 </head>
 <body>
     <div class="success-header">

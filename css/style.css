@@ -335,7 +335,7 @@ a { color: inherit; text-decoration: none; }
     left: 0;
     right: 0;
     bottom: 0;
-    background: url('data:image/svg+xml;charset=utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100"><path d="M0,0 C150,100 850,0 1000,100 L1000,0 Z" fill="rgba(255,255,255,0.1)"/></svg>') no-repeat;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100"><path d="M0,0 C150,100 850,0 1000,100 L1000,0 Z" fill="rgba(255,255,255,0.1)"/></svg>') no-repeat;
     background-size: cover;
 }
 .page-header .header-content { 

@@ -148,7 +148,7 @@ $pageTitle = 'Checkout';
     .crypto-address { background: #1f2937; color: #f9fafb; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; word-break: break-all; margin: 8px 0; }
     .qr-placeholder { width: 200px; height: 200px; background: #f3f4f6; border: 2px dashed #d1d5db; display: flex; align-items: center; justify-content: center; margin: 12px auto; border-radius: 8px; color: #6b7280; }
   </style>
-    <link rel="stylesheet" href="css/production-fixes.css">
+
 </head>
 <body>
   <header class="header">

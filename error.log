@@ -174,3 +174,135 @@ Stack trace:
 #2 /home/jemil/IdeaProjects/powerwave/index.php(6): getFeaturedProducts(6)
 #3 {main}
   thrown in /home/jemil/IdeaProjects/powerwave/includes/database.php on line 21
+[12-Sep-2025 07:46:57 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/functions.php(114): Database::getInstance()
+#2 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/index.php(6): getFeaturedProducts()
+#3 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 07:47:29 America/New_York] PHP Notice:  session_start(): Ignoring session_start() because a session is already active (started from /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/config.php on line 90) in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/test_add_to_cart.php on line 6
+[12-Sep-2025 07:47:29 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/test_add_to_cart.php(11): Database::getInstance()
+#2 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 07:48:56 America/New_York] PHP Warning:  ini_set(): Session ini settings cannot be changed after headers have already been sent in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/config.php on line 72
+[12-Sep-2025 07:48:56 America/New_York] PHP Warning:  ini_set(): Session ini settings cannot be changed after headers have already been sent in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/config.php on line 73
+[12-Sep-2025 07:48:56 America/New_York] PHP Warning:  ini_set(): Session ini settings cannot be changed after headers have already been sent in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/config.php on line 74
+[12-Sep-2025 07:48:56 America/New_York] PHP Warning:  ini_set(): Session ini settings cannot be changed after headers have already been sent in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/config.php on line 75
+[12-Sep-2025 07:48:56 America/New_York] PHP Warning:  ini_set(): Session ini settings cannot be changed after headers have already been sent in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/config.php on line 76
+[12-Sep-2025 07:48:56 America/New_York] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/config.php on line 90
+[12-Sep-2025 07:48:56 America/New_York] PHP Warning:  session_start(): Session cannot be started after headers have already been sent in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/functions.php on line 6
+[12-Sep-2025 07:48:56 America/New_York] PHP Warning:  Cannot modify header information - headers already sent by (output started at /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/test_cart_simulation.php:3) in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/add_to_cart.php on line 27
+[12-Sep-2025 07:58:21 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/add_to_cart.php(72): Database::getInstance()
+#2 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/test_cart_simple.php(23): include('...')
+#3 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:06:08 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/debug_images.php(11): Database::getInstance()
+#2 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:14:01 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/functions.php(114): Database::getInstance()
+#2 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/index.php(6): getFeaturedProducts()
+#3 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:16:20 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/functions.php(114): Database::getInstance()
+#2 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/index.php(6): getFeaturedProducts()
+#3 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:16:23 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/functions.php(114): Database::getInstance()
+#2 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/index.php(6): getFeaturedProducts()
+#3 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:16:23 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/functions.php(114): Database::getInstance()
+#2 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/index.php(6): getFeaturedProducts()
+#3 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:16:24 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/functions.php(114): Database::getInstance()
+#2 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/index.php(6): getFeaturedProducts()
+#3 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:16:24 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/functions.php(114): Database::getInstance()
+#2 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/index.php(6): getFeaturedProducts()
+#3 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:16:24 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/functions.php(114): Database::getInstance()
+#2 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/index.php(6): getFeaturedProducts()
+#3 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:16:24 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/functions.php(114): Database::getInstance()
+#2 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/index.php(6): getFeaturedProducts()
+#3 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:16:24 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/functions.php(114): Database::getInstance()
+#2 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/index.php(6): getFeaturedProducts()
+#3 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:16:25 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/functions.php(114): Database::getInstance()
+#2 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/index.php(6): getFeaturedProducts()
+#3 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:16:25 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/functions.php(114): Database::getInstance()
+#2 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/index.php(6): getFeaturedProducts()
+#3 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:16:25 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/functions.php(114): Database::getInstance()
+#2 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/index.php(6): getFeaturedProducts()
+#3 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:33:55 America/New_York] PHP Fatal error:  Uncaught Error: Undefined constant PDO::MYSQL_ATTR_INIT_COMMAND in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:15
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(27): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/accessories.php(5): Database::getInstance()
+#2 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 15
+[12-Sep-2025 08:34:44 America/New_York] PDO MySQL extension is not loaded
+[12-Sep-2025 08:34:44 America/New_York] PHP Fatal error:  Uncaught Exception: PDO MySQL extension is required but not installed. Please install php-mysql or php-pdo-mysql extension. in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php:12
+Stack trace:
+#0 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php(37): Database->__construct()
+#1 /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/accessories.php(5): Database::getInstance()
+#2 {main}
+  thrown in /home/jemil/Téléchargements/Ngestech_client1_corrected/Ngestech client1/includes/database.php on line 12

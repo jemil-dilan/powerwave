@@ -172,18 +172,11 @@ $brands = getAllBrands();
         <section class="accessories-filter">
             <div class="container">
                 <div class="filter-tabs">
-<<<<<<< HEAD
-                    <?php foreach ($accessoryCategories as $catKey => $catName): ?>
-                        <a href="accessories.php?category=<?php echo $catKey; ?>"
-                            class="filter-tab <?php echo $selectedCategory === $catKey ? 'active' : ''; ?>">
-                            <?php echo $catName; ?>
-=======
                     <a href="accessories.php?brand=All" class="filter-tab <?php echo $selectedBrand === 'All' ? 'active' : ''; ?>">All Brands</a>
                     <?php foreach ($brandsWithAccessories as $brand): ?>
                         <a href="accessories.php?brand=<?php echo urlencode($brand['id']); ?>"
                            class="filter-tab <?php echo $selectedBrand === (int)$brand['id'] ? 'active' : ''; ?>">
                             <?php echo sanitizeInput($brand['name']); ?>
->>>>>>> 8afeb0f115d9f9bda8e9ac3e5eb63e5f16c27d2c
                         </a>
                     <?php endforeach; ?>
                 </div>
@@ -204,14 +197,9 @@ $brands = getAllBrands();
                         <?php foreach ($accessories as $accessory): ?>
                             <div class="product-card">
                                 <div class="product-image">
-<<<<<<< HEAD
-                                    <img src="<?php echo $accessory['image']; ?>" alt="<?php echo $accessory['name']; ?>"
-                                        loading="lazy">
-=======
                                     <a href="product.php?id=<?php echo $accessory['id']; ?>">
                                         <img src="<?php echo getProductImageUrl($accessory['image']); ?>" alt="<?php echo sanitizeInput($accessory['name']); ?>" loading="lazy">
                                     </a>
->>>>>>> 8afeb0f115d9f9bda8e9ac3e5eb63e5f16c27d2c
                                     <?php if ($accessory['sale_price']): ?>
                                         <span class="sale-badge">Sale</span>
                                     <?php endif; ?>
@@ -232,30 +220,6 @@ $brands = getAllBrands();
                                             <span class="price"><?php echo formatPrice($accessory['price']); ?></span>
                                         <?php endif; ?>
                                     </div>
-<<<<<<< HEAD
-                                    <div class="product-rating">
-                                        <div class="stars">
-                                            <?php
-                                            $rating = $accessory['rating'];
-                                            $fullStars = floor($rating);
-                                            $hasHalfStar = $rating - $fullStars >= 0.5;
-
-                                            for ($i = 0; $i < $fullStars; $i++): ?>
-                                                <i class="fas fa-star"></i>
-                                            <?php endfor;
-
-                                            if ($hasHalfStar): ?>
-                                                <i class="fas fa-star-half-alt"></i>
-                                            <?php endif;
-
-                                            for ($i = $fullStars + ($hasHalfStar ? 1 : 0); $i < 5; $i++): ?>
-                                                <i class="far fa-star"></i>
-                                            <?php endfor; ?>
-                                        </div>
-                                        <span class="rating-count">(<?php echo rand(15, 50); ?> reviews)</span>
-                                    </div>
-=======
->>>>>>> 8afeb0f115d9f9bda8e9ac3e5eb63e5f16c27d2c
                                 </div>
                             </div>
                         <?php endforeach; ?>

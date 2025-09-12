@@ -6,14 +6,24 @@ class Database {
     private $connection;
     
     private function __construct() {
+        // Check if PDO MySQL extension is available
+        if (!extension_loaded('pdo_mysql')) {
+            error_log("PDO MySQL extension is not loaded");
+            throw new Exception("PDO MySQL extension is required but not installed. Please install php-mysql or php-pdo-mysql extension.");
+        }
+        
         try {
             $dsn = "mysql:host=" . DB_HOST . ";dbname=" . DB_NAME . ";charset=utf8mb4";
             $options = [
                 PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-                PDO::ATTR_EMULATE_PREPARES => false,
-                PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4"
+                PDO::ATTR_EMULATE_PREPARES => false
             ];
+            
+            // Add MySQL-specific options only if PDO MySQL extension is available
+            if (defined('PDO::MYSQL_ATTR_INIT_COMMAND')) {
+                $options[PDO::MYSQL_ATTR_INIT_COMMAND] = "SET NAMES utf8mb4";
+            }
             
             $this->connection = new PDO($dsn, DB_USER, DB_PASS, $options);
         } catch (PDOException $e) {

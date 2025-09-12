@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Font Awesome Test</title>
+    
+    <!-- Test different Font Awesome sources -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Backup CDN -->
+    <!-- <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0/css/all.css"> -->
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-section {
+            background: #f5f5f5;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        .icon-test {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 4px;
+            text-align: center;
+            min-width: 60px;
+        }
+        .icon-large {
+            font-size: 24px;
+            margin: 20px;
+        }
+        .before-pseudo::before {
+            content: "\f007"; /* User icon code */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Font Awesome Icon Test</h1>
+    
+    <div class="test-section">
+        <h2>Basic Icons</h2>
+        <div class="icon-test">
+            <i class="fas fa-home"></i><br>
+            Home
+        </div>
+        <div class="icon-test">
+            <i class="fas fa-user"></i><br>
+            User
+        </div>
+        <div class="icon-test">
+            <i class="fas fa-cart-plus"></i><br>
+            Cart
+        </div>
+        <div class="icon-test">
+            <i class="fas fa-phone"></i><br>
+            Phone
+        </div>
+        <div class="icon-test">
+            <i class="fas fa-envelope"></i><br>
+            Email
+        </div>
+    </div>
+    
+    <div class="test-section">
+        <h2>Large Icons</h2>
+        <i class="fas fa-anchor icon-large"></i>
+        <i class="fas fa-ship icon-large"></i>
+        <i class="fas fa-cog icon-large"></i>
+        <i class="fas fa-tools icon-large"></i>
+    </div>
+    
+    <div class="test-section">
+        <h2>CSS Pseudo-element Test</h2>
+        <span class="before-pseudo">This should have a user icon before this text</span>
+    </div>
+    
+    <div class="test-section">
+        <h2>Navigation Style Icons (matching site structure)</h2>
+        <nav style="background: #2c3e50; padding: 15px; border-radius: 8px;">
+            <ul style="list-style: none; margin: 0; padding: 0;">
+                <li style="display: inline-block; margin-right: 20px;">
+                    <a href="#" style="color: white; text-decoration: none;">
+                        <i class="fas fa-home"></i> Home
+                    </a>
+                </li>
+                <li style="display: inline-block; margin-right: 20px;">
+                    <a href="#" style="color: white; text-decoration: none;">
+                        <i class="fas fa-cog"></i> Products
+                    </a>
+                </li>
+                <li style="display: inline-block; margin-right: 20px;">
+                    <a href="#" style="color: white; text-decoration: none;">
+                        <i class="fas fa-tools"></i> Accessories
+                    </a>
+                </li>
+                <li style="display: inline-block;">
+                    <a href="#" style="color: white; text-decoration: none;">
+                        <i class="fas fa-shopping-cart"></i> Cart
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    
+    <div class="test-section">
+        <h2>Debug Information</h2>
+        <p><strong>User Agent:</strong> <span id="userAgent"></span></p>
+        <p><strong>Font Awesome CSS Loaded:</strong> <span id="fontStatus">Checking...</span></p>
+        <p><strong>Computed Font Family for fas:</strong> <span id="fontFamily">Checking...</span></p>
+    </div>
+
+    <script>
+        document.getElementById('userAgent').textContent = navigator.userAgent;
+        
+        // Check if Font Awesome is loaded
+        setTimeout(() => {
+            const testElement = document.createElement('span');
+            testElement.className = 'fas fa-home';
+            testElement.style.position = 'absolute';
+            testElement.style.left = '-9999px';
+            document.body.appendChild(testElement);
+            
+            const computedStyle = window.getComputedStyle(testElement, ':before');
+            const fontFamily = computedStyle.fontFamily;
+            const content = computedStyle.content;
+            
+            document.getElementById('fontFamily').textContent = fontFamily;
+            
+            if (fontFamily.includes('Font Awesome') || content !== 'none') {
+                document.getElementById('fontStatus').textContent = '✓ Loaded';
+                document.getElementById('fontStatus').style.color = 'green';
+            } else {
+                document.getElementById('fontStatus').textContent = '✗ Not Loaded';
+                document.getElementById('fontStatus').style.color = 'red';
+            }
+            
+            document.body.removeChild(testElement);
+        }, 1000);
+    </script>
+</body>
+</html>

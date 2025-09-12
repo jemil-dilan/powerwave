@@ -136,7 +136,9 @@ $brands = getAllBrands();
                         <a href="brands.php"><i class="fas fa-tags"></i> Brands <i class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
                             <?php foreach ($brands as $brand): ?>
-                                <li><a href="products.php?brand=<?php echo $brand['id']; ?>"><?php echo sanitizeInput($brand['name']); ?></a></li>
+                                <li><a
+                                        href="products.php?brand=<?php echo $brand['id']; ?>"><?php echo sanitizeInput($brand['name']); ?></a>
+                                </li>
                             <?php endforeach; ?>
                         </ul>
                     </li>

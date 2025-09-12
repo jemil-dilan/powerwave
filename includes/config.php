@@ -5,8 +5,8 @@ define('DB_NAME', 'outboard_sales2');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 
-// Site configuration
-define('SITE_URL', 'http://localhost/outboard-website');
+// Site configuration  
+define('SITE_URL', 'http://localhost:8000');
 define('SITE_NAME', 'WaveMaster Outboards');
 define('SITE_EMAIL', 'wavemasteroutboard@gmail.com');
 define('ADMIN_EMAIL', 'wavemasteroutboard@gmail.com');
@@ -28,20 +28,14 @@ define('CSRF_TOKEN_EXPIRE', 1800); // 30 minutes in seconds
 if (!defined('CURRENCY_SYMBOL')) {
     define('CURRENCY_SYMBOL', '$');
 }
-if (!defined('CURRENCY_CODE')) {
-    define('CURRENCY_CODE', 'USD');
-}
-if (!defined('TAX_RATE')) {
-    define('TAX_RATE', 0.08);
-}
-if (!defined('SHIPPING_RATE')) {
-    define('SHIPPING_RATE', 99.99);
-}
+define('CURRENCY_CODE', 'USD');
+define('TAX_RATE', 0.08); // 8% tax rate
+define('SHIPPING_RATE', 99.99); // Flat shipping rate
 
-//// Payment provider placeholders (replace with your real credentials)
-//// PayPal
-//define('PAYPAL_CLIENT_ID', '{{PAYPAL_CLIENT_ID}}');
-//define('PAYPAL_SECRET', '{{PAYPAL_SECRET}}');
+// Payment provider placeholders (replace with your real credentials)
+// PayPal
+define('PAYPAL_CLIENT_ID', '{{PAYPAL_CLIENT_ID}}');
+define('PAYPAL_SECRET', '{{PAYPAL_SECRET}}');
 // Apple Pay
 define('APPLE_PAY_MERCHANT_ID', '{{APPLE_PAY_MERCHANT_ID}}');
 // Cash App

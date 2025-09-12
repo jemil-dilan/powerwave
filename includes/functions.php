@@ -216,14 +216,14 @@ function addToCart($productId, $quantity = 1, $userId = null) {
 
     try {
         // Vérifier que le produit existe et est actif
-        $product = $db->fetchOne("SELECT id, stock, status FROM products WHERE id = ?", [$productId]);
+        $product = $db->fetchOne("SELECT id, stock_quantity, status FROM products WHERE id = ?", [$productId]);
         if (!$product || $product['status'] !== 'active') {
-            return ['success' => false, 'error' => 'Produit introuvable ou indisponible'];
+            return ['success' => false, 'error' => 'Product not found or unavailable'];
         }
 
         // Vérifier le stock si la colonne existe
-        if (isset($product['stock']) && is_numeric($product['stock']) && $product['stock'] < $quantity) {
-            return ['success' => false, 'error' => 'Quantité demandée supérieure au stock disponible'];
+        if (isset($product['stock_quantity']) && is_numeric($product['stock_quantity']) && $product['stock_quantity'] < $quantity) {
+            return ['success' => false, 'error' => 'Requested quantity exceeds available stock'];
         }
 
         // Transaction si supportée

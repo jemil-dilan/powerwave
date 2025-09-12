@@ -82,11 +82,21 @@ document.addEventListener('DOMContentLoaded', () => {
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
     
     try {
+      const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+      if (!csrfTokenElement) {
+        throw new Error('Security token not found. Please refresh the page.');
+      }
+      const csrfToken = csrfTokenElement.content;
+      if (!csrfToken) {
+        throw new Error('Invalid security token. Please refresh the page.');
+      }
+      
       const res = await fetch('add_to_cart.php', {
         method: 'POST',
         headers: { 
           'Content-Type': 'application/x-www-form-urlencoded',
-          'X-Requested-With': 'XMLHttpRequest'
+          'X-Requested-With': 'XMLHttpRequest',
+          'X-CSRF-TOKEN': csrfToken
         },
         body: new URLSearchParams({ product_id: productId, quantity: quantity })
       });
@@ -140,9 +150,23 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!cartId) return;
     
     try {
+      const csrfTokenElement = document.querySelector('meta[name="csrf-token"]');
+      if (!csrfTokenElement) {
+        alert('Security token not found. Please refresh the page.');
+        return;
+      }
+      const csrfToken = csrfTokenElement.content;
+      if (!csrfToken) {
+        alert('Invalid security token. Please refresh the page.');
+        return;
+      }
+      
       const res = await fetch('remove_cart_item.php', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        headers: { 
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-CSRF-TOKEN': csrfToken
+        },
         body: new URLSearchParams({ cart_id: cartId })
       });
       const data = await res.json();

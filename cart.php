@@ -9,6 +9,12 @@ $cartCount = getCartItemCount($userId);
 
 // Handle cart updates
 if ($_POST) {
+    // CSRF Protection
+    if (!isset($_POST['csrf_token']) || !validateCSRFToken($_POST['csrf_token'])) {
+        showMessage('Invalid security token. Please try again.', 'error');
+        redirect('cart.php');
+    }
+
     $db = Database::getInstance();
     
     if (isset($_POST['update_cart'])) {
@@ -41,6 +47,7 @@ $pageTitle = 'Shopping Cart';
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="csrf-token" content="<?php echo generateCSRFToken(); ?>">
 </head>
 <body>
     <header class="header">
@@ -91,6 +98,7 @@ $pageTitle = 'Shopping Cart';
             </div>
         <?php else: ?>
             <form method="POST" action="cart.php">
+                <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
                 <div class="cart-table" style="background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden;">
                     <div class="cart-header" style="display: grid; grid-template-columns: 2fr 1fr 1fr 1fr auto; gap: 16px; padding: 16px; background: #f8fafc; font-weight: 600; border-bottom: 1px solid #e2e8f0;">
                         <div>Product</div>

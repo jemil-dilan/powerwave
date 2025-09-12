@@ -1,6 +1,7 @@
 <?php
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
+require_once 'includes/crypto_config.php';
 require_once 'includes/paypal_config.php';
 require_once 'includes/PayPalService.php';
 
@@ -20,6 +21,75 @@ $shipping = SHIPPING_RATE;
 $tax = round($cartTotal * TAX_RATE, 2);
 $grandTotal = $cartTotal + $shipping + $tax;
 
+// AJAX endpoint: create Coinbase charge and order
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'create_crypto_charge') {
+    header('Content-Type: application/json; charset=utf-8');
+    $token = $_POST['csrf_token'] ?? $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+    if (!validateCSRFToken($token)) {
+        echo json_encode(['success' => false, 'error' => 'Invalid CSRF token']);
+        exit;
+    }
+
+    try {
+        $db = Database::getInstance();
+        // Create a minimal order record
+        $orderNumber = generateOrderNumber();
+        $orderData = [
+            'user_id' => $userId,
+            'order_number' => $orderNumber,
+            'amount' => $grandTotal,
+            'shipping' => $shipping,
+            'tax' => $tax,
+            'status' => 'pending',
+            'payment_status' => 'pending',
+            'payment_method' => 'crypto',
+            'created_at' => date('Y-m-d H:i:s')
+        ];
+        $db->insert('orders', $orderData);
+
+        // Attempt to get inserted order id
+        $orderId = null;
+        if (method_exists($db, 'lastInsertId')) {
+            $orderId = $db->lastInsertId();
+        }
+        if (!$orderId) {
+            // Fallback: fetch by order_number
+            $orderId = $db->fetchColumn("SELECT id FROM orders WHERE order_number = ?", [$orderNumber]);
+        }
+
+        // Create Coinbase charge
+        $charge = createCoinbaseCharge($orderId, 'Order ' . $orderNumber, 'Payment for order ' . $orderNumber, $grandTotal, 'USD');
+        if ($charge['success']) {
+            echo json_encode(['success' => true, 'hosted_url' => $charge['hosted_url'], 'charge_code' => $charge['code']]);
+            exit;
+        } else {
+            echo json_encode(['success' => false, 'error' => $charge['error'] ?? 'Failed to create charge']);
+            exit;
+        }
+    } catch (Exception $e) {
+        if (function_exists('logError')) logError('create_crypto_charge_error', ['msg' => $e->getMessage()]);
+        echo json_encode(['success' => false, 'error' => 'Server error']);
+        exit;
+    }
+}
+
+// Get crypto prices and amounts
+if (function_exists('getCryptoPrices') && function_exists('calculateCryptoAmount')) {
+    $cryptoPrices = getCryptoPrices();
+    $btcAmount = calculateCryptoAmount($grandTotal, 'bitcoin');
+    $usdtAmount = calculateCryptoAmount($grandTotal, 'usdt');
+} else {
+    // Fallback hard-coded values to avoid fatal errors
+    $cryptoPrices = [
+        'bitcoin' => 50000.00,
+        'usdt' => 1.00,
+        'last_updated' => time(),
+        'fallback' => true
+    ];
+    $btcAmount = round($grandTotal / $cryptoPrices['bitcoin'], 8);
+    $usdtAmount = round($grandTotal / $cryptoPrices['usdt'], 2);
+}
+
 $pageTitle = 'Checkout';
 ?>
 <!DOCTYPE html>
@@ -32,10 +102,22 @@ $pageTitle = 'Checkout';
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <style>
-    .pmethod { border:1px solid #e2e8f0; border-radius:10px; padding:12px; cursor:pointer; display:flex; align-items:center; gap:10px; }
-    .pmethod input { margin-right: 8px; }
-    .pmethod.active { border-color:#0ea5e9; background:#e0f2fe; }
+    .payment-method { border:1px solid #e2e8f0; border-radius:10px; padding:12px; cursor:pointer; display:flex; align-items:center; gap:10px; margin-bottom: 8px; }
+    .payment-method input { margin-right: 8px; }
+    .payment-method.active { border-color:#0ea5e9; background:#e0f2fe; }
+    .payment-method.disabled { opacity: 0.5; cursor: not-allowed; background: #f8f9fa; }
+    .payment-method.disabled input { cursor: not-allowed; }
+    .payment-status { font-size: 12px; color: #6b7280; margin-top: 4px; }
+    .payment-status.available { color: #059669; }
+    .payment-status.coming-soon { color: #f59e0b; }
+    .crypto-amount { font-weight: 600; color: #0ea5e9; }
+    .crypto-rate { font-size: 11px; color: #6b7280; }
     .summary { background:white; border:1px solid #e2e8f0; border-radius:12px; padding:16px; }
+    .checkout-buttons { display: flex; gap: 12px; margin-top: 20px; }
+    .hidden { display: none !important; }
+    .crypto-payment-info { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-top: 16px; }
+    .crypto-address { background: #1f2937; color: #f9fafb; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; word-break: break-all; margin: 8px 0; }
+    .qr-placeholder { width: 200px; height: 200px; background: #f3f4f6; border: 2px dashed #d1d5db; display: flex; align-items: center; justify-content: center; margin: 12px auto; border-radius: 8px; color: #6b7280; }
   </style>
 </head>
 <body>
@@ -57,8 +139,23 @@ $pageTitle = 'Checkout';
   <main class="container">
     <h1>Checkout</h1>
     <?php displayMessage(); ?>
+
+    <?php if (isset($_GET['payment_cancelled'])): ?>
+    <div class="alert alert-error">
+      <i class="fas fa-exclamation-triangle"></i> Payment was cancelled. Please try again or choose a different payment method.
+    </div>
+    <?php endif; ?>
+
+    <?php if (isset($cryptoPrices['fallback'])): ?>
+    <div class="alert alert-info">
+      <i class="fas fa-info-circle"></i> Using fallback cryptocurrency prices. Actual rates may vary slightly.
+    </div>
+    <?php endif; ?>
+
     <div class="grid" style="grid-template-columns: 2fr 1fr; gap: 24px;">
-      <form action="place_order.php" method="POST" class="grid" style="gap:16px;">
+      <form action="place_order.php" method="POST" id="checkout-form" class="grid" style="gap:16px;">
+        <input type="hidden" name="csrf_token" value="<?php echo generateCSRFToken(); ?>">
+
         <div class="summary">
           <h3>Billing Details</h3>
           <div class="grid grid-2">
@@ -99,19 +196,86 @@ $pageTitle = 'Checkout';
           </div>
           <div class="form-group">
             <label>Country *</label>
-            <input class="input" name="billing_country" required value="<?php echo sanitizeInput($user['country'] ?? ''); ?>">
+            <input class="input" name="billing_country" required value="<?php echo sanitizeInput($user['country'] ?? 'United States'); ?>">
           </div>
         </div>
 
         <div class="summary">
           <h3>Payment Method</h3>
-          <div class="grid grid-2">
-            <label class="pmethod"><input type="radio" name="payment_method" value="paypal" required> <i class="fab fa-paypal" style="color:#0ea5e9"></i> PayPal</label>
-            <label class="pmethod"><input type="radio" name="payment_method" value="bank"> <i class="fas fa-university" style="color:#0ea5e9"></i> Bank Transfer</label>
-            <label class="pmethod"><input type="radio" name="payment_method" value="applepay"> <i class="fab fa-apple" style="color:#0ea5e9"></i> Apple Pay</label>
-            <label class="pmethod"><input type="radio" name="payment_method" value="cashapp"> <i class="fas fa-dollar-sign" style="color:#0ea5e9"></i> Cash App</label>
+          <div class="payment-methods">
+            <!-- PayPal - Available -->
+            <label class="payment-method" data-method="paypal">
+              <input type="radio" name="payment_method" value="paypal" required>
+              <i class="fab fa-paypal" style="color:#0ea5e9; font-size: 20px;"></i>
+              <div>
+                <div>PayPal</div>
+                <div class="payment-status available">Available - Pay securely with PayPal</div>
+              </div>
+            </label>
+
+            <!-- Crypto (Automated) -->
+            <label class="payment-method" data-method="crypto">
+              <input type="radio" name="payment_method" value="crypto">
+              <i class="fab fa-bitcoin" style="color:#f7931a; font-size: 20px;"></i>
+              <div>
+                <div>Pay with Crypto</div>
+                <div class="payment-status available">Bitcoin, Ethereum, USDT, and more</div>
+              </div>
+            </label>
+
+            <!-- Bank Transfer - Manual Processing -->
+            <label class="payment-method" data-method="bank">
+              <input type="radio" name="payment_method" value="bank">
+              <i class="fas fa-university" style="color:#6b7280; font-size: 18px;"></i>
+              <div>
+                <div>Bank Transfer</div>
+                <div class="payment-status available">Manual processing - Instructions will be sent</div>
+              </div>
+            </label>
+
+            <!-- Apple Pay - Coming Soon -->
+            <label class="payment-method disabled" data-method="applepay">
+              <input type="radio" name="payment_method" value="applepay" disabled>
+              <i class="fab fa-apple" style="color:#6b7280; font-size: 18px;"></i>
+              <div>
+                <div>Apple Pay</div>
+                <div class="payment-status coming-soon">Coming Soon</div>
+              </div>
+            </label>
+
+            <!-- Cash App - Coming Soon -->
+            <label class="payment-method disabled" data-method="cashapp">
+              <input type="radio" name="payment_method" value="cashapp" disabled>
+              <i class="fas fa-dollar-sign" style="color:#6b7280; font-size: 18px;"></i>
+              <div>
+                <div>Cash App</div>
+                <div class="payment-status coming-soon">Coming Soon</div>
+              </div>
+            </label>
           </div>
-          <p style="color:#64748b; font-size:14px; margin-top:8px;">You can replace the placeholder credentials in includes/config.php with your real merchant keys later.</p>
+
+          <div id="payment-info" class="hidden" style="margin-top: 16px;">
+            <!-- PayPal Info -->
+            <div id="paypal-info" class="payment-info-content hidden" style="padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+              <p style="margin: 0; color: #475569; font-size: 14px;">
+                <i class="fas fa-info-circle"></i> You will be redirected to PayPal to complete your payment securely.
+              </p>
+            </div>
+
+            <!-- Crypto Info -->
+            <div id="crypto-info" class="payment-info-content hidden" style="padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+              <p style="margin: 0; color: #475569; font-size: 14px;">
+                <i class="fas fa-info-circle"></i> You will be redirected to Coinbase to complete your payment with Bitcoin, Ethereum, USDT, and other cryptocurrencies.
+              </p>
+            </div>
+
+            <!-- Bank Info -->
+            <div id="bank-info" class="payment-info-content hidden" style="padding: 12px; background: #f8fafc; border-radius: 8px; border: 1px solid #e2e8f0;">
+              <p style="margin: 0; color: #475569; font-size: 14px;">
+                <i class="fas fa-info-circle"></i> After placing your order, you'll receive bank transfer instructions via email.
+              </p>
+            </div>
+          </div>
         </div>
 
         <div class="summary">
@@ -119,28 +283,64 @@ $pageTitle = 'Checkout';
           <textarea name="notes" class="input" rows="4" placeholder="Notes about your order, e.g. special delivery instructions"></textarea>
         </div>
 
-        <div id="traditional-checkout-form">
-          <button class="btn btn-primary" type="submit"><i class="fas fa-lock"></i> Place Order</button>
+        <!-- Traditional Checkout Button -->
+        <div id="traditional-checkout" class="checkout-buttons">
+          <button class="btn btn-primary" type="submit" style="width: 100%;">
+            <i class="fas fa-lock"></i> <span id="checkout-btn-text">Place Order</span>
+          </button>
         </div>
       </form>
       
       <!-- PayPal Button Container -->
-      <div id="paypal-button-container" style="display: none; margin-top: 16px;"></div>
+      <div id="paypal-checkout" class="checkout-buttons hidden">
+        <div id="paypal-button-container"></div>
+        <p style="color: #6b7280; font-size: 12px; text-align: center; margin-top: 8px;">
+          Secure payment powered by PayPal
+        </p>
+      </div>
 
       <aside class="summary">
         <h3>Order Summary</h3>
         <div style="display:grid; gap:8px;">
           <?php foreach ($cartItems as $item): ?>
-            <div style="display:flex; justify-content:space-between;">
-              <div><?php echo sanitizeInput($item['name']); ?> × <?php echo (int)$item['quantity']; ?></div>
-              <div><?php echo formatPrice($item['price'] * $item['quantity']); ?></div>
+            <div style="display:flex; justify-content:space-between; align-items: center;">
+              <div style="flex: 1;">
+                <div style="font-weight: 600;"><?php echo sanitizeInput($item['name']); ?></div>
+                <div style="color: #6b7280; font-size: 14px;">Qty: <?php echo (int)$item['quantity']; ?> × <?php echo formatPrice($item['price']); ?></div>
+              </div>
+              <div style="font-weight: 600;"><?php echo formatPrice($item['price'] * $item['quantity']); ?></div>
             </div>
           <?php endforeach; ?>
-          <hr>
+          <hr style="margin: 12px 0; border: none; border-top: 1px solid #e2e8f0;">
           <div style="display:flex; justify-content:space-between;"><span>Subtotal</span><strong><?php echo formatPrice($cartTotal); ?></strong></div>
           <div style="display:flex; justify-content:space-between;"><span>Shipping</span><strong><?php echo formatPrice($shipping); ?></strong></div>
-          <div style="display:flex; justify-content:space-between;"><span>Tax</span><strong><?php echo formatPrice($tax); ?></strong></div>
-          <div style="display:flex; justify-content:space-between; font-size:18px; margin-top:8px;"><span>Total</span><strong><?php echo formatPrice($grandTotal); ?></strong></div>
+          <div style="display:flex; justify-content:space-between;"><span>Tax (<?php echo (TAX_RATE * 100); ?>%)</span><strong><?php echo formatPrice($tax); ?></strong></div>
+          <hr style="margin: 12px 0; border: none; border-top: 1px solid #e2e8f0;">
+          <div style="display:flex; justify-content:space-between; font-size:18px; font-weight: 700;"><span>Total</span><strong><?php echo formatPrice($grandTotal); ?></strong></div>
+
+          <!-- Crypto amounts -->
+          <div style="margin-top: 12px; padding: 12px; background: #f8fafc; border-radius: 6px; font-size: 14px;">
+            <div style="color: #6b7280;">Cryptocurrency equivalents:</div>
+            <div style="display: flex; justify-content: space-between; margin-top: 4px;">
+              <span><i class="fab fa-bitcoin" style="color: #f7931a;"></i> Bitcoin:</span>
+              <span><?php echo number_format($btcAmount, 8); ?> BTC</span>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+              <span><i class="fas fa-coins" style="color: #26a17b;"></i> USDT:</span>
+              <span><?php echo number_format($usdtAmount, 2); ?> USDT</span>
+            </div>
+            <div style="font-size: 11px; color: #9ca3af; margin-top: 4px;">
+              Rates updated: <?php echo date('H:i', $cryptoPrices['last_updated']); ?>
+            </div>
+          </div>
+        </div>
+
+        <div style="margin-top: 16px; padding: 12px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px;">
+          <div style="display: flex; align-items: center; gap: 8px; color: #166534; font-size: 14px;">
+            <i class="fas fa-shield-alt"></i>
+            <span style="font-weight: 600;">Secure Checkout</span>
+          </div>
+          <p style="margin: 4px 0 0; color: #166534; font-size: 12px;">All payment methods are secure and encrypted</p>
         </div>
       </aside>
     </div>
@@ -162,43 +362,107 @@ $pageTitle = 'Checkout';
   <script src="<?php echo getPayPalSDKUrl(PAYPAL_CURRENCY, 'capture'); ?>"></script>
   
   <script>
-    // Toggle visual active state for selected payment method
+    // Payment method selection handling
     document.addEventListener('change', (e) => {
       if (e.target.name === 'payment_method') {
-        document.querySelectorAll('.pmethod').forEach(el => el.classList.remove('active'));
-        e.target.closest('.pmethod').classList.add('active');
+        const selectedMethod = e.target.value;
+
+        // Update visual states
+        document.querySelectorAll('.payment-method').forEach(el => {
+          el.classList.remove('active');
+          if (el.querySelector('input').checked) {
+            el.classList.add('active');
+          }
+        });
+
+        // Show/hide payment info
+        const paymentInfo = document.getElementById('payment-info');
+        const allInfoContent = document.querySelectorAll('.payment-info-content');
+
+        allInfoContent.forEach(content => content.classList.add('hidden'));
         
-        // Show/hide PayPal button based on selection
-        const paypalContainer = document.getElementById('paypal-button-container');
-        const traditionalForm = document.getElementById('traditional-checkout-form');
-        
-        if (e.target.value === 'paypal') {
-          paypalContainer.style.display = 'block';
-          traditionalForm.style.display = 'none';
-          initializePayPalButton();
+        if (['paypal', 'crypto', 'bank'].includes(selectedMethod)) {
+          paymentInfo.classList.remove('hidden');
+          document.getElementById(selectedMethod + '-info').classList.remove('hidden');
         } else {
-          paypalContainer.style.display = 'none';
-          traditionalForm.style.display = 'block';
+          paymentInfo.classList.add('hidden');
+        }
+        
+        // Handle checkout buttons and button text
+        const traditionalCheckout = document.getElementById('traditional-checkout');
+        const paypalCheckout = document.getElementById('paypal-checkout');
+        const checkoutBtnText = document.getElementById('checkout-btn-text');
+
+        if (selectedMethod === 'paypal') {
+          // Show PayPal button, hide traditional
+          traditionalCheckout.classList.add('hidden');
+          paypalCheckout.classList.remove('hidden');
+          initializePayPalButton();
+        } else if (['bank', 'crypto'].includes(selectedMethod)) {
+          // Show traditional button for manual/redirect payment methods
+          paypalCheckout.classList.add('hidden');
+          traditionalCheckout.classList.remove('hidden');
+
+          // Update button text based on payment method
+          if (selectedMethod === 'crypto') {
+            checkoutBtnText.innerHTML = '<i class="fab fa-bitcoin"></i> Proceed to Crypto Payment';
+          } else if (selectedMethod === 'bank') {
+            checkoutBtnText.innerHTML = '<i class="fas fa-university"></i> Place Order - Bank Transfer';
+          }
+        } else {
+          // For disabled methods, hide both buttons
+          paypalCheckout.classList.add('hidden');
+          traditionalCheckout.classList.add('hidden');
         }
       }
     });
     
+    // Prevent selection of disabled payment methods
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.payment-method.disabled')) {
+        e.preventDefault();
+        return false;
+      }
+    });
+
+    // Copy crypto address to clipboard
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.crypto-address')) {
+        const address = e.target.textContent;
+        navigator.clipboard.writeText(address).then(() => {
+          // Show temporary feedback
+          const original = e.target.innerHTML;
+          e.target.innerHTML = 'Address copied!';
+          e.target.style.background = '#059669';
+          setTimeout(() => {
+            e.target.innerHTML = original;
+            e.target.style.background = '#1f2937';
+          }, 2000);
+        }).catch(() => {
+          alert('Please manually copy the address: ' + address);
+        });
+      }
+    });
+
     // Initialize PayPal button
     function initializePayPalButton() {
-      // Clear existing button
       document.getElementById('paypal-button-container').innerHTML = '';
       
       if (typeof paypal === 'undefined') {
         console.error('PayPal SDK not loaded');
+        document.getElementById('paypal-button-container').innerHTML =
+          '<div style="color: #ef4444; text-align: center; padding: 16px;">PayPal SDK failed to load. Please refresh or use another payment method.</div>';
         return;
       }
       
       paypal.Buttons({
         createOrder: function(data, actions) {
+          const csrfToken = document.querySelector('input[name="csrf_token"]').value;
           return fetch('api/paypal_create_order.php', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': csrfToken
             },
             body: JSON.stringify({
               amount: <?php echo $grandTotal; ?>,
@@ -220,10 +484,15 @@ $pageTitle = 'Checkout';
         },
         
         onApprove: function(data, actions) {
+          const csrfToken = document.querySelector('input[name="csrf_token"]').value;
+          document.getElementById('paypal-button-container').innerHTML =
+            '<div style="text-align: center; padding: 20px;"><i class="fas fa-spinner fa-spin"></i> Processing payment...</div>';
+
           return fetch('api/paypal_capture_order.php', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'X-CSRF-TOKEN': csrfToken
             },
             body: JSON.stringify({
               orderID: data.orderID
@@ -232,7 +501,6 @@ $pageTitle = 'Checkout';
           .then(response => response.json())
           .then(data => {
             if (data.success) {
-              // Redirect to success page
               window.location.href = data.redirect_url;
             } else {
               throw new Error(data.error || 'Failed to capture payment');
@@ -241,35 +509,87 @@ $pageTitle = 'Checkout';
           .catch(err => {
             console.error('Error capturing PayPal payment:', err);
             alert('Error processing payment: ' + err.message);
+            // Reinitialize PayPal button
+            initializePayPalButton();
           });
         },
         
         onError: function(err) {
           console.error('PayPal error:', err);
-          alert('PayPal error occurred. Please try again or use a different payment method.');
+          alert('PayPal error occurred. Please try another payment method.');
+          document.getElementById('paypal-button-container').innerHTML =
+            '<div style="text-align: center; color: #ef4444; padding: 16px;">PayPal temporarily unavailable.</div>';
         },
         
         onCancel: function(data) {
           console.log('PayPal payment cancelled', data);
-          alert('Payment was cancelled.');
+          // User cancelled, just show the button again
+          initializePayPalButton();
         },
         
         style: {
           layout: 'vertical',
           color: 'blue',
           shape: 'rect',
-          label: 'paypal'
+          label: 'paypal',
+          height: 45
         }
       }).render('#paypal-button-container');
     }
     
-    // Auto-select PayPal if it's the only checked option
+    // Intercept form submit for crypto payment
+    document.getElementById('checkout-form').addEventListener('submit', function(e) {
+      const selected = document.querySelector('input[name="payment_method"]:checked');
+      if (selected && selected.value === 'crypto') {
+        e.preventDefault();
+        const form = this;
+        const formData = new FormData(form);
+        formData.append('action', 'create_crypto_charge');
+
+        // Optional: show loading state
+        const btn = form.querySelector('button[type="submit"]');
+        const originalText = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+
+        fetch(window.location.pathname, {
+          method: 'POST',
+          body: formData,
+          credentials: 'same-origin'
+        })
+        .then(r => r.json())
+        .then(data => {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+          if (data.success && data.hosted_url) {
+            // Redirect user to Coinbase hosted payment page
+            window.location.href = data.hosted_url;
+          } else {
+            alert(data.error || 'Failed to initiate crypto payment. Please try again.');
+          }
+        })
+        .catch(err => {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+          console.error(err);
+          alert('Server error initiating crypto payment.');
+        });
+      }
+    });
+
+    // Initialize on page load - default to bank transfer if available
     document.addEventListener('DOMContentLoaded', function() {
-      const paypalRadio = document.querySelector('input[value="paypal"]');
-      if (paypalRadio && paypalRadio.checked) {
-        paypalRadio.dispatchEvent(new Event('change'));
+      // Check if there are any enabled payment methods
+      const enabledMethods = document.querySelectorAll('.payment-method:not(.disabled) input');
+      if (enabledMethods.length > 0) {
+        // Default to bank transfer if available, otherwise first available method
+        const bankMethod = document.querySelector('input[value="bank"]');
+        const defaultMethod = bankMethod && !bankMethod.disabled ? bankMethod : enabledMethods[0];
+        defaultMethod.checked = true;
+        defaultMethod.dispatchEvent(new Event('change'));
       }
     });
   </script>
 </body>
 </html>
+

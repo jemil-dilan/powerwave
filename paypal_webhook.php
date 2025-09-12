@@ -33,6 +33,12 @@ try {
     
     // In production, you should verify the webhook signature
     // For now, we'll process based on event type
+    // Ajouter la vérification de la signature
+    $webhookId = PAYPAL_WEBHOOK_ID; // À définir dans paypal_config.php
+    if (!$paypalService->verifyWebhookSignature(getallheaders(), $webhookBody, $webhookId)) {
+        http_response_code(401);
+        exit('Invalid signature');
+    }
     
     switch ($eventType) {
         case 'PAYMENT.CAPTURE.COMPLETED':

@@ -8,6 +8,7 @@ $categories = getAllCategories();
 $brands = getAllBrands();
 
 $pageTitle = "Home - Premium Outboard Motors";
+$csrfToken = generateCSRFToken();
 ?>
 
 <!DOCTYPE html>
@@ -28,6 +29,9 @@ $pageTitle = "Home - Premium Outboard Motors";
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSRF Token -->
+    <meta name="csrf-token" content="<?php echo $csrfToken; ?>">
 </head>
 <body>
     <!-- Header -->

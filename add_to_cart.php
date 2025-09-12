@@ -1,4 +1,9 @@
 <?php
+// Démarrer la session si ce n'est pas déjà fait
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 require_once 'includes/config.php';
 require_once 'includes/functions.php';
 
@@ -32,23 +37,23 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
-// CSRF Protection for traditional form submissions
-    // For AJAX, we expect the token in a header. For forms, in the POST body.
+// CSRF Protection pour les soumissions de formulaire traditionnelles
+// Pour AJAX, on attend le token dans un header. Pour les formulaires, dans le POST body.
+if ($isAjax) {
+    $token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+} else {
+    $token = $_POST['csrf_token'] ?? '';
+}
+
+if (!validateCSRFToken($token)) {
     if ($isAjax) {
-        $token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+        echo json_encode(['success' => false, 'message' => 'Invalid security token']);
     } else {
-        $token = $_POST['csrf_token'] ?? '';
+        showMessage('Invalid security token. Please try again.', 'error');
+        redirect($_SERVER['HTTP_REFERER'] ?? 'products.php');
     }
-    
-    if (!validateCSRFToken($token)) {
-        if ($isAjax) {
-            echo json_encode(['success' => false, 'message' => 'Invalid security token']);
-        } else {
-            showMessage('Invalid security token. Please try again.', 'error');
-            redirect($_SERVER['HTTP_REFERER'] ?? 'products.php');
-        }
-        exit;
-    }
+    exit;
+}
 
 // Input validation and sanitization
 $productId = isset($_POST['product_id']) ? (int)$_POST['product_id'] : 0;

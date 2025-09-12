@@ -63,6 +63,7 @@ $brands = getAllBrands();
 $totalPages = ceil($totalResults / $limit);
 
 $pageTitle = $query ? "Search Results for '{$query}'" : 'Search Products';
+$csrfToken = generateCSRFToken();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -73,6 +74,7 @@ $pageTitle = $query ? "Search Results for '{$query}'" : 'Search Products';
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta name="csrf-token" content="<?php echo $csrfToken; ?>">
 </head>
 <body>
     <header class="header">

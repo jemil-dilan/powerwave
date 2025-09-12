@@ -54,6 +54,7 @@ $pageTitle = 'Order Confirmation';
         .payment-info { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin: 16px 0; }
         .next-steps { background: #eff6ff; border: 1px solid #93c5fd; border-radius: 8px; padding: 16px; margin: 16px 0; }
     </style>
+    <link rel="stylesheet" href="css/production-fixes.css">
 </head>
 <body>
     <div class="success-header">
@@ -73,7 +74,7 @@ $pageTitle = 'Order Confirmation';
                     <h3>Order Information</h3>
                     <p><strong>Order Number:</strong> <?php echo sanitizeInput($order['order_number']); ?></p>
                     <p><strong>Order Date:</strong> <?php echo date('F j, Y g:i A', strtotime($order['created_at'])); ?></p>
-                    <p><strong>Total Amount:</strong> <?php echo formatPrice($order['total_amount']); ?></p>
+                    <p><strong>Total Amount:</strong> <?php echo formatPriceSafe($order['total_amount']); ?></p>
                     <p><strong>Payment Method:</strong> <?php echo ucfirst($order['payment_method']); ?></p>
                     <p><strong>Status:</strong>
                         <span style="color: #f59e0b; font-weight: 600;"><?php echo ucfirst($order['status']); ?></span>
@@ -118,28 +119,28 @@ $pageTitle = 'Order Confirmation';
                                 <strong><?php echo sanitizeInput($item['name']); ?></strong><br>
                                 <small style="color: #6b7280;"><?php echo sanitizeInput($item['brand_name']); ?> - <?php echo sanitizeInput($item['model']); ?></small>
                             </td>
-                            <td><?php echo formatPrice($item['price']); ?></td>
+                            <td><?php echo formatPriceSafe($item['price']); ?></td>
                             <td><?php echo (int)$item['quantity']; ?></td>
-                            <td><?php echo formatPrice($item['total']); ?></td>
+                            <td><?php echo formatPriceSafe($item['total']); ?></td>
                         </tr>
                     <?php endforeach; ?>
                 </tbody>
                 <tfoot>
                     <tr style="border-top: 2px solid #e2e8f0;">
                         <td colspan="2"><strong>Subtotal</strong></td>
-                        <td colspan="2"><strong><?php echo formatPrice($order['total_amount'] - $order['shipping_cost'] - $order['tax_amount']); ?></strong></td>
+                        <td colspan="2"><strong><?php echo formatPriceSafe($order['total_amount'] - $order['shipping_cost'] - $order['tax_amount']); ?></strong></td>
                     </tr>
                     <tr>
                         <td colspan="2">Shipping</td>
-                        <td colspan="2"><?php echo formatPrice($order['shipping_cost']); ?></td>
+                        <td colspan="2"><?php echo formatPriceSafe($order['shipping_cost']); ?></td>
                     </tr>
                     <tr>
                         <td colspan="2">Tax</td>
-                        <td colspan="2"><?php echo formatPrice($order['tax_amount']); ?></td>
+                        <td colspan="2"><?php echo formatPriceSafe($order['tax_amount']); ?></td>
                     </tr>
                     <tr style="font-size: 18px; font-weight: 700;">
                         <td colspan="2"><strong>Total</strong></td>
-                        <td colspan="2"><strong><?php echo formatPrice($order['total_amount']); ?></strong></td>
+                        <td colspan="2"><strong><?php echo formatPriceSafe($order['total_amount']); ?></strong></td>
                     </tr>
                 </tfoot>
             </table>
@@ -149,7 +150,7 @@ $pageTitle = 'Order Confirmation';
         <div class="order-details">
             <h3><i class="fas fa-university"></i> Bank Transfer Instructions</h3>
             <div class="next-steps">
-                <p><strong>Please transfer <?php echo formatPrice($order['total_amount']); ?> to:</strong></p>
+                <p><strong>Please transfer <?php echo formatPriceSafe($order['total_amount']); ?> to:</strong></p>
                 <p>
                     <strong>Account Name:</strong> <?php echo BANK_ACCOUNT_NAME; ?><br>
                     <strong>Account Number:</strong> <?php echo BANK_ACCOUNT_NUMBER; ?><br>

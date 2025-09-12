@@ -325,10 +325,10 @@ $pageTitle = 'Manage Products';
                             <td><?php echo sanitizeInput($product['category_name']); ?></td>
                             <td>
                                 <?php if ($product['sale_price']): ?>
-                                    <span style="text-decoration: line-through; color: #9ca3af;"><?php echo formatPrice($product['price']); ?></span><br>
-                                    <strong style="color: #dc2626;"><?php echo formatPrice($product['sale_price']); ?></strong>
+                                    <span style="text-decoration: line-through; color: #9ca3af;"><?php echo formatPriceSafe($product['price']); ?></span><br>
+                                    <strong style="color: #dc2626;"><?php echo formatPriceSafe($product['sale_price']); ?></strong>
                                 <?php else: ?>
-                                    <strong><?php echo formatPrice($product['price']); ?></strong>
+                                    <strong><?php echo formatPriceSafe($product['price']); ?></strong>
                                 <?php endif; ?>
                             </td>
                             <td>

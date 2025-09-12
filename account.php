@@ -100,6 +100,7 @@ $pageTitle = 'My Account';
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/production-fixes.css">
 </head>
 <body>
     <header class="header">
@@ -120,7 +121,7 @@ $pageTitle = 'My Account';
                     <a href="cart.php" class="cart-link">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="cart-count"><?php echo getCartItemCount($userId); ?></span>
-                        <span class="cart-total"><?php echo formatPrice(getCartTotal($userId)); ?></span>
+                        <span class="cart-total"><?php echo formatPriceSafe(getCartTotal($userId)); ?></span>
                     </a>
                 </div>
             </div>
@@ -246,7 +247,7 @@ $pageTitle = 'My Account';
                                     </div>
                                     <p style="margin: 4px 0; color: #64748b;">
                                         <strong>Date:</strong> <?php echo date('M j, Y', strtotime($order['created_at'])); ?> | 
-                                        <strong>Total:</strong> <?php echo formatPrice($order['total_amount']); ?> | 
+                                        <strong>Total:</strong> <?php echo formatPriceSafe($order['total_amount']); ?> | 
                                         <strong>Payment:</strong> <?php echo ucfirst($order['payment_method']); ?>
                                     </p>
                                 </div>

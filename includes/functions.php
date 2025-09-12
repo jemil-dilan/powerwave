@@ -328,6 +328,14 @@ function getCartTotal($userId = null) {
     return $total;
 }
 
+function getCartTotalForDisplay($userId = null) {
+    $count = getCartItemCount($userId);
+    if ($count == 0) {
+        return ''; // Return empty string for empty cart
+    }
+    return formatPrice(getCartTotal($userId));
+}
+
 function getCartItemCount($userId = null) {
     $db = Database::getInstance();
     $sessionId = session_id();
@@ -347,7 +355,9 @@ function getCartItemCount($userId = null) {
 
 // Utility functions
 function formatPrice($price) {
-    return CURRENCY_SYMBOL . number_format($price, 2);
+    // Force currency symbol to be a string dollar sign
+    $currencySymbol = '$';
+    return $currencySymbol . number_format($price, 2);
 }
 
 function formatWeight($weight) {
@@ -716,4 +726,24 @@ function createCoinbaseCharge($orderId, $name, $description, $amount, $currency 
 
     return ['success' => false, 'error' => $errMsg];
 }
+
+// Additional currency formatting functions for better reliability
+function getCurrencySymbol() {
+    return '$'; // Hard-coded reliable currency symbol
+}
+
+function formatPriceSafe($price) {
+    if (!is_numeric($price)) {
+        return getCurrencySymbol() . '0.00';
+    }
+    return getCurrencySymbol() . number_format(floatval($price), 2);
+}
+
+function formatCurrency($amount, $symbol = null) {
+    if ($symbol === null) {
+        $symbol = getCurrencySymbol();
+    }
+    return $symbol . number_format(floatval($amount), 2);
+}
+
 ?>

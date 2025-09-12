@@ -41,6 +41,7 @@ $csrfToken = generateCSRFToken();
   <link rel="stylesheet" href="css/responsive.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <meta name="csrf-token" content="<?php echo $csrfToken; ?>">
+    <link rel="stylesheet" href="css/production-fixes.css">
 </head>
 <body>
   <header class="header">
@@ -62,7 +63,7 @@ $csrfToken = generateCSRFToken();
           <a href="cart.php" class="cart-link">
             <i class="fas fa-shopping-cart"></i>
             <span class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
-            <span class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
+            <span class="cart-total"><?php echo getCartTotalForDisplay(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
           </a>
         </div>
       </div>
@@ -145,12 +146,12 @@ $csrfToken = generateCSRFToken();
           <?php endif; ?>
           <?php if ($minPrice !== null): ?>
             <span class="filter-tag" style="background: #f59e0b; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px;">
-              Min: <?php echo formatPrice($minPrice); ?>
+              Min: <?php echo formatPriceSafe($minPrice); ?>
             </span>
           <?php endif; ?>
           <?php if ($maxPrice !== null): ?>
             <span class="filter-tag" style="background: #ef4444; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px;">
-              Max: <?php echo formatPrice($maxPrice); ?>
+              Max: <?php echo formatPriceSafe($maxPrice); ?>
             </span>
           <?php endif; ?>
         </div>
@@ -181,10 +182,10 @@ $csrfToken = generateCSRFToken();
               <div class="product-specs"><span><?php echo (int)$p['horsepower']; ?>HP</span> <span><?php echo ucfirst($p['stroke']); ?></span></div>
               <div class="product-price">
                 <?php if ($p['sale_price']): ?>
-                  <span class="original-price"><?php echo formatPrice($p['price']); ?></span>
-                  <span class="sale-price"><?php echo formatPrice($p['sale_price']); ?></span>
+                  <span class="original-price"><?php echo formatPriceSafe($p['price']); ?></span>
+                  <span class="sale-price"><?php echo formatPriceSafe($p['sale_price']); ?></span>
                 <?php else: ?>
-                  <span class="price"><?php echo formatPrice($p['price']); ?></span>
+                  <span class="price"><?php echo formatPriceSafe($p['price']); ?></span>
                 <?php endif; ?>
               </div>
             </div>

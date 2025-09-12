@@ -154,7 +154,7 @@ $pageTitle = 'Order #' . $order['order_number'];
                 <div>
                     <strong>Total Amount:</strong><br>
                     <span style="font-size: 18px; font-weight: bold; color: #059669;">
-                        <?php echo formatPrice($order['total_amount']); ?>
+                        <?php echo formatPriceSafe($order['total_amount']); ?>
                     </span>
                 </div>
             </div>
@@ -208,7 +208,7 @@ $pageTitle = 'Order #' . $order['order_number'];
             
             <?php if ($order['shipping_cost'] > 0): ?>
                 <div style="margin-top: 12px;">
-                    <strong>Shipping Cost:</strong> <?php echo formatPrice($order['shipping_cost']); ?>
+                    <strong>Shipping Cost:</strong> <?php echo formatPriceSafe($order['shipping_cost']); ?>
                 </div>
             <?php endif; ?>
         </div>
@@ -231,11 +231,11 @@ $pageTitle = 'Order #' . $order['order_number'];
                                 Model: <?php echo sanitizeInput($item['model']); ?> • 
                                 SKU: <?php echo sanitizeInput($item['sku']); ?><br>
                                 Quantity: <?php echo $item['quantity']; ?> × 
-                                <?php echo formatPrice($item['price']); ?>
+                                <?php echo formatPriceSafe($item['price']); ?>
                             </div>
                         </div>
                         <div class="item-price">
-                            <?php echo formatPrice($item['price'] * $item['quantity']); ?>
+                            <?php echo formatPriceSafe($item['price'] * $item['quantity']); ?>
                         </div>
                     </div>
                 <?php endforeach; ?>
@@ -244,23 +244,23 @@ $pageTitle = 'Order #' . $order['order_number'];
                 <div style="border-top: 2px solid #e5e7eb; padding-top: 16px; margin-top: 16px;">
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                         <span>Subtotal:</span>
-                        <span><?php echo formatPrice($subtotal); ?></span>
+                        <span><?php echo formatPriceSafe($subtotal); ?></span>
                     </div>
                     <?php if ($order['tax_amount'] > 0): ?>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                         <span>Tax:</span>
-                        <span><?php echo formatPrice($order['tax_amount']); ?></span>
+                        <span><?php echo formatPriceSafe($order['tax_amount']); ?></span>
                     </div>
                     <?php endif; ?>
                     <?php if ($order['shipping_cost'] > 0): ?>
                     <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
                         <span>Shipping:</span>
-                        <span><?php echo formatPrice($order['shipping_cost']); ?></span>
+                        <span><?php echo formatPriceSafe($order['shipping_cost']); ?></span>
                     </div>
                     <?php endif; ?>
                     <div style="display: flex; justify-content: space-between; font-size: 18px; font-weight: bold; border-top: 1px solid #e5e7eb; padding-top: 8px;">
                         <span>Total:</span>
-                        <span><?php echo formatPrice($order['total_amount']); ?></span>
+                        <span><?php echo formatPriceSafe($order['total_amount']); ?></span>
                     </div>
                 </div>
             </div>

@@ -75,6 +75,7 @@ $csrfToken = generateCSRFToken();
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <meta name="csrf-token" content="<?php echo $csrfToken; ?>">
+    <link rel="stylesheet" href="css/production-fixes.css">
 </head>
 <body>
     <header class="header">
@@ -95,7 +96,7 @@ $csrfToken = generateCSRFToken();
                     <a href="cart.php" class="cart-link">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
-                        <span class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
+                        <span class="cart-total"><?php echo getCartTotalForDisplay(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
                     </a>
                 </div>
             </div>
@@ -193,10 +194,10 @@ $csrfToken = generateCSRFToken();
                             </div>
                             <div class="product-price">
                                 <?php if ($product['sale_price']): ?>
-                                    <span class="original-price"><?php echo formatPrice($product['price']); ?></span>
-                                    <span class="sale-price"><?php echo formatPrice($product['sale_price']); ?></span>
+                                    <span class="original-price"><?php echo formatPriceSafe($product['price']); ?></span>
+                                    <span class="sale-price"><?php echo formatPriceSafe($product['sale_price']); ?></span>
                                 <?php else: ?>
-                                    <span class="price"><?php echo formatPrice($product['price']); ?></span>
+                                    <span class="price"><?php echo formatPriceSafe($product['price']); ?></span>
                                 <?php endif; ?>
                             </div>
                         </div>

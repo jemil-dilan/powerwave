@@ -1,9 +1,15 @@
-# Deny direct access to PHP files in uploads
-<Files *.php>
-    Deny from all
-</Files>
+# Prevent script execution in uploads directory
+Options -ExecCGI -Indexes
+AddHandler cgi-script .php .pl .py .jsp .asp .sh .cgi
 
-# Allow image files
+# Only allow specific image types
 <FilesMatch "\.(jpg|jpeg|png|gif)$">
+    Order Allow,Deny
     Allow from all
+</FilesMatch>
+
+# Deny everything else
+<FilesMatch ".*">
+    Order Allow,Deny
+    Deny from all
 </FilesMatch>

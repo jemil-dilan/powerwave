@@ -59,6 +59,7 @@ $brands = getAllBrands();
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/production-fixes.css">
 </head>
 
 <body>
@@ -111,7 +112,7 @@ $brands = getAllBrands();
                         <span
                             class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
                         <span
-                            class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
+                            class="cart-total"><?php echo getCartTotalForDisplay(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
                     </a>
                 </div>
             </div>
@@ -214,10 +215,10 @@ $brands = getAllBrands();
                                     <div class="product-specs"><span><?php echo (int)$accessory['horsepower']; ?>HP</span> <span><?php echo ucfirst($accessory['stroke']); ?></span></div>
                                     <div class="product-price">
                                         <?php if ($accessory['sale_price']): ?>
-                                            <span class="original-price"><?php echo formatPrice($accessory['price']); ?></span>
-                                            <span class="sale-price"><?php echo formatPrice($accessory['sale_price']); ?></span>
+                                            <span class="original-price"><?php echo formatPriceSafe($accessory['price']); ?></span>
+                                            <span class="sale-price"><?php echo formatPriceSafe($accessory['sale_price']); ?></span>
                                         <?php else: ?>
-                                            <span class="price"><?php echo formatPrice($accessory['price']); ?></span>
+                                            <span class="price"><?php echo formatPriceSafe($accessory['price']); ?></span>
                                         <?php endif; ?>
                                     </div>
                                 </div>

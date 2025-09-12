@@ -180,7 +180,7 @@ $pageTitle = 'Manage Orders';
                                 <strong><?php echo sanitizeInput($order['order_number']); ?></strong>
                                 <div class="order-details">
                                     Items: <?php echo $db->fetchColumn("SELECT SUM(quantity) FROM order_items WHERE order_id = ?", [$order['id']]); ?> •
-                                    Shipping: <?php echo formatPrice($order['shipping_cost']); ?>
+                                    Shipping: <?php echo formatPriceSafe($order['shipping_cost']); ?>
                                 </div>
                             </td>
                             <td>
@@ -188,9 +188,9 @@ $pageTitle = 'Manage Orders';
                                 <small style="color: #6b7280;"><?php echo sanitizeInput($order['email']); ?></small>
                             </td>
                             <td>
-                                <strong><?php echo formatPrice($order['total_amount']); ?></strong>
+                                <strong><?php echo formatPriceSafe($order['total_amount']); ?></strong>
                                 <?php if ($order['tax_amount'] > 0): ?>
-                                    <br><small style="color: #6b7280;">Tax: <?php echo formatPrice($order['tax_amount']); ?></small>
+                                    <br><small style="color: #6b7280;">Tax: <?php echo formatPriceSafe($order['tax_amount']); ?></small>
                                 <?php endif; ?>
                             </td>
                             <td><?php echo ucfirst($order['payment_method']); ?></td>

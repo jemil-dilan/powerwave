@@ -148,6 +148,7 @@ $pageTitle = 'Checkout';
     .crypto-address { background: #1f2937; color: #f9fafb; padding: 12px; border-radius: 6px; font-family: monospace; font-size: 14px; word-break: break-all; margin: 8px 0; }
     .qr-placeholder { width: 200px; height: 200px; background: #f3f4f6; border: 2px dashed #d1d5db; display: flex; align-items: center; justify-content: center; margin: 12px auto; border-radius: 8px; color: #6b7280; }
   </style>
+    <link rel="stylesheet" href="css/production-fixes.css">
 </head>
 <body>
   <header class="header">
@@ -158,7 +159,7 @@ $pageTitle = 'Checkout';
           <a href="cart.php" class="cart-link">
             <i class="fas fa-shopping-cart"></i>
             <span class="cart-count"><?php echo getCartItemCount($userId); ?></span>
-            <span class="cart-total"><?php echo formatPrice($cartTotal); ?></span>
+            <span class="cart-total"><?php echo formatPriceSafe($cartTotal); ?></span>
           </a>
         </div>
       </div>
@@ -335,17 +336,17 @@ $pageTitle = 'Checkout';
             <div style="display:flex; justify-content:space-between; align-items: center;">
               <div style="flex: 1;">
                 <div style="font-weight: 600;"><?php echo sanitizeInput($item['name']); ?></div>
-                <div style="color: #6b7280; font-size: 14px;">Qty: <?php echo (int)$item['quantity']; ?> × <?php echo formatPrice($item['price']); ?></div>
+                <div style="color: #6b7280; font-size: 14px;">Qty: <?php echo (int)$item['quantity']; ?> × <?php echo formatPriceSafe($item['price']); ?></div>
               </div>
-              <div style="font-weight: 600;"><?php echo formatPrice($item['price'] * $item['quantity']); ?></div>
+              <div style="font-weight: 600;"><?php echo formatPriceSafe($item['price'] * $item['quantity']); ?></div>
             </div>
           <?php endforeach; ?>
           <hr style="margin: 12px 0; border: none; border-top: 1px solid #e2e8f0;">
-          <div style="display:flex; justify-content:space-between;"><span>Subtotal</span><strong><?php echo formatPrice($cartTotal); ?></strong></div>
-          <div style="display:flex; justify-content:space-between;"><span>Shipping</span><strong><?php echo formatPrice($shipping); ?></strong></div>
-          <div style="display:flex; justify-content:space-between;"><span>Tax (<?php echo (TAX_RATE * 100); ?>%)</span><strong><?php echo formatPrice($tax); ?></strong></div>
+          <div style="display:flex; justify-content:space-between;"><span>Subtotal</span><strong><?php echo formatPriceSafe($cartTotal); ?></strong></div>
+          <div style="display:flex; justify-content:space-between;"><span>Shipping</span><strong><?php echo formatPriceSafe($shipping); ?></strong></div>
+          <div style="display:flex; justify-content:space-between;"><span>Tax (<?php echo (TAX_RATE * 100); ?>%)</span><strong><?php echo formatPriceSafe($tax); ?></strong></div>
           <hr style="margin: 12px 0; border: none; border-top: 1px solid #e2e8f0;">
-          <div style="display:flex; justify-content:space-between; font-size:18px; font-weight: 700;"><span>Total</span><strong><?php echo formatPrice($grandTotal); ?></strong></div>
+          <div style="display:flex; justify-content:space-between; font-size:18px; font-weight: 700;"><span>Total</span><strong><?php echo formatPriceSafe($grandTotal); ?></strong></div>
 
           <!-- Crypto amounts -->
           <div style="margin-top: 12px; padding: 12px; background: #f8fafc; border-radius: 6px; font-size: 14px;">

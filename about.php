@@ -13,6 +13,7 @@ $pageTitle = 'About Us';
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="css/production-fixes.css">
 </head>
 <body>
     <header class="header">
@@ -33,7 +34,7 @@ $pageTitle = 'About Us';
                     <a href="cart.php" class="cart-link">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
-                        <span class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
+                        <span class="cart-total"><?php echo getCartTotalForDisplay(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
                     </a>
                 </div>
             </div>

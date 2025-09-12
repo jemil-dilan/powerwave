@@ -27,6 +27,7 @@ $pageTitle = 'Warranty Information';
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/production-fixes.css">
 </head>
 
 <body>
@@ -79,7 +80,7 @@ $pageTitle = 'Warranty Information';
                         <span
                             class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
                         <span
-                            class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
+                            class="cart-total"><?php echo getCartTotalForDisplay(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
                     </a>
                 </div>
             </div>

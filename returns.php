@@ -25,6 +25,7 @@ $pageTitle = 'Returns & Refunds Policy';
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/production-fixes.css">
 </head>
 <body>
     <!-- Header -->
@@ -74,7 +75,7 @@ $pageTitle = 'Returns & Refunds Policy';
                     <a href="cart.php" class="cart-link">
                         <i class="fas fa-shopping-cart"></i>
                         <span class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
-                        <span class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
+                        <span class="cart-total"><?php echo getCartTotalForDisplay(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
                     </a>
                 </div>
             </div>

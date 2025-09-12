@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Style Loading Diagnostic - PowerWave</title>
+    
+    <!-- Original CSS files -->
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/fallback.css">
+    
+    <!-- External dependencies -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .diagnostic {
+            background: #f8f9fa;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            border-left: 4px solid #007bff;
+            background: white;
+        }
+        .pass { border-left-color: #28a745 !important; }
+        .fail { border-left-color: #dc3545 !important; }
+        .loading-test {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PowerWave Style Loading Diagnostic</h1>
+        
+        <div class="diagnostic">
+            <h2>CSS Loading Tests</h2>
+            
+            <div class="test-item" id="main-css-test">
+                <h3>Main CSS (style.css)</h3>
+                <p>Testing if main stylesheet loads...</p>
+                <div class="loading-test" style="color: #1e40af; font-weight: 600;">✅ Main CSS loaded successfully</div>
+            </div>
+            
+            <div class="test-item" id="responsive-css-test">
+                <h3>Responsive CSS</h3>
+                <p>Testing responsive styles...</p>
+            </div>
+            
+            <div class="test-item" id="font-test">
+                <h3>Inter Font Loading</h3>
+                <p style="font-family: 'Inter', Arial, sans-serif;">This text should use Inter font if loaded correctly.</p>
+            </div>
+            
+            <div class="test-item" id="fontawesome-test">
+                <h3>FontAwesome Icons</h3>
+                <p>
+                    <i class="fas fa-phone"></i> Phone |
+                    <i class="fas fa-envelope"></i> Email |
+                    <i class="fas fa-shopping-cart"></i> Cart |
+                    <i class="fas fa-search"></i> Search |
+                    <i class="fas fa-user"></i> User
+                </p>
+            </div>
+            
+            <div class="test-item" id="grid-test">
+                <h3>CSS Grid Support</h3>
+                <div class="grid grid-3" style="margin-top: 10px;">
+                    <div style="background: #e3f2fd; padding: 10px; text-align: center;">Grid Item 1</div>
+                    <div style="background: #f3e5f5; padding: 10px; text-align: center;">Grid Item 2</div>
+                    <div style="background: #e8f5e8; padding: 10px; text-align: center;">Grid Item 3</div>
+                </div>
+            </div>
+            
+            <div class="test-item" id="gradient-test">
+                <h3>CSS Gradient Support</h3>
+                <div style="height: 50px; background: linear-gradient(135deg, #1e40af 0%, #f97316 100%); border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold;">
+                    Gradient Background Test
+                </div>
+            </div>
+            
+            <div class="test-item" id="backdrop-filter-test">
+                <h3>Backdrop Filter Support</h3>
+                <div style="position: relative; height: 100px; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"100\" height=\"100\"><rect width=\"100\" height=\"100\" fill=\"%23f97316\"/></svg>'); display: flex; align-items: center; justify-content: center;">
+                    <div style="backdrop-filter: blur(10px); background: rgba(255,255,255,0.8); padding: 20px; border-radius: 8px;">
+                        Backdrop Filter Test
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="diagnostic">
+            <h2>Common UI Elements Test</h2>
+            
+            <div class="test-item">
+                <h3>Buttons</h3>
+                <button class="btn btn-primary" style="margin-right: 10px;">Primary Button</button>
+                <button class="btn btn-outline">Outline Button</button>
+            </div>
+            
+            <div class="test-item">
+                <h3>Navigation Style</h3>
+                <ul class="nav-menu" style="list-style: none; display: flex; gap: 10px; margin: 0; padding: 0;">
+                    <li><a href="#" class="active">Home</a></li>
+                    <li><a href="#">Products</a></li>
+                    <li><a href="#">About</a></li>
+                </ul>
+            </div>
+            
+            <div class="test-item">
+                <h3>Product Card</h3>
+                <div class="product-card" style="max-width: 300px; margin: 10px 0;">
+                    <div class="product-image" style="height: 200px; background: #f1f5f9; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #64748b;">
+                        Product Image Placeholder
+                    </div>
+                    <div class="product-info">
+                        <h3>Sample Product</h3>
+                        <div class="product-price">
+                            <span class="price">$299.99</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Test if main CSS is loaded
+        window.addEventListener('load', function() {
+            const testElement = document.createElement('div');
+            testElement.className = 'container';
+            testElement.style.visibility = 'hidden';
+            testElement.style.position = 'absolute';
+            document.body.appendChild(testElement);
+            
+            const computedStyle = window.getComputedStyle(testElement);
+            const mainCssTest = document.getElementById('main-css-test');
+            
+            if (computedStyle.width.includes('1200px') || computedStyle.maxWidth.includes('1200px')) {
+                mainCssTest.classList.add('pass');
+                mainCssTest.querySelector('.loading-test').style.display = 'block';
+            } else {
+                mainCssTest.classList.add('fail');
+                mainCssTest.innerHTML += '<p style="color: #dc3545;">❌ Main CSS failed to load properly</p>';
+            }
+            
+            document.body.removeChild(testElement);
+            
+            // Test font loading
+            const fontTest = document.getElementById('font-test');
+            const fontTestElement = fontTest.querySelector('p');
+            const fontFamily = window.getComputedStyle(fontTestElement).fontFamily;
+            
+            if (fontFamily.includes('Inter')) {
+                fontTest.classList.add('pass');
+                fontTest.innerHTML += '<p style="color: #28a745;">✅ Inter font loaded successfully</p>';
+            } else {
+                fontTest.classList.add('fail');
+                fontTest.innerHTML += '<p style="color: #dc3545;">❌ Inter font failed to load, using fallback: ' + fontFamily + '</p>';
+            }
+            
+            // Test CSS Grid support
+            const gridTest = document.getElementById('grid-test');
+            if (CSS.supports('display', 'grid')) {
+                gridTest.classList.add('pass');
+                gridTest.innerHTML += '<p style="color: #28a745;">✅ CSS Grid is supported</p>';
+            } else {
+                gridTest.classList.add('fail');
+                gridTest.innerHTML += '<p style="color: #dc3545;">❌ CSS Grid not supported, using flexbox fallback</p>';
+            }
+            
+            // Test backdrop filter support
+            const backdropTest = document.getElementById('backdrop-filter-test');
+            if (CSS.supports('backdrop-filter', 'blur(10px)')) {
+                backdropTest.classList.add('pass');
+                backdropTest.innerHTML += '<p style="color: #28a745;">✅ Backdrop filter is supported</p>';
+            } else {
+                backdropTest.classList.add('fail');
+                backdropTest.innerHTML += '<p style="color: #dc3545;">❌ Backdrop filter not supported, using fallback</p>';
+            }
+        });
+    </script>
+</body>
+</html>

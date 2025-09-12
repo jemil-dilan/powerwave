@@ -48,6 +48,7 @@ $pageTitle = 'Shopping Cart';
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <meta name="csrf-token" content="<?php echo generateCSRFToken(); ?>">
+    <link rel="stylesheet" href="css/production-fixes.css">
 </head>
 <body>
     <header class="header">
@@ -68,7 +69,7 @@ $pageTitle = 'Shopping Cart';
                     <a href="cart.php" class="cart-link">
                         <i class="fas fa-shopping-cart"></i>
 <span class="cart-count"><?php echo $cartCount; ?></span>
-                        <span class="cart-total"><?php echo formatPrice($cartTotal); ?></span>
+                        <span class="cart-total"><?php echo formatPriceSafe($cartTotal); ?></span>
                     </a>
                 </div>
             </div>
@@ -125,14 +126,14 @@ $pageTitle = 'Shopping Cart';
                                     </p>
                                 </div>
                             </div>
-                            <div><?php echo formatPrice($item['price']); ?></div>
+                            <div><?php echo formatPriceSafe($item['price']); ?></div>
                             <div>
                                 <input type="number" name="quantities[<?php echo $item['id']; ?>]" 
                                        value="<?php echo $item['quantity']; ?>" 
                                        min="0" max="99" 
                                        style="width: 80px; padding: 8px; border: 1px solid #cbd5e1; border-radius: 8px;">
                             </div>
-                            <div><?php echo formatPrice($item['price'] * $item['quantity']); ?></div>
+                            <div><?php echo formatPriceSafe($item['price'] * $item['quantity']); ?></div>
                             <div>
                                 <button type="button" class="remove-item" data-cart-id="<?php echo $item['id']; ?>" 
                                         style="color: #ef4444; background: none; border: none; cursor: pointer; padding: 8px;">
@@ -147,10 +148,10 @@ $pageTitle = 'Shopping Cart';
                     <button type="submit" name="update_cart" class="btn btn-outline">Update Cart</button>
                     <div style="text-align: right;">
                         <div style="font-size: 18px; font-weight: 600; margin-bottom: 8px;">
-                            Total: <?php echo formatPrice($cartTotal); ?>
+                            Total: <?php echo formatPriceSafe($cartTotal); ?>
                         </div>
                         <div style="color: #64748b; font-size: 14px;">
-                            + <?php echo formatPrice(SHIPPING_RATE); ?> shipping
+                            + <?php echo formatPriceSafe(SHIPPING_RATE); ?> shipping
                         </div>
                     </div>
                 </div>

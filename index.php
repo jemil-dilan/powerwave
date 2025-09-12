@@ -25,6 +25,7 @@ $csrfToken = generateCSRFToken();
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/fallback.css">
 
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -34,6 +35,7 @@ $csrfToken = generateCSRFToken();
     
     <!-- CSRF Token -->
     <meta name="csrf-token" content="<?php echo $csrfToken; ?>">
+    <link rel="stylesheet" href="css/production-fixes.css">
 </head>
 
 <body>
@@ -88,7 +90,7 @@ $csrfToken = generateCSRFToken();
                         <span
                             class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
                         <span
-                            class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
+                            class="cart-total"><?php echo getCartTotalForDisplay(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
                     </a>
                 </div>
             </div>

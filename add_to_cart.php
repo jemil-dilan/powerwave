@@ -123,10 +123,10 @@ try {
     }
     
     // Add to cart
-    $success = addToCart($productId, $quantity, $userId);
+    $result = addToCart($productId, $quantity, $userId);
     
-    if (!$success) {
-        throw new Exception('Failed to add item to cart. Please try again.');
+    if (!$result['success']) {
+        throw new Exception($result['error'] ?? 'Failed to add item to cart. Please try again.');
     }
     
     // Update rate limiting

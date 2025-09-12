@@ -9,23 +9,26 @@ $pageTitle = 'Warranty Information';
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $pageTitle; ?> - <?php echo SITE_NAME; ?></title>
-    <meta name="description" content="Learn about warranty coverage for outboard motors and marine equipment. Comprehensive warranty protection on all products.">
+    <meta name="description"
+        content="Learn about warranty coverage for outboard motors and marine equipment. Comprehensive warranty protection on all products.">
     <meta name="keywords" content="outboard motor warranty, marine engine warranty, warranty coverage, warranty terms">
-    
+
     <!-- CSS -->
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/responsive.css">
-    
+
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
     <!-- Header -->
     <header class="header">
@@ -51,7 +54,7 @@ $pageTitle = 'Warranty Information';
                     <?php endif; ?>
                 </div>
             </div>
-            
+
             <!-- Main Header -->
             <div class="main-header">
                 <div class="logo">
@@ -60,7 +63,7 @@ $pageTitle = 'Warranty Information';
                         <h1><?php echo SITE_NAME; ?></h1>
                     </a>
                 </div>
-                
+
                 <!-- Search Bar -->
                 <div class="search-bar">
                     <form action="search.php" method="GET" class="search-form">
@@ -68,26 +71,31 @@ $pageTitle = 'Warranty Information';
                         <button type="submit"><i class="fas fa-search"></i></button>
                     </form>
                 </div>
-                
+
                 <!-- Cart -->
                 <div class="cart-info">
                     <a href="cart.php" class="cart-link">
                         <i class="fas fa-shopping-cart"></i>
-                        <span class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
-                        <span class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
+                        <span
+                            class="cart-count"><?php echo getCartItemCount(isLoggedIn() ? $_SESSION['user_id'] : null); ?></span>
+                        <span
+                            class="cart-total"><?php echo formatPrice(getCartTotal(isLoggedIn() ? $_SESSION['user_id'] : null)); ?></span>
                     </a>
                 </div>
             </div>
-            
+
             <!-- Navigation -->
             <nav class="navigation">
                 <ul class="nav-menu">
                     <li><a href="index.php"><i class="fas fa-home"></i> Home</a></li>
                     <li class="dropdown">
-                        <a href="products.php"><i class="fas fa-cog"></i> Products <i class="fas fa-chevron-down"></i></a>
+                        <a href="products.php"><i class="fas fa-cog"></i> Products <i
+                                class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
                             <?php foreach ($categories as $category): ?>
-                                <li><a href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a></li>
+                                <li><a
+                                        href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a>
+                                </li>
                             <?php endforeach; ?>
                         </ul>
                     </li>
@@ -96,7 +104,9 @@ $pageTitle = 'Warranty Information';
                         <a href="brands.php"><i class="fas fa-tags"></i> Brands <i class="fas fa-chevron-down"></i></a>
                         <ul class="dropdown-menu">
                             <?php foreach ($brands as $brand): ?>
-                                <li><a href="products.php?brand=<?php echo $brand['id']; ?>"><?php echo sanitizeInput($brand['name']); ?></a></li>
+                                <li><a
+                                        href="products.php?brand=<?php echo $brand['id']; ?>"><?php echo sanitizeInput($brand['name']); ?></a>
+                                </li>
                             <?php endforeach; ?>
                         </ul>
                     </li>
@@ -114,22 +124,23 @@ $pageTitle = 'Warranty Information';
     <!-- Main Content -->
     <main>
         <?php displayMessage(); ?>
-        
+
         <!-- Page Header -->
         <section class="page-header">
             <div class="container">
                 <div class="header-content">
                     <h1>Warranty Information</h1>
-                    <p>Comprehensive warranty coverage on all outboard motors and marine equipment. Your investment is protected with industry-leading warranty terms.</p>
+                    <p>Comprehensive warranty coverage on all outboard motors and marine equipment. Your investment is
+                        protected with industry-leading warranty terms.</p>
                 </div>
             </div>
         </section>
-        
+
         <!-- Warranty Content -->
         <section class="policy-section">
             <div class="container">
                 <div class="policy-content">
-                    
+
                     <!-- Overview -->
                     <div class="policy-card">
                         <div class="policy-icon">
@@ -137,10 +148,11 @@ $pageTitle = 'Warranty Information';
                         </div>
                         <div class="policy-text">
                             <h2>Industry-Leading Warranty Protection</h2>
-                            <p>We stand behind every product we sell with comprehensive warranty coverage that exceeds industry standards. Your peace of mind is our priority.</p>
+                            <p>We stand behind every product we sell with comprehensive warranty coverage that exceeds
+                                industry standards. Your peace of mind is our priority.</p>
                         </div>
                     </div>
-                    
+
                     <!-- Warranty Coverage -->
                     <div class="content-section">
                         <h2>Warranty Coverage by Product Type</h2>
@@ -183,7 +195,7 @@ $pageTitle = 'Warranty Information';
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- What's Covered -->
                     <div class="content-section">
                         <h2>What's Covered</h2>
@@ -214,49 +226,55 @@ $pageTitle = 'Warranty Information';
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Warranty Registration -->
                     <div class="content-section">
                         <h2>Warranty Registration</h2>
-                        <p>To ensure your warranty coverage, please register your product within 30 days of purchase.</p>
-                        
+                        <p>To ensure your warranty coverage, please register your product within 30 days of purchase.
+                        </p>
+
                         <div class="process-steps">
                             <div class="step">
                                 <div class="step-number">1</div>
                                 <div class="step-content">
                                     <h3>Keep Your Documentation</h3>
-                                    <p>Save your original purchase receipt and all product documentation. You'll need these for warranty claims.</p>
+                                    <p>Save your original purchase receipt and all product documentation. You'll need
+                                        these for warranty claims.</p>
                                 </div>
                             </div>
                             <div class="step">
                                 <div class="step-number">2</div>
                                 <div class="step-content">
                                     <h3>Register Online</h3>
-                                    <p>Visit the manufacturer's website or call us to register your product. This activates your warranty coverage.</p>
+                                    <p>Visit the manufacturer's website or call us to register your product. This
+                                        activates your warranty coverage.</p>
                                 </div>
                             </div>
                             <div class="step">
                                 <div class="step-number">3</div>
                                 <div class="step-content">
                                     <h3>Schedule Installation</h3>
-                                    <p>Use only authorized dealers for installation to maintain warranty coverage. We provide professional installation services.</p>
+                                    <p>Use only authorized dealers for installation to maintain warranty coverage. We
+                                        provide professional installation services.</p>
                                 </div>
                             </div>
                             <div class="step">
                                 <div class="step-number">4</div>
                                 <div class="step-content">
                                     <h3>Follow Maintenance Schedule</h3>
-                                    <p>Regular maintenance is required to keep your warranty valid. We offer full-service maintenance programs.</p>
+                                    <p>Regular maintenance is required to keep your warranty valid. We offer
+                                        full-service maintenance programs.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Warranty Claims -->
                     <div class="content-section">
                         <h2>Making a Warranty Claim</h2>
-                        <p>If you experience a covered issue, we make the warranty claim process as simple as possible.</p>
-                        
+                        <p>If you experience a covered issue, we make the warranty claim process as simple as possible.
+                        </p>
+
                         <div class="highlight-box">
                             <h3><i class="fas fa-clipboard-list"></i> Warranty Claim Process</h3>
                             <ol>
@@ -268,11 +286,12 @@ $pageTitle = 'Warranty Information';
                                 <li>Receive repair or replacement at no cost to you</li>
                             </ol>
                         </div>
-                        
+
                         <div class="info-grid">
                             <div class="info-card">
                                 <h3><i class="fas fa-clock"></i> Response Time</h3>
-                                <p>We respond to warranty claims within 24 hours and aim to resolve issues within 5-7 business days.</p>
+                                <p>We respond to warranty claims within 24 hours and aim to resolve issues within 5-7
+                                    business days.</p>
                             </div>
                             <div class="info-card">
                                 <h3><i class="fas fa-map-marker-alt"></i> Service Locations</h3>
@@ -280,18 +299,21 @@ $pageTitle = 'Warranty Information';
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Maintenance Requirements -->
                     <div class="content-section">
                         <h2>Maintenance Requirements</h2>
-                        <p>Regular maintenance is essential to keep your warranty valid and your motor running at peak performance.</p>
-                        
+                        <p>Regular maintenance is essential to keep your warranty valid and your motor running at peak
+                            performance.</p>
+
                         <div class="grid grid-2">
                             <div class="condition-card">
                                 <h3><i class="fas fa-calendar-alt"></i> Required Maintenance</h3>
                                 <ul>
-                                    <li><strong>Every 100 Hours or Annually:</strong> Oil change, filter replacement, spark plug inspection</li>
-                                    <li><strong>Every 300 Hours:</strong> Impeller replacement, thermostat inspection</li>
+                                    <li><strong>Every 100 Hours or Annually:</strong> Oil change, filter replacement,
+                                        spark plug inspection</li>
+                                    <li><strong>Every 300 Hours:</strong> Impeller replacement, thermostat inspection
+                                    </li>
                                     <li><strong>Seasonally:</strong> Winterization/de-winterization service</li>
                                     <li><strong>As Needed:</strong> Propeller inspection and replacement</li>
                                 </ul>
@@ -306,7 +328,7 @@ $pageTitle = 'Warranty Information';
                                 </ul>
                             </div>
                         </div>
-                        
+
                         <div class="emergency-contact">
                             <h3><i class="fas fa-exclamation-triangle"></i> Warranty Maintenance Tips</h3>
                             <p>To protect your warranty coverage:</p>
@@ -318,17 +340,19 @@ $pageTitle = 'Warranty Information';
                             </ul>
                         </div>
                     </div>
-                    
+
                     <!-- Extended Warranty -->
                     <div class="content-section">
                         <h2>Extended Warranty Options</h2>
-                        <p>Protect your investment beyond the standard warranty period with our extended warranty plans.</p>
-                        
+                        <p>Protect your investment beyond the standard warranty period with our extended warranty plans.
+                        </p>
+
                         <div class="info-grid">
                             <div class="info-card">
                                 <h3><i class="fas fa-shield-alt"></i> PowerGuard Plus</h3>
                                 <p><strong>5-Year Total Coverage</strong><br>
-                                Extends your warranty to 5 years total coverage with comprehensive protection including mechanical breakdown coverage.</p>
+                                    Extends your warranty to 5 years total coverage with comprehensive protection
+                                    including mechanical breakdown coverage.</p>
                                 <ul style="margin-top: 12px;">
                                     <li>Covers all major components</li>
                                     <li>No deductible required</li>
@@ -338,7 +362,8 @@ $pageTitle = 'Warranty Information';
                             <div class="info-card">
                                 <h3><i class="fas fa-crown"></i> PowerGuard Elite</h3>
                                 <p><strong>7-Year Total Coverage</strong><br>
-                                Our most comprehensive coverage with additional benefits including annual maintenance services.</p>
+                                    Our most comprehensive coverage with additional benefits including annual
+                                    maintenance services.</p>
                                 <ul style="margin-top: 12px;">
                                     <li>Everything in PowerGuard Plus</li>
                                     <li>Annual maintenance included</li>
@@ -347,12 +372,13 @@ $pageTitle = 'Warranty Information';
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Warranty Support -->
                     <div class="contact-section">
                         <h2>Warranty Support</h2>
-                        <p>Our dedicated warranty department is here to help with all your warranty needs and questions.</p>
-                        
+                        <p>Our dedicated warranty department is here to help with all your warranty needs and questions.
+                        </p>
+
                         <div class="contact-options">
                             <div class="contact-option">
                                 <i class="fas fa-phone"></i>
@@ -376,7 +402,7 @@ $pageTitle = 'Warranty Information';
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div style="text-align: center; margin-top: 32px;">
                             <a href="contact.php" class="btn btn-primary">Contact Warranty Department</a>
                             <a href="products.php" class="btn btn-outline" style="margin-left: 8px;">Shop Products</a>
@@ -393,7 +419,8 @@ $pageTitle = 'Warranty Information';
             <div class="footer-content">
                 <div class="footer-section">
                     <h3><?php echo SITE_NAME; ?></h3>
-                    <p>Your trusted source for premium outboard motors. We offer the best selection of marine engines from top brands.</p>
+                    <p>Your trusted source for premium outboard motors. We offer the best selection of marine engines
+                        from top brands.</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -401,7 +428,7 @@ $pageTitle = 'Warranty Information';
                         <a href="#"><i class="fab fa-youtube"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Quick Links</h4>
                     <ul>
@@ -411,16 +438,18 @@ $pageTitle = 'Warranty Information';
                         <li><a href="contact.php">Contact</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Categories</h4>
                     <ul>
                         <?php foreach (array_slice($categories, 0, 4) as $category): ?>
-                            <li><a href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a></li>
+                            <li><a
+                                    href="products.php?category=<?php echo $category['id']; ?>"><?php echo sanitizeInput($category['name']); ?></a>
+                            </li>
                         <?php endforeach; ?>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Customer Service</h4>
                     <ul>
@@ -430,18 +459,18 @@ $pageTitle = 'Warranty Information';
                         <li><a href="faq.php">FAQ</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-section">
                     <h4>Contact Info</h4>
                     <div class="contact-info">
                         <p><i class="fas fa-phone"></i> (555) 123-4567</p>
                         <p><i class="fas fa-envelope"></i> <?php echo SITE_EMAIL; ?></p>
-                        <p><i class="fas fa-map-marker-alt"></i> 123 Marina Drive<br>Coastal City, CC 12345</p>
+                        <p><i class="fas fa-map-marker-alt"></i> 4801 W Buckeye Rd<br>Phoenix, AZ 85043</p>
                         <p><i class="fas fa-clock"></i> Mon-Fri: 8AM-6PM<br>Sat: 9AM-5PM, Sun: Closed</p>
                     </div>
                 </div>
             </div>
-            
+
             <div class="footer-bottom">
                 <p>&copy; <?php echo date('Y'); ?> <?php echo SITE_NAME; ?>. All rights reserved.</p>
                 <div class="footer-links">
@@ -455,4 +484,5 @@ $pageTitle = 'Warranty Information';
     <!-- JavaScript -->
     <script src="js/main.js"></script>
 </body>
+
 </html>
